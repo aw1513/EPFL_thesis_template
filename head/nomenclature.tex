@@ -1,0 +1,53 @@
+\makenomenclature
+
+%% This will add the subgroups
+%----------------------------------------------
+
+\renewcommand\nomgroup[1]{%
+  \item[\bfseries
+  \ifstrequal{#1}{A}{Acronyms}{%
+  \ifstrequal{#1}{B}{Symbols}{%
+  \ifstrequal{#1}{C}{Subscripts/superscripts}{}
+  }}%
+]{\medskip}}
+%----------------------------------------------
+
+%% This will add the units
+%----------------------------------------------
+\newcommand{\nomunit}[1]{%
+  \renewcommand{\nomentryend}{\hspace*{\fill}[#1]}% alternative: \hspace*{\fill}[#1]
+}
+%----------------------------------------------
+\renewcommand{\nomname}{Nomenclature}
+\renewcommand{\nompreamble}{\vspace{6pt}}
+% \renewcommand{\nomlabel}[1]{\textbf{#1}}
+\setlength{\nomitemsep}{-2pt}
+
+\renewcommand{\nompreamble}{\begin{multicols}{2}}
+\renewcommand{\nompostamble}{\end{multicols}}
+
+\printnomenclature
+
+% Abbreviations
+\nomenclature[A]{PV}{Photovoltaics}{}{}
+\nomenclature[A]{GIS}{Geographic Information System}
+\nomenclature[A]{GSHP}{Ground-source heat pump}
+\nomenclature[A]{BHE}{Borehole heat exchanger}
+
+% Variables
+% General 
+\nomenclature[B]{$E$}{Electrical energy \nomunit{$Wh$}}
+\nomenclature[B]{$P$}{Electrical power \nomunit{$W$}}
+\nomenclature[B]{$Q$}{Thermal energy \nomunit{$Wh$}}
+\nomenclature[B]{$\dot{Q}$}{Thermal power \nomunit{$W$}}
+% Solar
+\nomenclature[B]{$G$}{Solar radiation \nomunit{$W/m^2$}}
+% Geothermal
+\nomenclature[B]{$\alpha$}{Thermal diffusivity \nomunit{$m^2/s$}}
+\nomenclature[B]{$\lambda$}{Thermal conductivity \nomunit{$m^2K/W$}}
+
+% Subscripts/superscripts
+\nomenclature[C]{$PV$}{photovoltaic}
+\nomenclature[C]{$t$}{tilted}
+\nomenclature[C]{$B$}{direct beam}
+\nomenclature[C]{$pot$}{potential}

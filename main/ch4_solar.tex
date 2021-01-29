@@ -1,0 +1,59 @@
+\chapter{Solar energy potential}
+\label{solar}
+
+\vspace{-45pt} % one line spacing corresponds approx to 15 pts
+\begin{tcolorbox}[enhanced,width=\textwidth,size=fbox,
+        sharp corners,colframe=black!5!white,drop fuzzy shadow southeast,
+        boxrule=3mm, parbox=false] % other options: fontupper=\large\bfseries
+This chapter is based on the article \citep{walch_big_2020}:
+
+\qquad \bibentry{walch_big_2020}
+
+and the conference proceedings \cite{walch_spatio-temporal_2019, walch_critical_2019, walch_fast_2019-1}:
+
+\quad \bibentry{walch_spatio-temporal_2019} - \textit{Section~\ref{solar_phys}} 
+
+\quad \bibentry{walch_critical_2019} - \textit{Section~\ref{solar_comparison}} 
+
+\quad \bibentry{walch_fast_2019-1} - \textit{Section~\ref{solar_application}} 
+\end{tcolorbox}
+
+% SOURCE: Introduction ICAE paper
+We use an Extreme Learning Machine (ELM) ensemble algorithm that allows to predict solar irradiance at an hourly time granularity for a high spatial resolution (250 $\times$ 250) m2 grid over Switzerland and to estimate the uncertainty related to the model and the data. The main advantages of this algorithm are (i) its fast training time and (ii) its ability to learn and to model complex non-linear phenomena with the desired precision. Hence this algorithm is well suitable for the analysis and modelling of large datasets [6,9,10].
+
+\section{Related literature}
+
+% SOURCE: Introduction ICAE paper
+Current climate and environmental policies in Switzerland and worldwide aim at a strong reduction of CO2 emissions in the next decades by transitioning from fossil fuels to renewable energy. Harvesting solar energy using photovoltaic (PV) and solar thermal technologies is one promising approach to achieve the ambitious emission targets. To determine the potential for large-scale deployment of solar technologies and to assess the requirements for a successful integration into the built environment, an accurate modelling of the spatial and temporal patterns of solar irradiance is essential. In this study, we present a methodology for modelling environmental variables at high spatial and temporal resolution by using large satellite datasets. We apply it to predict hourly global horizontal irradiance (GHI) on a (250 $\times$ 250) m2 grid, in order to be able to estimate PV potential at the neighborhood scale in Switzerland. 
+Several data-driven methods exist to model solar irradiance. These include averaging the nearest neighbors [1], geostatistical methods such as kriging [2] as well as machine learning approaches such as Support Vector Machines [3], Random Forests [4] and neural networks [5,6]. As averaging tends to oversimplify the modelling, and kriging is computationally intensive and requires modelling of anisotropic spatial correlations and stationarity of the process, the data-driven machine learning algorithms have recently gained much attention due to their performance and speed [7]. Most studies however focus either on a high spatial or temporal resolution and frequently do not consider the uncertainty that is intrinsic to the modelling [8]. 
+
+% SOURCE: Research plan
+Several methods exist in the literature to map horizontal irradiance to obtain a physical solar energy potential. These include averaging the nearest neighbours [5], geostatistical methods such as kriging [18], [19] as well as machine learning approaches such as Support Vector Machines [3], Random Forests [20] and neural networks [21]–[23]. As averaging tends to oversimplify the modelling, and kriging is computationally intensive and requires modelling of anisotropic spatial correlations and stationarity of the process, the data-driven machine learning algorithms have recently gained much attention due to their performance and speed [24]. Most models do not estimate the uncertainty related to modelling horizontal irradiance, which is an important aspect if the results are processed further.
+For an estimation of the geographic potential in urban environments, the most significant factors are shading effects and the determination of the area available for the installations [3]. Several methods exist to compute these in a detailed fashion, including image analysis and 3D modelling [25]. There are two main issues with computing urban factors for a large geographic area: 1) high-resolution datasets are typically not available everywhere, and 2) the computational time for exact methods is prohibitively high [7]. Different methods exist to approximate urban factors. These range from using standard tabulated factors based on expert opinions [26], statistical methods [7] and extrapolation techniques based on Machine Learning [3]. Assouline et al. [14] provide a detailed analysis of these methods. 
+
+\section{Physical potential estimation - horizontal radiation}
+\label{solar_phys}
+
+\subsection{Data pre-processing}
+
+\subsection{Machine Learning model selection}
+
+\subsection{Prediction and uncertainties}
+
+After defining the model parameters and training the model on the satellite data, we predict the monthly-mean-hourly GHI on a dense grid over Switzerland and estimate the model uncertainty from the ELM ensemble variance and the data uncertainty from the second ELM ensemble trained on the remaining residuals. Table 2 shows the monthly mean predictions and satellite data, as well as model and data uncertainty. All values were summed over the respective time span (month or year) and averaged across all locations. We observe that the predicted monthly mean values are slightly above the satellite data. However, the total difference amounts to 0.2\% of yearly predicted GHI, which is negligible compared to the yearly model uncertainty of 0.94\% of GHI. Overall, data uncertainty dominates with a total of 14.45\% of GHI. Figure 4 shows the high-resolution spatial prediction and the spatial distribution of the uncertainties, summed to yearly values. Note that the scale for the prediction is equivalent to Fig. 2(a). The spatial patterns follow the ones observed in the satellite data, but with much higher precision. In the low-altitude regions of Switzerland, spanning from the west to the north-east of the country, the total potential is low, and so is the model uncertainty. In the high-altitude regions of the Swiss alps with high predicted irradiance, as well as near the borders we can observe a higher model uncertainty, with some peaks at the summits of high mountains. These peaks may be due to spatial extrapolation and a lack of data at these altitudes, as the satellite data is the mean over a pixel. The data uncertainty shows some correlation with the altitude profile of Switzerland and is largest in the south-western part of the country. This can be an indication that the weather in this region is least predictable.
+% IN PROCESS: Transfer conference paper ICAE
+
+
+\section{Technical potential estimation - PV electricity generation}
+\label{solar_tech}
+
+\section{Comparison to existing studies}
+\label{solar_comparison}
+
+\section{Scenarios of PV potential under different hypotheses}
+
+
+\section{\textit{Application}: Estimating annual solar radiation in new areas}
+\label{solar_application}
+
+% \section{Technical potential of solar thermal collectors}

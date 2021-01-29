@@ -20,10 +20,10 @@
 \setlength{\parskip}{0pt} %(needs to be before titlepage and frontmatter to keep the table of contents lists short)
 \frontmatter
 \input{head/titlepage.tex}
-\include{head/dedication}
+% \include{head/dedication}
 \setcounter{page}{0}
-\include{head/acknowledgements}
-\include{head/preface}
+% \include{head/acknowledgements}
+% \include{head/preface}
 \include{head/abstracts}
 
 \cleardoublepage
@@ -31,17 +31,21 @@
 \tableofcontents
 
 % % Following content is OPTIONAL (List of figures + tables)
-% \cleardoublepage
-% \phantomsection
-% \addcontentsline{toc}{chapter}{List of Figures} % adds an entry to the table of contents
-% \listoffigures
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Figures} % adds an entry to the table of contents
+\listoffigures
 % 
-% \cleardoublepage
-% \phantomsection
-% \addcontentsline{toc}{chapter}{List of Tables} % adds an entry to the table of contents
-% \listoftables
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Tables} % adds an entry to the table of contents
+\listoftables
 % your list of symbols here, if needed.
 
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Nomenclature} % adds an entry to the table of contents
+\input{head/nomenclature}
 
 % space before each new paragraph according to the template guidelines.
 %(needs to be after titlepage and frontmatter to keep the table of contents lists short)
@@ -51,15 +55,30 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% MAIN: The chapters of the thesis
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nobibliography*
 \mainmatter
 \include{main/ch1_introduction}
 \cleardoublepage
-\part{Body 1}
-\include{main/ch2_figures_tables}
+
+\part{Methods and data}
+\label{methods}
+\include{main/ch2_methods}
 \cleardoublepage
-\part{Body 2}
-\include{main/ch3_math}
-\include{main/ch4_more_text}
+\include{main/ch3_data}
+\cleardoublepage
+
+\part{Spatial-temporal estimation of renewable energy potentials}
+\label{potential}
+\include{main/ch4_solar}
+\cleardoublepage
+\include{main/ch5_geothermal}
+\cleardoublepage
+
+\part{Hybrid renewable energy \mbox{integration} for urban energy systems}
+\label{hybrid}
+\include{main/ch6_hybrid}
+\cleardoublepage
+\include{main/ch7_conclusion}
 
 % use to end the last part if the thesis is composed of parts
 \addtocontents{toc}{\vspace{\normalbaselineskip}}
@@ -69,7 +88,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% TAIL: Bibliography, Appendix, CV
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{tail/appendix}
+%\include{tail/appendix}
 \backmatter
 \include{tail/biblio}
 % Add your glossary here

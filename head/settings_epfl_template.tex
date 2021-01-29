@@ -28,7 +28,8 @@
 %\addbibresource{tail/bibliography.bib}
 % % OR Bibliography management for Bibtex 
 % Load natbib before babel
-\usepackage[round]{natbib}
+\usepackage[square,numbers]{natbib}
+\bibliographystyle{ieeetr}
 
 
 \usepackage[french,german,english]{babel}
@@ -38,6 +39,7 @@
 %% EDOC THESIS TEMPLATE: Variant 1.0 -> Latin modern, large text width&height
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{lmodern} % use this to fix blurry typewriter text font
+\usepackage{helvet}
 %\usepackage[a4paper,top=22mm,bottom=28mm,inner=35mm,outer=25mm]{geometry}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -67,7 +69,7 @@
 \usepackage{graphicx,xcolor}
 \graphicspath{{images/}}
 
-\usepackage{subfig}
+\usepackage{subcaption}
 \usepackage{booktabs}
 \usepackage{lipsum}
 \usepackage{microtype}
@@ -135,13 +137,13 @@
 \newcommand*\chapterlabel{}
 %\renewcommand{\thechapter}{\Roman{chapter}}
 \titleformat{\chapter}[display]  % type (section,chapter,etc...) to vary,  shape (eg display-type)
-	{\normalfont\bfseries\Huge} % format of the chapter
+	{\normalfont\sffamily\Huge\scshape\bfseries} % format of the chapter 
 	{\gdef\chapterlabel{\thechapter\ }}     % the label 
  	{0pt} % separation between label and chapter-title
  	  {\begin{tikzpicture}[remember picture,overlay]
     \node[yshift=-8cm] at (current page.north west)
       {\begin{tikzpicture}[remember picture, overlay]
-        \draw[fill=black] (0,0) rectangle(35.5mm,15mm);
+        \draw[fill=red,red] (0,0) rectangle(35.5mm,15mm);
         \node[anchor=north east,yshift=-7.2cm,xshift=34mm,minimum height=30mm,inner sep=0mm] at (current page.north west)
         {\parbox[top][30mm][t]{15mm}{\raggedleft \rule{0cm}{0.6cm}\color{white}\chapterlabel}};  %the empty rule is just to get better base-line alignment
         \node[anchor=north west,yshift=-7.2cm,xshift=37mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north west)
@@ -161,7 +163,7 @@
 \newcounter{myparts}
 \newcommand*\partlabel{}
 \titleformat{\part}[display]  % type (section,chapter,etc...) to vary,  shape (eg display-type)
-	{\normalfont\bfseries\Huge} % format of the part
+	{\normalfont\sffamily\Huge\scshape\bfseries} % format of the part
 	{\gdef\partlabel{\thepart\ }}     % the label 
  	{0pt} % separation between label and part-title
  	  {\ifpdf\setlength{\unitlength}{20mm}\else\setlength{\unitlength}{0mm}\fi
@@ -169,10 +171,10 @@
 	  \begin{tikzpicture}[remember picture,overlay]
     \node[anchor=north west,xshift=-65mm,yshift=-6.9cm-\value{myparts}*20mm] at (current page.north east) % for unknown reasons: 3mm missing -> 65 instead of 62
       {\begin{tikzpicture}[remember picture, overlay]
-        \draw[fill=black] (0,0) rectangle(62mm,20mm);   % -\value{myparts}\unitlength
+        \draw[fill=red,red] (0,0) rectangle(62mm,20mm);   % -\value{myparts}\unitlength
         \node[anchor=north west,yshift=-6.1cm-\value{myparts}*\unitlength,xshift=-60.5mm,minimum height=30mm,inner sep=0mm] at (current page.north east)
         {\parbox[top][30mm][t]{55mm}{\raggedright \color{white}Part \partlabel \rule{0cm}{0.6cm}}};  %the empty rule is just to get better base-line alignment
-        \node[anchor=north east,yshift=-6.1cm-\value{myparts}*\unitlength,xshift=-63.5mm,text width=\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north east)
+        \node[anchor=north east,yshift=-6.1cm-\value{myparts}*\unitlength,xshift=-66.5mm,text width=0.9\textwidth,minimum height=30mm,inner sep=0mm] at (current page.north east)
               {\parbox[top][30mm][t]{\textwidth}{\raggedleft \rule{0cm}{0.6cm}\color{black}#1}};
        \end{tikzpicture}
       };
