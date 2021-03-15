@@ -7,13 +7,57 @@
 
 \section{Motivation}
 \label{intro_motivation}
+
+% Potential re-formulation
+%Paragraph 1: Energy transition, Paris agreement
+% Paragraph 2: Covid-19 pandemic and focus on cities
+% Paragraph 3: Spatial and temporal estimation, Increasing data availability
+% Paragraph 4: Research gap addressed in the thesis
+% Paragraph 5: Switzerland and urban environment as focus
 % SOURCE: Research plan
-The energy sector is currently undergoing big changes in many parts of the world. These changes are driven by two main factors: the need to reduce global CO2 emissions in order to fight climate change, and the opportunities created by digitalisation and the big data era. The share of renewable energies (RE) in the energy mix is growing constantly, with an increasing importance of distributed generation, particularly in urban environments. Rapid improvements in the quantity and quality of data on renewable resources and the environment, as well as in computational methods for data handling and analysis allow to assess the potentials and risks of the developments in the energy sector in unprecedented ways. Focusing on the Swiss energy landscape, this research aims to quantify the potential for distributed hybrid energy generation using state-of-the-art data-driven methods.
 
-More specifically, a spatio-temporal estimation of the potential from two renewable resources in urban environments will be conducted. The potential includes electricity and heat generation from rooftop-mounted solar photovoltaics (PV) and solar thermal collectors, respectively, and heat generation from shallow (<400m) geothermal energy using borehole heat exchangers (BHE). The estimations will be combined with other sources of RE to give a hybrid energy potential that optimally complements the energy demand. While individual aspects have been studied at national scale, no large-scale approach exists to model hybrid potential at high temporal and high spatial resolution to quantify the geographic distribution of storage requirements and maximum energy mismatch. Assessing for the first time the spatio-temporal distribution of hybrid energy potential on national scale can hence give a comprehensive view on the opportunities and risks of hybrid systems and on the regional and national energy balance. 
+The decarbonisation of the energy system plays an important role in fulfilling the ambitious emission targets set by the Paris Agreement, which aims to limit global warming to well below 2$^\circ$C below pre-industrial levels \cite{rogelj_paris_2016}.
+To contribute to achieving this goal, governments around the world have established national energy policies, setting targets for the use of renewable energies (RE) within the next 10 - 30 years. 
+\nomenclature[A]{RE}{Renewable energy}
+An analysis of worldwide RE policies \cite{ren21_renewables_2020} showed that in 2019, 166 countries had specific targets for shares of renewable electricity production, while only only 49 countries have established targets for the heating and cooling sector, of which very few reach beyond 2020. 
+As a consequence, roughly 26\% of current electricity production is provided through RE, while only 10\% of heating and cooling energy is provided renewably. However, heating and cooling makes up more than half of the worldwide final energy consumption (in 2017, see Fig. \ref{fig:ren21_RE_use}). These numbers call for an increased focus on decarbonisation targets for the heating and cooling sectors, in particular through cross-sectoral policies  \cite{ren21_renewables_2020}.
+% BRING IN HYBRID
 
-The first phase of the study focuses primarily on electricity, i.e. the estimation of solar PV potential and its combination with electricity generation from wind and electricity demand (external inputs). During the second phase, heat systems with geothermal and solar thermal heat generation will be investigated. For the computation of potentials, data-driven modelling using Machine Learning algorithms is combined with parallelisation of analytical models to cope with the high spatial and temporal resolution of the relevant datasets. Geographic information systems (GIS) are further used to handle geographically referenced datasets. Efforts are made to quantify the uncertainty related to several modelling steps throughout the study and to identify the sources of uncertainties, for example caused by modelling or by data noise.
+\begin{figure}
+\centering 
+\includegraphics[width=\textwidth]{images/gsr_2020_RE_share.pdf} 
+\caption[Renewable Share of Total Final Energy Consumption, by Final Energy Use, 2017]{Renewable Share of Total Final Energy Consumption, by Final Energy Use, 2017. Source: \citet{ren21_renewables_2020} (Based on IEA data)}
+\label{fig:ren21_RE_use} 
+\end{figure}
+In this context, global energy reports highlight the current Covid-19 pandemic as a crucial opportunity to push towards more ambitious RE strategies \cite{iea_world_2020,irena_global_2020,fs-unep_global_2020}. 
+The disruption to the energy sector caused by the pandemic exceed any event in history, and the consequences will last for years \cite{iea_world_2020}. 
+As governments all around the world are developing huge recovery packages to support their societies and economies, aligning these packages with the medium and long-term goals of the Paris Agreement may lead to a "shift to sustainable, decarbonised economies and resilient inclusive societies" \cite{irena_global_2020}. 
+The potential RE generation in urban environments is hereby of high interest, as cities are responsible for a large share of current global greenhouse gas emissions and are expected to host two thirds of the world population by 2050 \cite{irena_rise_2020}. 
 
+Developing effective national and regional strategies to integrate RE into future energy systems requires knowledge of the potential energy generation from the available renewable resources. 
+This includes information on \textit{which} technologies may provide a significant amount of energy, \textit{where} RE resources may be exploited and \textit{when} they are available. 
+These aspects may be assessed through spatio-temporal modelling, which characterises both the spatial (\textit{"where"}) and temporal (\textit{"when"}) patterns of the energy generation from given RE resource.
+The spatio-temporal modelling of RE potentials is however dependent on the availability of sufficient and high-quality data on the natural resources and the environment.
+Rapid improvements in the quantity and quality of data collected at national and global levels, for example through satellite imagery, weather stations and land surveys, as well as in computational methods for data handling and analysis allows to assess these potentials in unprecedented ways.
+
+% Paragraph: Switzerland
+% Currently, there is no methodology that estimates the large-scale RPV potential at a high spatio-temporal resolution and also addresses the systematic propagation of uncertainties arising from the modelling process.
+% This paper contributes to fill this gap by adapting state of the art methods for the assessment of RPV potential in order to quantify and combine different sources of uncertainty. 
+% We further use Machine Learning to incorporate information that is only available in parts of the study region of Switzerland.
+Motivated by the need for cross-sectoral RE policies, the push for RE incentives as part of  Covid-19-related recovery strategies as well as the opportunities presented through an increasing amount of energy-related data, this thesis aims to estimate a \textit{hybrid renewable energy potential} (HREP) for the built environment at national scale. 
+\nomenclature[A]{HREP}{hybrid renewable energy potential}
+This HREP describes the spatial and temporal patterns of several renewable energy resources for electricity and heat generation, which may be combined with other energy sources to assess the compatibility and mismatch with the energy demand. 
+
+% something about a database, focus on methodological aspects to have a spatially comparable potential, as well as establishing database
+
+% More specifically, the potential energy generation from two renewable resources is assessed, namely solar and geothermal energy. 
+% The potential includes electricity and heat generation from rooftop-mounted solar photovoltaics (PV) and solar thermal collectors (STC), respectively, and heat generation from shallow (<400m) geothermal energy using borehole heat exchangers (BHE). 
+
+% While to date individual aspects have been studied at national scale, no large-scale approach exists to model hybrid potential at high temporal and high spatial resolution to quantify the geographic distribution of storage requirements and maximum energy mismatch. Assessing for the first time the spatio-temporal distribution of hybrid energy potential on national scale can hence give a comprehensive view on the opportunities and risks of hybrid systems and on the regional and national energy balance. 
+
+% Focusing on the Swiss energy landscape, this research aims to quantify the potential for distributed hybrid energy generation using state-of-the-art data-driven methods.
+
+% END WITH SWITZERLAND
 
 \section{A hybrid renewable energy potential for Switzerland}
 \label{intro_REN}
@@ -36,21 +80,18 @@ Two types of renewable energies (RE) will be investigated in this study: solar e
 \label{fig:ren_ch} 
 \end{figure}
 
-\subsubsection{Solar energy from photovoltaics and thermal collectors}
-
+\subsubsection{Solar energy from photovoltaics and thermal collectors.}
 As solar energy is abundantly available and easy to harvest, solar PV and solar thermal technologies have attracted worldwide interest. Most studies of solar potentials focus on PV potentials, for example in Switzerland [3]–[5], USA [6], Spain [7], [8], Germany [9], [10]. Solar thermal potentials on the large scale are rarely quantified; this may be partly due to a lower interest in solar thermal collectors for residential applications [1] and partly due to the high interdependency between collector efficiency and heat demand [11]. Large-scale potential studies have been carried out for thermal power plants in India [12], and for residential buildings in Switzerland [11]. Potentials are typically computed as monthly or yearly values; there is however no current study estimating the large-scale potential at an hourly timescale, which is necessary to quantify a potential for hybrid energy systems and requirements for energy storage. 
 
 \subsubsection{Shallow geothermal energy from borehole heat exchangers}
 
 
-\subsubsection{Wind energy from large wind turbines}
-
-\subsubsection{Other renewable energy sources}
-
-
 \subsection{Spatio-temporal estimation of renewable energy potentials}
 
-
+%% SOURCE: Research plan
+For the computation of large-scale solar energy potentials, related studies widely apply a hierarchical approach [3], [4], [7], [13], illustrated in Figure 2. The first step is the calculation of a physical or theoretical potential, which represents the amount of energy that natural resources in the region of interest can provide (per unit area). In the second step, the geographic or urban potential is calculated, which accounts for the impact of the built environment on the natural resources. It measures the amount of energy that can be collected by the panels or collectors. The third step gives the technical potential and accounts for losses during conversion of the natural resources to domestic heat and electricity. It gives the maximum feasible amount of energy that can be harvested using a given technology. After obtaining the maximum feasible energy output, one may consider additional environmental, economic or social considerations to refine the estimated size of the system. A fourth step may thus be an economic potential focused on sizing the systems under given constraints. Economic considerations such as technology cost are not taken into account in the reviewed large-scale studies. Instead, they have been assessed in separate studies, in smaller-scale case studies as well as in hybrid potential assessments. An analysis of market potential is beyond the scope of this work. 
+ 
+% Figure 2: Hierarchical approach for estimating rooftop PV and solar thermal potentials. [14]
 
 \subsection{Definition of hybrid renewable energy potential}
 
@@ -71,6 +112,8 @@ This study aims to combine methodologies of large-scale potential assessment and
 
 The study is divided in three phases. The first phase focuses on electricity. It is divided into the computation of hourly solar energy potentials (WP1) and the assessment of hybrid electricity potential based on solar PV and wind energy (WP2). The second phase focuses on heat energy. In this phase, geothermal energy potentials will be evaluated (WP3) and combined with solar thermal potentials to a hybrid heat potential (WP4). A case study for a selected district will be conducted to assess multi-energy potentials and their effect on covering the urban energy demand. Finally, visualization methods for multi-dimensional data will be explored. 
 
+% SOURCE: Research plan 
+% The first phase of the study focuses primarily on electricity, i.e. the estimation of solar PV potential and its combination with electricity generation from wind and electricity demand (external inputs). During the second phase, heat systems with geothermal and solar thermal heat generation will be investigated. For the computation of potentials, data-driven modelling using Machine Learning algorithms is combined with parallelisation of analytical models to cope with the high spatial and temporal resolution of the relevant datasets. Geographic information systems (GIS) are further used to handle geographically referenced datasets. Efforts are made to quantify the uncertainty related to several modelling steps throughout the study and to identify the sources of uncertainties, for example caused by modelling or by data noise.
 
 \section{Structure of the thesis}
 To address the above research goals, the thesis is structured as follows:

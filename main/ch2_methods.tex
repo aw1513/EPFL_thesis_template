@@ -1,6 +1,6 @@
 % \chapter{Methods and data}
 
-\chapter{Physical models of renewable energy technologies}
+\chapter{Modelling renewable energy technologies}
 \label{methods_physical}
 
 \vspace{-15pt} % -15pts for two-line heading, -45pts for single-line heading
@@ -15,20 +15,36 @@ This chapter borrows from the articles \citep{walch_big_2020,walch_quantifying_2
 \qquad \bibentry{walch_quantifying_2021}
 \end{tcolorbox}
 
-\section{Solar PV and solar thermal energy}
+Spatio-temporal modelling of renewable energy potentials integrates physical models of the renewable resources and technologies with geospatial operations using Geographic Information Systems (GIS).
+The present chapter introduces state-of-the-art modelling approaches for two types of renewables addressed in this thesis, namely rooftop solar energy (Section \ref{solar_method}) and shallow geothermal energy (Section \ref{geo_method}). 
+Relevant physical, geographical and technical constraints for both energy resources are outlined and popular modelling approaches are summarized, such as to justify the methods used in the large-scale estimation of rooftop solar potential (Chapter \ref{solar}) and shallow geothermal potential (Chapter \ref{geothermal}).
 
-%% SOURCE: Research plan
-For the computation of large-scale solar energy potentials, related studies widely apply a hierarchical approach [3], [4], [7], [13], illustrated in Figure 2. The first step is the calculation of a physical or theoretical potential, which represents the amount of energy that natural resources in the region of interest can provide (per unit area). In the second step, the geographic or urban potential is calculated, which accounts for the impact of the built environment on the natural resources. It measures the amount of energy that can be collected by the panels or collectors. The third step gives the technical potential and accounts for losses during conversion of the natural resources to domestic heat and electricity. It gives the maximum feasible amount of energy that can be harvested using a given technology. After obtaining the maximum feasible energy output, one may consider additional environmental, economic or social considerations to refine the estimated size of the system. A fourth step may thus be an economic potential focused on sizing the systems under given constraints. Economic considerations such as technology cost are not taken into account in the reviewed large-scale studies. Instead, they have been assessed in separate studies, in smaller-scale case studies as well as in hybrid potential assessments. An analysis of market potential is beyond the scope of this work. 
- 
-% Figure 2: Hierarchical approach for estimating rooftop PV and solar thermal potentials. [14]
-\subsubsection{Solar radiation}
+\section{Rooftop solar energy}
+\label{solar_method}
+% and solar thermal 
+
+\subsection{Definitions}
+
+Rooftop solar energy is defined here as the electrical or thermal energy harvested from installations on building rooftops, using solar photovoltaic (PV) panels or solar thermal collectors (STC), respectively. It accounts for the incoming solar energy, for the roof geometry as well as for the technology behind the modelled panel/collector. 
+\nomenclature[A]{STC}{Solar thermal collector}
+\nomenclature[A]{RPV}{Rooftop photovoltaics}
+
+
+
+\subsection{Parameters}
+
+To model 
+
+\subsection{Solar radiation}
 
 %% SOURCE: Research plan
 To compute the potential energy output, firstly the amount of solar power reaching a tilted panel/collector surface must be computed. This quantity is defined as global solar irradiance and given in W/m2. It consists of 3 components: a direct or beam component, a diffuse component and a reflected component (see Figure 3a). They are calculated from measurements of global horizontal (GHI), direct normal (DNI) and diffuse horizontal irradiance (DHI). Direct normal irradiance is converted to the tilted beam component via a geographic projection shown in Figure 3b. Diffuse tilted irradiance is more complex to determine due to its diffracted nature. Several models exist with different assumptions and hence varying complexity. Gueymard [15] compared several of these models and compared their approximation errors under different operating conditions. While no model clearly outperforms the other models, his analysis shows the Klucher method [16] amongst the best in most scenarios. The reflected component is given by another geometric conversion based on the ground’s surface reflectance. The mathematical formulae for the conversions are demonstrated for example by Gulin et al. [17].
 
 % Figure 3: a) three solar irradiance components reach a solar panel: direct (beam), diffuse and reflected irradiance; b) geometry for calculating the angle of incidence of direct beam irradiance on a tilted plane;  , : surface tilt & azimuth, z : apparent sun zenith,  : angle of incidence [17]
 
-\subsection{Available area for PV installation}
+\subsection{Shading effects and sky view factor}
+
+\subsection{Available area for solar panel installation}
 
 \subsection{PV module and inverter efficiency}
 
@@ -45,11 +61,24 @@ The computation of the technical potential of a solar thermal collector is more 
 \end{comment}
 
 \section{Shallow geothermal energy}
+\label{geo_method}
+
+This section provides an overview of the concept behind the estimation of the technical potential for borehole heat exchangers (BHE). It introduces the parameters used in the estimation (Section \ref{geo_params}) and summarizes the analytical methods for simulating the thermodynamic processes in the ground, which form the basis for the potential estimation (Section X, XX). Different analys
+
+In this work, the technical geothermal potential for BHSs is defined as:
+
+\textbf{The heat energy ($E_Q$) that may be \textit{sustainably} extracted from a field of BHEs, each of length $H$ and spaced apart by a distance $B$, by a ground source heat pump (GSHP) system with a heat extraction power $Q$ during an annual operational time $t_{op}$. }
+
+The key condition for a \textit{sustainable} extraction of energy from the ground is to keep the mean temperature of the borehole fluid above the freezing temperature ($-1.5^\circ C$ \citep{wagner_erdsondenpotenzial_2014}) during the time of operation. This condition is a limiting factor on the total heat that can be extracted from the ground and plays a key role in the estimation of the large-scale BHE potential estimation.
+
+With appropriately dimensioned and spaced boreholes, a large-scale potential can be defined in $kWh/m^2$. This potential may be computed at annual temporal scales (using an annual mean heat extraction rate), at monthly scales (using the heat degree days as weighting function) or at hourly scales (using hourly load profiles).
+The aim here is to define a maximum amount of energy that can be extracted from the ground without negatively affecting the long-term ground temperature. Energy demand is on purpose not taken into account. 
+This is due to the fact that multiple operation modes exist, e.g. individual BHEs or entire fields that are connected to heat distribution networks. The separation between supply and demand also allows to simulate scenarios of "hybrid" systems, where the demand is covered by different sources.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.7\linewidth]{Figs/BHE_layout.png}
-    \caption{Single BHE installation and its effects on the temperature in the ground. The arrows on the top indicate the natural heat flux from the environment, those on the bottom indicate the geothermal heat flux. The dashed lines are isothermal lines, while the continuous lines represent the heat flow in the stationary state. Source: \citet{wagner_erdsondenpotenzial_2014}}
+    \caption[Single BHE installation and its effects on the temperature in the ground.]{Single BHE installation and its effects on the temperature in the ground. The arrows on the top indicate the natural heat flux from the environment, those on the bottom indicate the geothermal heat flux. The dashed lines are isothermal lines, while the continuous lines represent the heat flow in the stationary state. Source: \citet{wagner_erdsondenpotenzial_2014}}
     \label{fig:BHE}
 \end{figure}
 
@@ -64,7 +93,7 @@ In order to sustain a given heat extraction power and keep a close spacing betwe
 On the other side, a shorter borehole length means that heat is extracted at a higher rate, which also increases the temperature drop. This can be compensated by either reducing the heat extraction power (which lowers the efficiency of the system) or by increasing the borehole spacing.
 
 \subsection{Parameters}
-
+\label{geo_params}
 The parameters involved in the modelling of the thermodynamic behaviour of borehole heat exchangers can be divided into three groups: 
 
 \begin{enumerate}
@@ -111,7 +140,7 @@ Another important physical parameter is the \textit{undisturbed ground temperatu
 \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{Figs/ground_temperature.png}
-    \caption{Example for the variation in ground temperature for two measurements of ground temperature in Zürich, showing the influence of altitude and additional surface heating. \citep{huber_bodentemperaturen_2014}.}
+    \caption[Example for the variation in ground temperature for two measurements of ground temperature in Zürich.]{Example for the variation in ground temperature for two measurements of ground temperature in Zürich, showing the influence of altitude and additional surface heating. Source: \citet{huber_bodentemperaturen_2014}.}
     \label{fig:T_ground}
 \end{figure}
 
@@ -146,14 +175,14 @@ The geothermal heat flow is approximately constant across the outer crust of the
 \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{Figs/q_geo.png}
-    \caption{Map of geothermal heat flows in Switzerland \citep{huber_bodentemperaturen_2014}.}
+    \caption[Map of geothermal heat flows in Switzerland]{Map of geothermal heat flows in Switzerland \citep{huber_bodentemperaturen_2014}.}
     \label{fig:q_geo}
 \end{figure}
 
 \begin{figure}[b]
     \centering
     \includegraphics[width=0.4\linewidth]{Figs/BHE_tech.png}
-    \caption{Cross-section of a duplex BHE layout \citep{wagner_erdsondenpotenzial_2014}.}
+    \caption[Cross-section of a duplex BHE layout.]{Cross-section of a duplex BHE layout \citep{wagner_erdsondenpotenzial_2014}.}
     \label{fig:BHE_cross-sec}
 \end{figure}
 
@@ -398,7 +427,7 @@ The \textit{steady-state asymptote} approximates the steady-state solution of th
 From Eqs.~\ref{eq:Esk_trans} and \ref{eq:Esk_qss} it is easy to see that the two asymptotes intersect at $t = t_s$.
 As the Esk model is practically equivalent to the ILS solution for $t_{min} < t < t_s$ (provided Eq.~\ref{eq:r_cond} is fulfilled), the transient asymptote has a negligible error with respect to the FLS for $t < 0.1 t_s$, and a bounded error for $t = t_s$. The transient asymptote also has a bounded error with respect to the FLS.
 
-\subsection{Model comparison}
+\subsubsection{Model comparison}
 \label{comparison}
 
 \begin{figure}[t]
@@ -473,7 +502,8 @@ The penetration depth of the temperature drop is denoted as $\delta$, which is a
     \mathrm{R}_{peak}(t_{peak}) = \frac{1}{2 \pi \lambda} \ \mathrm{g}_{Esk, trans}(r_b, t_{peak})
 \end{equation}
 
-\section{Geographic Information Systems processing}
+
+%\section{Hybrid system optimization}
 
 \cleardoublepage
 \chapter{Machine Learning}
