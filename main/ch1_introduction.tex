@@ -19,7 +19,7 @@
 The decarbonisation of the energy system plays an important role in fulfilling the ambitious emission targets set by the Paris Agreement, which aims to limit global warming to well below 2$^\circ$C below pre-industrial levels \cite{rogelj_paris_2016}.
 To contribute to achieving this goal, governments around the world have established national energy policies, setting targets for the use of renewable energies (RE) within the next 10 - 30 years. 
 \nomenclature[A]{RE}{Renewable energy}
-An analysis of worldwide RE policies \cite{ren21_renewables_2020} showed that in 2019, 166 countries had specific targets for shares of renewable electricity production, while only only 49 countries have established targets for the heating and cooling sector, of which very few reach beyond 2020. 
+An analysis of worldwide RE policies~\cite{ren21_renewables_2020} showed that in 2019, 166 countries had specific targets for shares of renewable electricity production, while only only 49 countries have established targets for the heating and cooling sector, of which very few reach beyond 2020. 
 As a consequence, roughly 26\% of current electricity production is provided through RE, while only 10\% of heating and cooling energy is provided renewably. However, heating and cooling makes up more than half of the worldwide final energy consumption (in 2017, see Fig. \ref{fig:ren21_RE_use}). These numbers call for an increased focus on decarbonisation targets for the heating and cooling sectors, in particular through cross-sectoral policies  \cite{ren21_renewables_2020}.
 % BRING IN HYBRID
 
@@ -44,11 +44,21 @@ Rapid improvements in the quantity and quality of data collected at national and
 % Currently, there is no methodology that estimates the large-scale RPV potential at a high spatio-temporal resolution and also addresses the systematic propagation of uncertainties arising from the modelling process.
 % This paper contributes to fill this gap by adapting state of the art methods for the assessment of RPV potential in order to quantify and combine different sources of uncertainty. 
 % We further use Machine Learning to incorporate information that is only available in parts of the study region of Switzerland.
-Motivated by the need for cross-sectoral RE policies, the push for RE incentives as part of  Covid-19-related recovery strategies as well as the opportunities presented through an increasing amount of energy-related data, this thesis aims to estimate a \textit{hybrid renewable energy potential} (HREP) for the built environment at national scale. 
-\nomenclature[A]{HREP}{hybrid renewable energy potential}
-This HREP describes the spatial and temporal patterns of several renewable energy resources for electricity and heat generation, which may be combined with other energy sources to assess the compatibility and mismatch with the energy demand. 
+Motivated by the need for cross-sectoral RE policies, the push for RE incentives as part of  Covid-19-related recovery strategies and the opportunities presented through an increasing amount of energy-related data, this thesis aims to estimate a \textit{hybrid renewable energy potential} (HyREP) for the built environment at national scale. 
+\nomenclature[A]{HyREP}{Hybrid Renewable Energy Potential}
+The HyREP describes the spatial and temporal patterns of several renewable energy resources for electricity \textit{and} heat generation, which may be combined with other (non)-renewable energy sources to assess potential complementarities between energy sources and their potential for satisfying the energy demand of cities. 
 
 % something about a database, focus on methodological aspects to have a spatially comparable potential, as well as establishing database
+This thesis focuses on RE potential within the built environment, since the built environment gives rise to a large amount of the national electricity and heat demand. Directly satisfying this demand where it occurs reduces the need for heat and power transmission over large distances, which reduces losses and can help to reduce supply peaks due to the intermittency of RE resources. 
+The focus of the work lies in the spatio-temporal estimation of the technical potential of RE sources at large scale, whereby the technical potential is defined as the maximum energy (heat or electricity) which can be provided using a specific RE technology. 
+These resource potentials include physical, geographical and technical limitations and yield results at the scale of individual building or property units, at hourly or monthly temporal resolution for a large geographic area, such as the country of Switzerland. 
+
+We assess the potential energy generation from two renewable resources which have been growing rapidly in Switzerland, namely rooftop solar photovoltaics (RPV) and ground-source heat pumps (GSHPs), which extract shallow geothermal heat at depths of < 400 m. 
+The resource assessments form publicly available databases of RE potential, which can be used to study hybrid systems from neighbourhood to country scale based on data that is homogeneous across the country. 
+By combining state-of-the-art analytical models of RE technologies with large-scale data processing techniques and advanced statistical methods, including Machine Learning (ML), the HyREP datasets presented in this thesis contain a high level of detail on the natural resources, the built environment and the modelled technologies.
+\nomenclature[A]{ML}{Machine Learning}
+To demonstrate how the renewable energy databases can be used for the study of hybrid energy systems (HES), this thesis concludes with an analysis of the potential self-coverage and self-sufficiency of urban neighbourhoods across the country through the large-scale deployment of RPV and GSHPs, setting these results in context with the Swiss Energy Strategy for 2050.
+\nomenclature[A]{HES}{Hybrid Energy System}
 
 % More specifically, the potential energy generation from two renewable resources is assessed, namely solar and geothermal energy. 
 % The potential includes electricity and heat generation from rooftop-mounted solar photovoltaics (PV) and solar thermal collectors (STC), respectively, and heat generation from shallow (<400m) geothermal energy using borehole heat exchangers (BHE). 
@@ -61,6 +71,7 @@ This HREP describes the spatial and temporal patterns of several renewable energ
 
 \section{A hybrid renewable energy potential for Switzerland}
 \label{intro_REN}
+
 
 Estimation of a hybrid renewable energy potential for Switzerland requires answering the following questions: 
 \begin{itemize}
@@ -118,11 +129,11 @@ The study is divided in three phases. The first phase focuses on electricity. It
 \section{Structure of the thesis}
 To address the above research goals, the thesis is structured as follows:
 
-\textbf{Part~\ref{methods}} provides a summary of state-of-the-art methods used in the thesis and large-scale  datasets used in the national REN potential studies. \textbf{Chapter~\ref{methods_physical}} introduces physical models. \textbf{Chapter~\ref{methods_ML}} covers Machine Learning and uncertainty estimation.  \textbf{Chapter~\ref{data}} provides an overview over the available large-scale datasets.
+\textbf{Part~\ref{methods}} provides a summary of state-of-the-art analytical and statistical methods used in the thesis and large-scale datasets used in the national REN potential studies. \textbf{Chapter~\ref{methods_physical}} introduces analytical methods for modelling physical processes and technological aspects of RPV and GSHP systems. \textbf{Chapter~\ref{methods_ML}} covers Machine Learning methods used in this work and stastical approaches for uncertainty estimation.  \textbf{Chapter~\ref{data}} provides an overview over the available meteorological, environmental and building-related datasets for Switzerland.
 
-\textbf{Part~\ref{potential} }addresses the estimation of renewable energy potentials. \textbf{Chapter~\ref{solar} }details the developed model for estimating rooftop solar photovoltaic potential at national scale, as well as a detailed comparison of the resulting potential database with existing estimations for Switzerland. \textbf{Chapter~\ref{geothermal}} provides the estimation of technical potential for shallow geothermal energy, using analytical models at regional scale and Machine Learning for the estimation at national scale. The chapter further shows an approach to expand the model to include thermal regeneration of the geothermal resources through cooling re-injection to the ground with regional-scale application.
+\textbf{Part~\ref{potential} }addresses the estimation of renewable energy potentials. \textbf{Chapter~\ref{solar} } details the developed model for estimating rooftop solar photovoltaic potential at national scale, as well as a  comparison of the resulting potential database with existing estimations for Switzerland. \textbf{Chapter~\ref{geothermal}} provides the estimation of technical potential for shallow geothermal energy, using analytical models at regional scale and Machine Learning for the estimation at national scale. The chapter further shows an approach to expand the model to include thermal regeneration of the geothermal resources through cooling re-injection to the ground with regional-scale application.
 
-\textbf{Part~\ref{hybrid}} shows examples of the application of the potential databases developed in Part~\ref{potential} for case studies on hybrid renewable energy systems. \textbf{Chapter~\ref{hybrid_chapter}} outlines a mapping approach for the energy demand of heat and electricity from readily available data, which is a necessary complementary input to perform hybrid system studies. [TO BE CONTINUED].
+\textbf{Part~\ref{hybrid}} demonstrates the application of the potential databases developed in Part~\ref{potential} for modelling hybrid renewable energy systems. \textbf{Chapter~\ref{hybrid_chapter}} outlines a mapping approach for the energy demand of heat and electricity from readily available data, which is a necessary complementary input to perform hybrid system studies. [TO BE CONTINUED].
 
 \textbf{Chapter~\ref{conclusion}} concludes with the main findings of the thesis and a future outlook.
 
