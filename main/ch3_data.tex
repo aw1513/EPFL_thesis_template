@@ -5,139 +5,182 @@
 % Using big data mining techniques for the estimation of large-scale RPV potential requires the availability of accurate and high-resolution environmental and building datasets. Spatial and temporal resolutions of these data are rapidly increasing, but the highest-quality information is frequently not available for a large spatial coverage. Switzerland has been selected as case study area for this approach, as large amounts of data at different resolutions and spatial coverage exist for solar radiation, the building stock and digital surface models.
 
 The spatio-temporal modelling of solar photovoltaic and shallow geothermal energy potentials at national scale for Switzerland requires the availability of high-resolution data on the existing building stock, meteorological data and data on the subsurface geology. 
-As most of these data are used in several instances and play an important role in the choice of suitable modelling approaches, the relevant large-scale datasets used throughout this thesis and relevant pre-processing steps are detailed in the following.
+As most of these data are used several times throughout this work and may play an important role in the choice of suitable modelling approaches, the relevant large-scale datasets used throughout this thesis and relevant pre-processing steps are detailed in the following.
 
 \section{Building and landscape data}
-A large amount and variety of building and landscape data is available for Switzerland. These include statistics related to the existing building stock and their use for the residential and service sector, the geometries of building footprints, rooftops and other built-up areas, as well as high-resolution digital elevation models (see Table~\ref{tab:bld_landscape}). Most of this data can be accessed freely on the mapping platform of the Swiss Confederation\footnote{\url{https://map.geo.admin.ch/}}.
-
-[ADD TABLE HERE]
-
-\subsection{Building and enterprise statistics}
-\label{data_rbd_statent}
-\textbf{Registry of Buildings and Dwellings (RBD).} The RBD, published and continously updated by the Swiss Federal Statistical Office (FSO) \cite{bundesamt_fur_statistik_bfs_eidgenossisches_2015}, contains 1.6 million registered buildings in Switzerland.
-It lists a large amount of building-related attributes, including coordinates, floor area, construction period, number of floors, number of dwellings, and information on the building use (e.g. residential/service sector/industrial). 
-The RBD further contains a registry of 4.2 million [CHECK] dwellings, amongst other listing the dwelling's area, number of rooms and dwelling use.
-\nomenclature[A]{RBD}{Registry of Buildings and Dwellings}
-
-As the attributes in the RBD are missing for some buildings and dwellings, we estimate the missing characteristics in order to estimate RE potentials for the entire building stock. [COMPLETE WITH DETAILS]
-
-\textbf{Structural Business Statistic (STATENT).} In addition to the RBD, the STATENT provides information on the number of enterprises and employees in each of the service and industrial sectors, at a resolution of $100 \times 100 m^2$ pixels for Switzerland \cite{bfs_statistik_2018}. The sectors are divided according to the Swiss General Classification of Economic Activities (NOGA) into 88 NOGA codes, which we group to 19 sub-sectors following the classification proposed in \cite{bfe_energieverbrauch_2019} [APPENDIX?].
-\nomenclature[A]{STATENT}{Structural Business Statistic}
-\nomenclature[A]{NOGA}{General Classification of Economic Activities}
-
-\subsection{Building and landscape geometries}
-
-\textbf{Building footprints.} are available at different 
-% SOURCE: PV paper (original draft)
-% We compute the RPV potential per roof surface, based on a national-scale dataset of building rooftops.
-
-\textbf{Parcel geometries}
-The parcel boundaries are vector representations of the official mensuration data for around 100,000 property units, obtained from the cantonal geoinformation services of Vaud (ASIT-VD) \cite{asit_vd_cadastre_2019} and Geneva (SITG) \cite{sitg_parcelles_2020}.
-
-\textbf{Roof surfaces.}
-The dataset contains 9.6M vector polygons which are derived from a national 3D building model (LOD~2) by the Swiss Federal Office of Topography (SwissTopo) \cite{klauser_solarpotentialanalyse_2016}.
-The roof polygons represent the roofs of 3.7M buildings in Switzerland and contain information  on the tilt, aspect and tilted area of each roof.
-
-\textbf{Roof superstructures.}
-In the Canton of Geneva, where detailed city GML data (LOD~4) exists, an additional dataset of roof superstructures is available through Geneva's geographic information system (SITG)~\cite{sitg_superstructures_2019}. %NEED TO ADD SOURCE
-These are vector polygons which represent objects on rooftops such as dormers and chimneys. 
-Furthermore, small roof shapes such as dormers, which are generally unsuitable for installing PV, are partly represented as separate roof polygons in the LOD4 dataset.
-For this reason, we convert all surfaces smaller than $8m^2$ are converted to superstructures. 
-As the superstructure dataset has been derived from LiDAR data, building-integrated objects such as windows or already existing solar panels are not considered. We thus use only the roof superstructure data as represented in the SITG dataset, which is available for 37.7K roofs in the Canton of Geneva. Roofs without any superstructure information are excluded 
-
-The details of all building datasets used here are summarized in Table~\ref{tab:buildings}.
+A large amount and variety of building and landscape data is available for Switzerland. These include statistics related to the existing building stock and their use for the residential and service sector, the geometries of building footprints, rooftops and other built-up areas, as well as high-resolution digital elevation models. Most of this data can be accessed freely on the mapping platform of the Swiss Confederation\footnote{\url{https://map.geo.admin.ch/}}.  Table~\ref{tab:bld_landscape} shows an overview of all building and landscape data used throughout this thesis, with a short explanation of each of the datasets provided below.
 
 \begin{table}[tb]
 \centering
 \footnotesize
-\begin{tabular} {lllll} %% {\textwidth}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllll}
 \hline
-\textbf{Data} & \textbf{Coverage} & \textbf{Spatial res.} & \textbf{Creation} & \textbf{Source}\\
-\hline 
-Roof surfaces  & Switzerland & Rooftop (Vectors) & 2010-2016 & Sonnendach.ch \cite{klauser_solarpotentialanalyse_2016} \\
-Register of buildings  & Switzerland & Buildings (Points) & 2015 & SwissStat \cite{federal_statistics_office_federal_2015} \\
-Roof superstructures  & Geneva Canton & Rooftop (Vectors) & 2005-2011 & SITG \cite{sitg_superstructures_2019} \\
-\hline
-\end{tabular}
-\caption{Building data used in the study}
-\label{tab:buildings}
+\textbf{Type}                                   & \textbf{Dataset}     & \textbf{Coverage} & \textbf{Spatial res.} & \textbf{Creation} & \textbf{Source} & \textbf{Chapter} \\ \hline
+\multirow{2}{*}{\textit{Statistics}}                     & RBD                  & CH                & Building                    & 2015/2019         & FSO \cite{bundesamt_fur_statistik_bfs_eidgenossisches_2015}            & \ref{solar},\ref{hybrid_chapter}         \\
+                                                & STATENT              & CH                & $100 \times 100 m^2$        & 2018              & FSO \cite{bfs_statistik_2018}            & \ref{hybrid_chapter}               \\ \hline
+\multirow{5}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Building /} \\ \textit{landscape} \\ \textit{geometries}\end{tabular}} & Building footprints  & CH             & Building                    & 2017              & swisstopo  \cite{swisstopo_swisstlm3d_2018}       & \ref{solar},\ref{geothermal}, \ref{hybrid_chapter}    \\
+                                                & Building parcels     & CH (ex. LU)       & Parcel                      & various           & Cantons*        & \ref{geothermal}, \ref{hybrid_chapter}    \\
+                                                & Roof surfaces        & CH                & Rooftop                     & 2010-2016      & Sonnendach.ch   \cite{klauser_solarpotentialanalyse_2016}       & \ref{solar},\ref{hybrid_chapter}      \\
+                                                & Roof superstructures & GE                & Rooftop                     & 2005-2011  & SITG  \cite{sitg_superstructures_2019}          & \ref{solar}                \\
+                                                & TLM                  & CH                & various                     & 2017              & swisstopo \cite{swisstopo_swisstlm3d_2018}      & \ref{geothermal}           \\ \hline
+\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Digital} \\ \textit{elevation} \\ \textit{models}\end{tabular}}       & DTM                  & CH                & $2 \times 2 m^2$            & 2010-2016         & swisstopo  \cite{swisstopo_swissalti3d_2017}     &\ref{solar}             \\
+                                                & DSM                  & CH                & $2 \times 2 m^2$            & 2000-2008         & swisstopo   \cite{swisstopo_dsm_2005}    & \ref{solar}                \\
+                                                & DSM                  & GE                & $0.5 \times 0.5 m^2$        & 2013              & SITG  \cite{sitg_mns_2018}          & \ref{solar}   \\ \hline
+\multicolumn{7}{l}{* Data has been collected from individual cantonal offices for all cantons except Luzern (see Appendix \ref{app:canton_parcels})}                                           
+\end{tabular}%
+}
+\caption{Overview of building and landscape datasets and the relevant chapters where the data is used. \textit{CH}: Entire Switzerland, \textit{GE, LU}: Cantons of Geneva and Luzern.}
+\label{tab:bld_landscape}
 \end{table}
 
-\textbf{Topographic Landscape Model (TLM).}
-The TLM used in this work is obtained from swisstopo \cite{swisstopo_swisstlm3d_2018} and contains a detailed 3D representation of various landscape objects in vector form. 
-It has an accuracy of $0.2-1.5m$ for well-defined objects such as roads or buildings, and of $1 - 3m$ for other landscape features such as forests \cite{swisstopo_swisstlm3d_2018}. 
-To account for the inaccuracies of the TLM, we apply a tolerance buffer of $1m$ to all objects listed in Section~\ref{GIS}. 
-Additionally, roads and railways are buffered by their widths. 
-\nomenclature[A]{TLM}{Topographic Landscape Model}
+\subsection{Building and enterprise statistics}
+\label{data_rbd_statent}
+\textbf{Registry of Buildings and Dwellings (RBD).} The RBD, published and continously updated by the Swiss Federal Statistical Office (FSO) \cite{bundesamt_fur_statistik_bfs_eidgenossisches_2015}, contains 2.2 million registered buildings in Switzerland.
+It lists a large amount of building-related attributes, including building coordinates, floor area, construction period, number of floors, number of dwellings, and information on the building use (e.g. residential/service sector/industrial). 
+The RBD further contains a registry of 4.6 million dwellings, amongst other listing the dwelling's area, number of rooms and dwelling use.
+\nomenclature[A]{RBD}{Registry of Buildings and Dwellings}
+As the attributes in the RBD are missing for some buildings and dwellings, we estimate the missing characteristics in order to estimate RE potentials for the entire building stock. Details for the pre-processing steps to fill missing data are described in Appendix \ref{app:rbd}.
 
+\textbf{Structural Business Statistic (STATENT).} In addition to the RBD, the STATENT provides information on the number of enterprises and employees in each of the service and industrial sectors, at a resolution of $100 \times 100 m^2$ pixels for Switzerland \cite{bfs_statistik_2018}. The sectors are divided according to the Swiss General Classification of Economic Activities (NOGA) into 88 NOGA codes \cite{bfs_noga_2008}, which we group to 19 sub-sectors as described in Appendix \ref{app:noga}.
+\nomenclature[A]{STATENT}{Structural Business Statistic}
+\nomenclature[A]{NOGA}{General Classification of Economic Activities}
+
+\subsection{Building and landscape geometries}
+\label{data_geometry}
+
+\textbf{Building footprints.} 
+Geometries of the building footprints for the entire Swiss building stock are available as 3.7 million vector polygons. 
+The polygons are part of the Topographic Landscape Model (TLM) of Switzerland published by the Swiss Federal Office of Topography (swisstopo) \cite{swisstopo_swisstlm3d_2018}. 
+The footprints are based on a 3D model of the Swiss building stock, which is created using a photogrammetric capturing method and has a high precision of $\pm 0.3 m$.
+% SOURCE: PV paper (original draft)
+% We compute the RPV potential per roof surface, based on a national-scale dataset of building rooftops.
+\nomenclature[A]{TLM}{Topographic Landscape Model}
+%\nomenclature[A]{swisstopo}{Swiss Federal Office of Topography}
+
+\textbf{Parcel geometries.}
+In contrast to the building footprints, information on the boundaries of property units (parcels) are not collected at national level for Switzerland. 
+Parcel geometries, which are vector polygons derived from official mensuration data, are instead available from cantonal geoinformation services. 
+As parcel data provides valuable insights in the attribution of surrounding land to building footprints, we have collected parcel geometry data for 25 of the 26 Swiss cantons separately.
+In most cantons, this data is entirely available, while some areas are missing for a small number of cantons (see Appendix \ref{app:canton_parcels} for an overview of the data sources and availability). Only for the canton of Luzern it was not possible to obtain parcel data.
+% The parcel boundaries are vector representations of the official mensuration data for around 100,000 property units, obtained from the cantonal geoinformation services of Vaud (ASIT-VD) \cite{asit_vd_cadastre_2019} and Geneva (SITG) \cite{sitg_parcelles_2020}.
+%\nomenclature[A]{ASIT-VD}{Geoinformation service (Vaud)}
+%\nomenclature[A]{SITG}{Geoinformation service (Geneva)}
+
+\textbf{Roof surfaces.}
+This dataset contains 9.6 million vector polygons which are derived from a national 3D building model (LOD~2) by swisstopo \cite{klauser_solarpotentialanalyse_2016}.
+The roof polygons represent the roofs of the 3.7 million building footprints in Switzerland and contain information  on the tilt, aspect and tilted area of each roof.
+This data has has been published as part of a previous study of RPV potential in the Switzerland, carried out by the Swiss Federal Office of Energy (SFOE), titled and referred to throughout this study as "Sonnendach.ch" \cite{klauser_solarpotentialanalyse_2016}.
+%\nomenclature[A]{SFOE}{Swiss Federal Office of Energy}
+
+\textbf{Roof superstructures.}
+In the Canton of Geneva, where detailed city GML data (LOD~4) exists, an additional dataset of roof superstructures is available through SITG~\cite{sitg_superstructures_2019}. %NEED TO ADD SOURCE
+These superstructures are vector polygons which represent objects on rooftops such as dormers and chimneys. 
+Furthermore, small roof shapes such as dormers, which are generally unsuitable for installing PV, are partly represented as separate roof polygons in the LOD~4 dataset.
+For this reason, we convert all surfaces smaller than $8m^2$ are converted to superstructures. 
+As the superstructure dataset has been derived from LiDAR data, building-integrated objects such as windows or already existing solar panels are not considered. 
+Furthermore, roofs without any superstructure information are excluded from the analysis, as a visual inspection showed that this data is missing on a large part of the rooftops. Using only rooftops where superstructure information is available yields a dataset of 37.7K roofs in the Canton of Geneva. 
+
+\textbf{Topographic Landscape Model (TLM).}
+In addition to the building footprints, the TLM \cite{swisstopo_swisstlm3d_2018} and contains a detailed 3D representation of various landscape objects in vector form. 
+These include built-up areas (e.g. roads, railways, parking lots, sports facilities etc.), natural (e.g. lakes, rivers) and artificial (e.g. pools) water bodies and land cover data (e.g. forests, wetlands, agricultural use, glaciers), protected areas, and more
+\footnote{See \url{https://www.swisstopo.admin.ch/en/geodata/landscape/tlm3d.html} for a full list of attributes}.
+The TLM has a precision of $0.2-1.5m$ for well-defined objects such as roads or buildings, and of $1 - 3m$ for other landscape features such as forests \cite{swisstopo_swisstlm3d_2018}. 
+To create a homogeneous dataset of vector polygons, relevant line data, namely roads and railways, are buffered (expanded) by their width (see Appendix \ref{app:roads}).
+Other TLM objects used in Chapter \ref{geothermal} are buffered by $1m$ to account for the imprecision of the TLM.
 
 \subsection{Digital Elevation models}
 \textbf{Digital Terrain Model.} Two types of surface datasets are used for the projection of PV potential: A Digital Terrain Model (DTM) and a Digital Surface Model (DSM) of Switzerland. The DTM is a high-resolution surface model, without considering vegetation and constructions. It is available at national scale as pixels of $(2\times2)m^2$ resolution. The DTM is derived from Light Detection and Ranging (LiDaR) data that was collected in the period from 2000-2008 and has been updated from 2010-2016.
 
 \textbf{Digital Surface Model.} The DSM is a complete model of the landscape, including all visible landscape elements. As the DTM it is available  in $(2\times2)m^2$ resolution from LiDaR data that was collected in the period from 2000-2008, but contrary to the DSM is has not been updated. More recent DSMs have however been created for individual cantons in Switzerland at a resolution of $(0.5\times0.5)m^2$. 
 
-In this study, we use the higher-resolution and more updated DSM in the canton of Geneva to improve the estimation of shading effects and the skyview factor, as described in Sections \ref{shade} and \ref{svf}. This has two-fold reasons. Firstly, the spatial resolution of the updated DSM is 16 times higher, and secondly, the newer period of construction accounts for some buildings which have been built after the completion of the first DSM. An analysis of the RBD shows that 9.32\% of buildings in Switzerland have been constructed in the period of 2006-2015, corresponding approximately to the time span between the two studies. In Geneva, this fraction is comparable (7.28\%).
+We use the higher-resolution and more updated DSM for the canton of Geneva to improve the estimation of RPV potential.
+This has two-fold reasons. Firstly, the spatial resolution of the updated DSM is 16 times higher, and secondly, the newer period of construction accounts for some buildings which have been built after the completion of the first DSM.
+An analysis of the RBD shows that 9.32\% of buildings in Switzerland have been constructed in the period of 2006-2015, corresponding approximately to the time span between the two studies. In Geneva, this fraction is comparable (7.28\%).
 
 \nomenclature[A]{DTM}{Digital Terrain Model}
 \nomenclature[A]{DSM}{Digital Surface Model}
 \nomenclature[A]{LiDaR}{Light Detection and Ranging}
 
-\begin{table}[b]
-\centering
-\footnotesize
-\begin{tabular} {lllll} %% {\textwidth}
-\hline
-\textbf{Data} & \textbf{Coverage} & \textbf{Spatial res.} & \textbf{Creation} & \textbf{Source}\\
-\hline 
-DTM  & Switzerland & $(2\times2) m^2$ & 2010-2016 & SwissTopo \cite{swisstopo_swissalti3d_2017} \\
-DSM  & Switzerland & $(2\times2) m^2$ & 2000-2008 & SwissTopo \cite{swisstopo_dsm_2005} \\
-DSM  & Geneva Canton & $(0.5\times0.5) m^2$ & 2013 & SITG \cite{sitg_mns_2018} \\
-\hline
-\end{tabular}
-\caption{Digital Elevation Models used in the study}
-\label{tab:surface}
-\end{table}
-
 \section{Meteorological data}
-
-\subsection{Solar radiation}
-% SOURCE: PV paper (original draft)
-In the context of this study, satellite data for global horizontal radiation and direct beam radiation provided by the Swiss Federal Office of Meteorology and Climatology (MeteoSwiss) is used \cite{stockli_heliomont_2017}. The radiation describes the total solar power at the earth's surface, given in $W/m^2$. The solar energy is referred to as irradiation, given in $Wh/m^2$. The data are available as hourly values for the period from 2004-2015 on a longitude-latitude grid of 1.25 degree minutes, equivalent to approximately $(1.6 \times 2.3)km^2$. Satellite data is preferred over data from measurement stations as it provides a better spatial coverage with an increased spatial resolution and has a very low missing data ratio ($<1\%$).
-
-The datasets have been derived from Meteosat Second Generation (MSG) satellite observations using the Heliomont algorithm~\cite{stockli_heliomont_2017}. It was developed to improve the quality of the results, particularly in Switzerland's Alpine territories. 
-\citet{ineichen_long_2014} performed a comprehensive validation of various satellite-based products against measurement data, and found a negligible bias of the hourly satellite data across 18 measurement stations. 
-The standard deviation for hourly global and direct radiation is 19\% and 39\%, respectively.
-
-We average the 12 years of satellite data in order to obtain an average year in hourly resolution, i.e. $12 \times 365$ time steps for $11,243$ satellite pixels. This reduces the variability of the radiation data, and furthermore allows the estimation of long-term PV potential without bias due to extreme meteorological events of a specific year.
-
-\subsection{Temperature}
+\label{data_meteo}
+Meteorological data is available from the Swiss Federal Office of Meteorology and Climatology (MeteoSwiss) as gridded data and for a network of measurement stations across the country. 
+Gridded data is preferred over data from measurement stations as it provides a better spatial coverage with an increased spatial resolution and has a very low missing data ratio ($<1\%$). 
+For the potential studies in Part~\ref{potential}, we have used solar radiation and temperature data for Switzerland. We further derive heating and cooling degree days (HDD/CDD), which are used to estimate monthly variations of heating and cooling demands \cite{stadler_contribution_2018}. The meteorological datasets are summarised in Table~\ref{tab:meteo}.
+%\nomenclature[A]{MeteoSwiss}{Swiss Federal Office of Energy}
+\nomenclature[A]{HDD}{Heating Degree Days}
+\nomenclature[A]{CDD}{Cooling Degree Days}
 
 \begin{table}[tb]
 \centering
 \footnotesize
-\begin{tabular}{lllll} % {X[-1,l] X[-1,l] X[-1,l] X[-1,l] X[-1,l]} %% {\textwidth}
+\begin{tabular}{lllllll}
 \hline
-\textbf{Data}               & \textbf{Spatial res.}        & \textbf{Time} & \textbf{Range} & \textbf{Source} \\
-\hline 
-Global horizontal radiation & $1.25$ deg. min.\footnotemark & hourly              & 2004-2015          &  MeteoSwiss \cite{stockli_daily_2013} \\
-Direct horizontal radiation & $1.25$ deg. min.\footnotemark[\value{footnote}] & hourly              & 2004-2015          &  MeteoSwiss \cite{stockli_daily_2013} \\
-Surface albedo              & $1.25$ deg. min.\footnotemark[\value{footnote}] & daily               & 2004-2015          &  MeteoSwiss \cite{stockli_daily_2013} \\
-Maximum temperature         & $1 km^2$            & daily               & 2004-2015          &  MeteoSwiss \cite{meteoswiss_daily_2017} \\              
-\hline
+\textbf{Type}                    & \textbf{Dataset}            & \textbf{Spatial res.} & \textbf{Time} & \textbf{Range} & \textbf{Source} & \textbf{Chapter}   \\ \hline
+\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Solar} \\ \textit{radiation}\end{tabular}} & GHI & $1.25$ deg. min.*   & hourly        & 2004-2015      & MeteoSwiss \cite{stockli_daily_2013}     & \ref{solar}              \\
+                                 & DIR & $1.25$ deg. min.*   & hourly        & 2004-2015      & MeteoSwiss  \cite{stockli_daily_2013}    & \ref{solar}              \\
+                                 & Albedo              & $1.25$ deg. min.*   & hourly        & 2004-2015      & MeteoSwiss \cite{stockli_daily_2013}     & \ref{solar}              \\ \hline
+\multirow{3}{*}{\textit{Temperature}}     & Max. temp.   & $1 \times 1 km^2$    & daily         & 2004-2015      & MeteoSwiss \cite{meteoswiss_daily_2017}     & \ref{solar}              \\
+                                 & HDD                 & $200 \times 200m^2$  & daily         & averaged      & Eq.~\ref{eq:hdd}     & \ref{geothermal}, \ref{hybrid_chapter} \\
+                                 & CDD                 & $200 \times 200m^2$  & daily         & averaged      & Eq.~\ref{eq:cdd}    & \ref{geothermal}         \\ \hline
+\multicolumn{7}{l}{* Deg. min.: degree minutes on a longitude-latitude grid (1.25 deg. min. $\approx (1.6 \times 2.3)km^2$)}   
 \end{tabular}
-\caption{Meteorological data used in the study.}
+
+\caption{Overview of meteorolgical datasets and the relevant chapters. }
 \label{tab:meteo}
 \end{table}
 
-\footnotetext{Deg. min. denotes degree minutes on a longitude-latitude grid. 1.25 deg. min. corresponds to approximately $(1.6 \times 2.3)km^2$.}
 
-\section{Subsurface data}
+\subsection{Solar radiation}
+\label{data_solarRad}
+
+% SOURCE: PV paper (original draft)
+\textbf{Global and direct horizontal radiatio (GHI/DIR).} To estimate RPV potential for Switzerland, we use satellite data for global horizontal radiation (GHI), also known as surface incoming shortwave radiation, and direct beam radiation (DIR) provided by MeteoSwiss\cite{stockli_daily_2013}. The radiation describes the total solar power at the earth's surface, given in $W/m^2$. The solar energy is referred to as irradiation, given in $Wh/m^2$. The data are available as hourly values for the period from 2004-2015 on a longitude-latitude grid of 1.25 degree minutes, equivalent to approximately $(1.6 \times 2.3)km^2$.  
+\nomenclature[A]{GHI}{Global horizontal radiation}
+\nomenclature[A]{DIR}{Direct beam radiation}
+
+We average the 12 years of satellite data in order to obtain an average year in hourly resolution, i.e. $12 \times 365$ time steps for $11,243$ satellite pixels. This reduces the variability of the radiation data, and furthermore allows the estimation of long-term RPV potential without bias due to extreme meteorological events of a specific year.
+
+\textbf{Surface albedo.} A dataset for surface reflectance, also referred to as surface albedo, is available at the same spatio-temporal resolution as the global and direct horizontal radiation. In particular in Switzerland, where a large part of the country is covered by mountains, the surface albedo plays an important role in the quantification of the reflected solar radiation component \cite{kahl_bright_2019}. As the surface albedo shows low variations throughout the day, the data is aggregated to daily values, before being averaged across the 12 years as described above.
+
+All solar radiation data has been derived by MeteoSwiss from Meteosat Second Generation (MSG) satellite observations using the Heliomont algorithm~\cite{stockli_heliomont_2017}. It was developed to improve the quality of the results, particularly in Switzerland's Alpine territories. 
+\citet{ineichen_long_2014} performed a comprehensive validation of various satellite-based products against measurement data, and found a negligible bias of the hourly satellite data across 18 measurement stations. 
+The standard deviation for hourly global and direct radiation is 19\% and 39\%, respectively.
+
+\subsection{Temperature}
+
+\textbf{Maximum daily air temperature.} Air temperature data, including the daily mean, maximum and minimum air temperature, is available from MeteoSwiss on a grid of $1 \times 1 km^2$ for Switzerland \cite{meteoswiss_daily_2017}. 
+In contrast to the solar radiation, MeteoSwiss uses near-surface air temperature measurements from meteorological stations, which are interpolated in three dimensions, with further adjustments to account for temperatures in high mountain areas \cite{meteoswiss_daily_2017}.
+For coherence with the solar radiation data described above, we collect daily air temperature data for the years of $2004-2015$. 
+We use maximum air temperature in the estimation of RPV potential (Chapter~\ref{solar}) as the maximum solar yield occurs around midday when temperatures are near their daily maximum, resulting in a conservative estimate of the PV panel efficiency.
+
+\textbf{Heating degree days (HDD).}
+\label{app:HDD}
+The HDD is defined in the norm SIA 2028 as the sum of the heating degrees for each month $m$, averaged across 20 years, such that \cite{sia_klimadaten_2010}: 
+
+\begin{equation}
+\label{eq:hdd}
+    HDD = \frac{1}{20} \sum_{y=1}^{20} \sum_{d=1}^{d_m} (20 - T_{m}(d, m, y)) \quad \forall T_{m} (d, m, y) \leq 12 ^\circ C. 
+\end{equation}
+
+where $d_m$ is the number of days of each month and $T_{m}$ is the daily mean temperature on day $d$ in month $m$ of year $y$. 
+We use gridded daily mean air temperature data for 20 years ($1991-2011$) \cite{meteoswiss_daily_2017} to compute the HDD for each of the $1 \times 1 km^2$ pixels of the temperature grid (see above). The time span of  $1991-2011$ is chosen such as to yield results that are comparable to the tabulated HDD in \cite{sia_klimadaten_2010}.
+The HDD is then spatially interpolated to a resolution of $200 \times 200m^2$ using a Random Forest algorithm (see Section \ref{RF}) with the pixel coordinates and the altitude (obtained from DTM) as features.
+
+\textbf{Cooling degree days (CDD).} In contrast to the HDD, no Swiss norm exists for the computation of CDD. We hence obtain the CDD from \cite{christenson_climate_2006} using a reference temperature of $18 ^\circ C$:
+\begin{equation}
+\label{eq:cdd}
+    CDD = \frac{1}{20} \sum_{y=1}^{20} \sum_{d=1}^{d_m} (T_{m}(d, m, y)-18) \quad \forall T_{m} (d, m, y) \geq 18 ^\circ C. 
+\end{equation}
+for the same timespan ($1991-2011$) and spatial resolution ($1 \times 1 km^2$) as the HDD, which is then interpolated to pixels of $200 \times 200m^2$ as described above.
+
+\section{Subsurface data [\textit{PRELIMINARY}]}
 \label{data_geo}
 
 The geothermal cadastres, provided by ASIT-VD \cite{asit_vd_cadastre_2019-1} and SITG \cite{sitg_cadastre_2019}, contain information on (i) restriction zones for geothermal installations within the case study area, (ii) thermal ground properties, and (iii) over 4,400 existing installations with $\sim 10,800$ BHEs.
 
 \subsection{Geological characteristics}
-\textbf{Swiss Geological Atlas (GK500).}
+\textbf{Geological Maps (GK500).}
 
 \textbf{Depth of unconsolidated deposits.}
 

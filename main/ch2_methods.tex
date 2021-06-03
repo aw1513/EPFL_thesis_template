@@ -16,43 +16,144 @@ This chapter borrows from the articles \citep{walch_big_2020,walch_quantifying_2
 \end{tcolorbox}
 
 Spatio-temporal modelling of renewable energy potentials integrates physical models of the renewable resources and technologies with geospatial operations using Geographic Information Systems (GIS).
-The present chapter introduces state-of-the-art modelling approaches for two types of renewables addressed in this thesis, namely rooftop solar energy (Section \ref{solar_method}) and shallow geothermal energy (Section \ref{geo_method}). 
+The present chapter introduces state-of-the-art modelling approaches for two types of renewables addressed in this thesis, namely rooftop solar energy (Section \ref{method_solar}) and shallow geothermal energy (Section \ref{geo_method}). 
 Relevant physical, geographical and technical constraints for both energy resources are outlined and popular modelling approaches are summarized, such as to justify the methods used in the large-scale estimation of rooftop solar potential (Chapter \ref{solar}) and shallow geothermal potential (Chapter \ref{geothermal}).
 
 \section{Rooftop solar energy}
-\label{solar_method}
+\label{method_solar}
 % and solar thermal 
 
-\subsection{Definitions}
+\subsection{Hierarchial approach for estimating rooftop solar PV potential}
 
 Rooftop solar energy is defined here as the electrical or thermal energy harvested from installations on building rooftops, using solar photovoltaic (PV) panels or solar thermal collectors (STC), respectively. It accounts for the incoming solar energy, for the roof geometry as well as for the technology behind the modelled panel/collector. 
 \nomenclature[A]{STC}{Solar thermal collector}
 \nomenclature[A]{RPV}{Rooftop photovoltaics}
 
-
-
-\subsection{Parameters}
-
-To model 
-
-\subsection{Solar radiation}
+\subsection{Physical models}
+\label{phys_models}
 
 %% SOURCE: Research plan
 To compute the potential energy output, firstly the amount of solar power reaching a tilted panel/collector surface must be computed. This quantity is defined as global solar irradiance and given in W/m2. It consists of 3 components: a direct or beam component, a diffuse component and a reflected component (see Figure 3a). They are calculated from measurements of global horizontal (GHI), direct normal (DNI) and diffuse horizontal irradiance (DHI). Direct normal irradiance is converted to the tilted beam component via a geographic projection shown in Figure 3b. Diffuse tilted irradiance is more complex to determine due to its diffracted nature. Several models exist with different assumptions and hence varying complexity. Gueymard [15] compared several of these models and compared their approximation errors under different operating conditions. While no model clearly outperforms the other models, his analysis shows the Klucher method [16] amongst the best in most scenarios. The reflected component is given by another geometric conversion based on the ground’s surface reflectance. The mathematical formulae for the conversions are demonstrated for example by Gulin et al. [17].
 
 % Figure 3: a) three solar irradiance components reach a solar panel: direct (beam), diffuse and reflected irradiance; b) geometry for calculating the angle of incidence of direct beam irradiance on a tilted plane;  , : surface tilt & azimuth, z : apparent sun zenith,  : angle of incidence [17]
 
-\subsection{Shading effects and sky view factor}
+\subsubsection{Plane-of-array radiation}
+\label{app:irrad}
 
-\subsection{Available area for solar panel installation}
+Widely accepted physical and empirical models are used to compute the plane-of-array (POA) radiation.
+%
+The $G_{Bt}$ is computed from $G_B$ and the angle of incidence of the sun rays on the tilted panel ($\theta$) \cite{gulin_estimation_2013}:
 
-\subsection{PV module and inverter efficiency}
+\begin{equation}
+\label{eq:direct}
+    G_{Bt} = G_{B} * max \left( 0, \frac{\cos(\theta)}{\cos(\theta_Z)} \right)
+\end{equation}
+\begin{equation}
+\label{eq:dir_angle}
+\cos(\theta) = \sin(\beta) \sin(\theta_Z) \cos(\gamma_S - \gamma) + \cos(\beta) \cos(\theta_Z) 
+\end{equation}
+
+The angles $\theta_Z$ and $\gamma_S$ describe the sun zenith and azimuth angles, respectively, while roof tilt and aspect are given by $\beta$ and $\gamma$.
+%
+The empirical formula for $G_{Dt}$ using the Perez model is given by~\cite{perez_modeling_1990}:
+
+\begin{equation}
+\label{eq:diffuse}
+G_{Dt} = G_D * \left[ (1 - F_1) \left( \frac{1 + \cos \beta}{2} \right) 
+       + F_1 \frac{ a }{ b }
+       + F_2 \sin \beta \right]
+\end{equation}
+
+where $F_1$ and $F_2$ are empirically fitted functions for the circumsolar and horizon brightness, and $a$, $b$ are geometric angles. The derivation of these factors is described in \cite{loutzenhiser_empirical_2007}.
+%
+The calculation of $G_{Rt}$ from the surface albedo $\rho$ is given by \cite{duffie_solar_2013}:
+
+\begin{equation}
+\label{eq:reflected}
+G_{Rt} = G_h * \rho \left( \frac{1-\cos \beta}{2} \right)
+\end{equation}
+
+To ease the notation, Equations~\ref{eq:direct}-\ref{eq:reflected} can be referred to as:
+\begin{equation}
+\label{eq:tilted_irrad_simplified}
+G_{Bt} = F_B G_B, \quad G_{Dt} = F_D G_D, \quad G_{Rt} = F_R G_h
+\end{equation}
+
+
+
+\subsubsection{PV module and inverter efficiency}
+\label{app:efficiency}
 
 For the calculation of technical potential, PV and solar thermal potentials must be separated. The conversion of global irradiance to PV potentials is driven by two types of losses: the panel efficiency and the performance ratio. The panel efficiency is dependent on the selected technology and lies typically between 15-20\%. The performance ratio considers several external factors affecting the system’s performance, such as operating temperature, panel obstruction or converter losses. It can thus be calculated using an analytical formula [9], in most large-scale studies it is however approximated as 80\% [3], [5], [6]. Given the global irradiance on tilted surfaces Gt, the useful rooftop area AR, the power factor PF and the panel efficiency $\eta_{PV}$, the total PV power output per rooftop $P_{PV}$ (in $W$) can hence be calculated as:
 
 \begin{equation}
     P_{PV} = G_t \times A_R \times \eta_{PV} \times PF 
 \end{equation}
+The module and inverter efficiencies are computed using the \textit{PVWatts} model developed by the National Renewable Energy Laboratory (NREL) \cite{dobos_pvwatts_2014}. The DC power output of a PV panel is modelled as a function of the tilted radiation $G_t$ and the cell temperature $T_{cell}$:
+
+\begin{equation}
+\label{eq:Pdc}
+    P_{dc} = \frac{G_{t}}{1000} P_{dc0} (1 + \gamma_{pdc}(T_{cell}-T_{ref}))
+\end{equation}
+
+where $P_{dc0}$ is the DC rating of the panel, $\gamma_{pdc}$ is its temperature coefficient and $T_{ref}$ is the reference temperature.
+%
+We use average panel specifications of mid-range 60-cell mono-crystalline PV modules, the most frequently used technology in Switzerland \cite{buffat_scalable_2018}, from three market-leading manufacturers (JA Solar, Jinko Solar, Trinasolar).
+%
+The \textit{PVSyst} model~\cite{faiman_assessing_2008} is used to derive $T_{cell}$ from $G_t$ and the ambient temperature $T_{amb}$:
+
+\begin{equation}
+    T_{cell} = T_{amb} + G_t \frac{\alpha (1 - \eta_m)}{U}
+\end{equation}
+
+where $\alpha$ denoted the absorption coefficient, $\eta_m$ denotes the module efficiency and $U$ is the heat transfer component. 
+%
+From the DC power output and the area of a PV panel ($A_{panel}$), we compute the module efficiency $\eta_{PV}$:
+
+\begin{equation}
+\label{eq:eff}
+    \eta_{PV} = \frac{P_{dc}}{G_{t} * A_{panel} }
+\end{equation}
+
+The empirical loss formula for the inverter efficiency ($\eta_{inv}$) in \textit{PVWatts} is given by:
+
+\begin{equation}
+    \eta_{inv} = \frac{\eta_{nom}}{\eta_{ref}} \left( -0.0162 * \zeta - \frac{0.0059}{\zeta} + 0.9858 \right)
+\end{equation}
+
+where $\zeta = P_{dc}/P_{dc0}$, $\eta_{nom}$ is the nominal inverter efficiency and $\eta_{ref}$ is the reference efficiency. 
+%
+The performance factor ($PF$) is obtained by multiplying $\eta_{inv}$ with other system losses. These include soiling, degradation, mismatch, wiring and connection losses and are estimated as 14\% \cite{dobos_pvwatts_2014}. 
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+    \begin{tabular}{lll}
+    \hline
+    \textbf{Parameter} & \textbf{Value}     & \textbf{Description}          \\ \hline
+    $P_{dc0}$          & $285 Wp$           & Nameplate DC rating           \\
+    $\gamma_{pdc}$     & $-0.39\%/ ^\circ C$& Temperature coefficient       \\
+    $T_{ref}$          & $25^\circ C$       & Cell reference temperature    \\
+    $\alpha$           & 0.9                & Absorption coefficient        \\
+    $\eta_m$           & 0.17               & Nominal module efficiency     \\
+    $U$                & $15 W/m^2K$        & Heat transfer component       \\
+    $A_{panel}$        & $1.6 m^2$          & PV panel area                 \\
+    $\eta_{nom}$       & 0.96               & Nominal inverter efficiency   \\
+    $\eta_{ref}$       & 0.9637             & Reference inverter efficiency \\ \hline
+    \end{tabular}
+\caption{Parameters used in the PV module and inverter efficiency models \cite{dobos_pvwatts_2014, faiman_assessing_2008}.}
+\label{tab:efficiency}
+\end{table}
+
+We use the \texttt{pvlib} python package developed by Sandia National Laboratories \cite{holmgren_pvlib_2018} for the computing the POA irradiance and the module and inverter efficiency. All parameter values are shown in Table~\ref{tab:efficiency}.
+
+\subsection{Geospatial techniques}
+\label{GIS_methods}
+
+\subsubsection{Shading effects and sky view factor}
+
+\subsubsection{Available area for solar panel installation}
+
 
 \begin{comment}
 \subsection{Solar thermal heat generation}
@@ -504,53 +605,3 @@ The penetration depth of the temperature drop is denoted as $\delta$, which is a
 
 
 %\section{Hybrid system optimization}
-
-\cleardoublepage
-\chapter{Machine Learning}
-\label{methods_ML}
-
-\vspace{-45pt} % one line spacing corresponds approx to 15 pts
-\begin{tcolorbox}[enhanced,width=\textwidth,size=fbox,
-        sharp corners,colframe=black!5!white,drop fuzzy shadow southeast,
-        boxrule=3mm, parbox=false] 
-        
-This chapter borrows from the article \citep{walch_big_2020}:
-
-\qquad \bibentry{walch_big_2020}
-
-and the conference proceedings \cite{walch_spatio-temporal_2019, walch_fast_2019-1}:
-
-\quad \bibentry{walch_spatio-temporal_2019} 
-
-\quad \bibentry{walch_fast_2019-1}
-\end{tcolorbox}
-
-\section{Supervised learning algorithms}
-\label{ML_supervised}
-
-\subsection{Overview of supervised regression models}
-
-\subsection{Ensemble models}
-\subsubsection*{Random Forests}
-\subsubsection*{Extreme Learning Machine Ensembles}
-% SOURCE: ICAE conference paper
-Extreme Learning Machines, as proposed by Huang et al. [11], are single-layer feed-forward neural networks which are trained using a single-step optimization. The training process of ELM is up to hundreds of times faster than the training of other machine learning algorithms [11]. For our model we aggregate M ELM to an ensemble, as shown in Fig. 1. This is known to improve the generalization performance by reducing the risk of overfitting [6,9,12], and allows to estimate the uncertainty as described in Section 2.2. At the hidden layer of each ELM, the training points $x_i$ of dimensionality d are multiplied by the randomly chosen input weights w and added to the random bias b. An activation function ƒ( ) is applied to the resulting random projections for modelling nonlinear behaviour of the data. We use a sigmoid activation function in this study, which is a common choice for regression problems [12]. The hidden layer is multiplied by the output weights $\beta$ and summed to give the model output $\hat{y}i$ (see Eq.1). During training, only $\beta$ needs to be optimized.
-
-For ensemble training, we apply a bootstrap-aggregating (bagging) approach [13] where each ensemble member is trained on one bootstrapped resample of the training data. Each bootstrap replicate is obtained by resampling the N training samples N times uniformly and with replacement. On average, every replicate contains 63.2\% of the original data, with some duplicated samples. At the output, the predictions $\hat{y}_\mathrm{i}^\mathrm{m}$ of each ELM are averaged to give the final estimation $\hat{y}_i$ as shown in Eq. 2. The generation of M bootstrap replicates comes at a computational cost. For the implementation of each ELM, we therefore use the python toolbox hpelm with GPU acceleration [14]. This showed significant speed-up in performance compared to the standard CPU implementation. This implementation allows us to train and to test ELM ensembles with a large number of hidden neurons on our large environmental dataset.
-
-% EQUATIONS 1 and 2 IN ICAE PAPER
-
-\subsection{Uncertainty estimation for Machine Learning models}
-
-% Source: ICAE paper
-Applying bagging to the ELM ensemble increases the quality of the prediction and it also allows to compute the model uncertainty $\hat{\sigma}M$, derived from the variance ${\hat{\sigma}}_M^2$ of the M model outputs ${\hat{y}}_\mathrm{i}^\mathrm{m}$ (see Eq. 3) [9,15]. Afterwards, remaining residuals are derived by subtracting the model variance from the squared difference between the model outputs and the targets ti, as visible in Eq. 4. We compute these residuals for the training data, which are used to train a second ELM ensemble. The output is the data noise variance ${\hat{\sigma}}_D^2$, and the standard deviation $\hat{\sigma}D$ quantifies the data uncertainty. Adding model and data noise variance provides a qualitative estimate of the uncertainty on the predictions.
-
-\subsection{Uncertainty propagation}
-
-% EQUATIONS 3 and 4 IN ICAE paper
-    
-\section{Clustering techniques}
-\subsection{K-means clustering}
-\subsection{Density-Based Spatial Clustering of Applications with Noise}
-
-%\section{Optimisation of hybrid energy systems}

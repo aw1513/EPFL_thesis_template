@@ -66,13 +66,13 @@ The results yield a first regional-scale estimate of the technical potential of 
 \begin{figure}[tb]
 \centering\includegraphics[trim=30 310 250 30,clip,width=1.0\linewidth]{Figs/Geothermal_simplified.pdf}
 \caption{Workflow for modelling the technical potential of GSHPs.}
-\label{fig:workflow}
+\label{fig:workflow_BHE}
 \end{figure}
 
 The proposed method to quantify the technical potential of GSHPs combines 
 (i) GIS processing for the virtual installation of BHEs for various density scenarios, where each scenario is defined by a different spacing between adjacent BHEs,
 (ii) analytical modelling of the borehole thermal response and its effect on the heat extraction power and the energy potential of the BHEs within each parcel  % borehole thermal resistance and max. operating power and energy
-and (iii) an optimisation step to maximise the energy potential of each parcel while assuring a minimum heat extraction power (see Fig.~\ref{fig:workflow}). % to get the techncial potential
+and (iii) an optimisation step to maximise the energy potential of each parcel while assuring a minimum heat extraction power (see Fig.~\ref{fig:workflow_BHE}). % to get the techncial potential
 The technical potential represents the annual heat energy that can be extracted from all the BHEs, such that their long-term operation is assured. 
 We use a planning horizon ($t_{dim}$) of 50 years as suggested by the geothermal norm of the Swiss society of engineers and architects (SIA)~\cite{sia_sondes_2010}. 
 The SIA norm defines the requirements for the dimensioning of shallow GSHPs in Switzerland and sets the technical framework for our work.
@@ -88,6 +88,7 @@ To quantify the available area for the installation of BHEs, we combine parcel b
 All parcels containing at least one building within their boundaries are considered. 
 Parcels without any building inside are neglected, as these parcels neither create a demand for heating nor do they provide any infrastructure to install a GSHP system. 
 From the selected parcels, we remove any built-up areas, such as building footprints, roads, railways, traffic-related areas (e.g. parkings, airports) and leisure zones (e.g. sport facilities).
+% [FROM DATA] To account for the inaccuracies of the TLM, we apply a tolerance buffer of $1m$ to all objects listed in Section~\ref{GIS}. 
 A buffer of $3m$ is removed around all parcels and buildings to assure the minimum distance from a BHE to any building or parcel boundary as specified by the SIA \cite{sia_sondes_2010}.
 We also exclude natural and artificial surface water bodies, natural habitat such as forests and wetlands, and protected areas such as national parks.
 Fig.~\ref{fig:avail_area_method} shows an example of the excluded objects and the available area within each parcel (blue shading).
@@ -592,7 +593,7 @@ b) Sensitivity of the technical potential $Q_{pot}$ to changes in the required h
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Discussion}
-\label{discussion}
+\label{discussion_BHE}
 
 \subsection{Methodological contribution}
 
@@ -622,7 +623,7 @@ In this case study, which assures at least 80\% of the nominal operating power f
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Limitations}
-\label{limitations}
+\label{limitations_BHE}
 
 As any study estimating a technical potential of GSHPs, the present work is subject to uncertainties related to the modelling approach and the data. 
 % and assumptions and lacks a ground truth for validation. 
@@ -648,7 +649,7 @@ The relevance of such a validation approach however is limited, as real installa
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Applications and future work}
-\label{application}
+\label{application_BHE}
 
 Applications for a regional-scale estimate of the technical potential of BHEs include the support of policy making, urban planning and the development of a framework for the regulation of new installations. 
 As part of their renewable energy strategies, policy makers may provide financial support mechanisms for businesses, homeowners and energy providers to invest in GSHPs, knowing that these may cover significant fractions of the heat demand in suburban and rural areas. 
@@ -665,7 +666,7 @@ To further develop the proposed method, several limitations may be addressed, in
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Conclusion}
-\label{conclusion}
+\label{conclusion_BHE}
 
 This work presents an estimation of the technical geothermal potential from shallow ground-source heat pumps for individual parcels at regional scale.
 We define the technical potential as the maximum thermal energy that can be extracted from vertical borehole heat exchangers installed on all the available surface area, such that these can be operated with at least $80\%$ of the recommended operating power. 
