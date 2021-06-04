@@ -986,6 +986,141 @@ Uncertainties are not specifically addressed in \cite{assouline_quantifying_2017
 \section{\textit{Application}: Estimating annual solar radiation in new areas}
 \label{solar_application}
 % PAPER CHILE
+Existing studies of PV potential hence require the collection of various input datasets and the implementation of computationally intensive data processing methods to compute each parameter. We propose a model which can accurately predict long-term annual solar irradiation on building roofs from a reduced set of inputs and with a significantly smaller computational effort compared to existing studies. Recent suggested methods such as a simplified skyline-based method \cite{calcabrini_simplified_2019} are insufficient for this task, as separate models needed to be fitted for each pair of roof slope and aspect. Instead, we train a Machine Learning model using data from an existing dataset of rooftop PV potential at national scale in Switzerland, in order to learn the relation between rooftop features, weather data and rooftop irradiation. The use of ML for a large-scale estimation of rooftop PV potential has been tested at the scale of communes \cite{assouline_quantifying_2017} and pixels of $200 \times 200m^2$ resolution \cite{assouline_large-scale_2018}, but it has not yet been applied to the estimation of solar irradiation for individual roof surfaces. ML methods to predict solar irradiation perform a short-term forecasting for individual roofs, but do not address a large-scale potential estimation. An overview of these methods is provided by \citet{voyant_machine_2017}. 
+
+In this work, we compare the performance of five different ML models in estimating the annual solar irradiation on building roofs and we quantify the uncertainty for the predicted values. We further use Machine Learning to reduce the number of input features by determining those with the highest importance for the prediction of annual irradiation. Our model is trained and tested on data belonging to two distinct geographic areas in Switzerland. The testing procedure demonstrates that our model predicts tilted irradiation (in kWh/m2) with an accuracy of 92.3%. The results suggest that the proposed model is suitable to estimate annual solar irradiation on building roofs in regions with similar geographic and meteorological conditions, for example in Germany, France or northern Italy.
+
+\subsection{Methods and data}
+\label{chile_method}
+
+To estimate annual solar irradiation on building roofs ($G_t$, in kWh/m2), we account for different types of input features, which represent the main input parameters used in existing studies. These are (i) horizontal irradiation, (ii) roof aspect, (iii) roof tilt, (iv) shading effects from buildings and trees, (v) sky visibility, (vi) horizon maps. We use a feature selection procedure to extract the most relevant features, and compare five Machine Learning methods with respect to their performance in predicting $G_t$. The complete methodology is summarized in \ref{fig:chile_schema}.
+
+\begin{figure}[tb]
+\centering\includegraphics[width=1.0\linewidth]{Figs/chile_schematic.pdf}
+\caption{Schematic for estimation of annual rooftop solar irradiation ($G_t$). Feature selection is applied to choose the most important features and to reduce the total number of features. Five ML algorithms are tested for the prediction of annual $G_t$ (* see Chapter~\ref{ML_models}). Model and data uncertainties are computed for the ensemble-based algorithms (ELM-E, RF). }
+\label{fig:chile_schema}
+\end{figure}
+\subsubsection{Dataset description}
+
+The target variable estimated in this work is the annual rooftop solar irradiation ($G_t$). We use values for $G_t$ from a publicly available dataset of PV potentials for 9.6M rooftops in Switzerland \cite{klauser_solarpotentialanalyse_2016} as labels for training the ML models. The method applied by \citet{klauser_solarpotentialanalyse_2016} to obtain $G_t$ is summarized in \cite{walch_fast_2019-1}. The dataset also contains information on roof slope and roof aspect, which are input features to the ML models. We further include the global and direct horizontal irradiation components (GHI and DNI) in the set of features. They are derived from satellite data provided by the Swiss meteorological office MeteoSwiss \cite{stockli_daily_2013} for the years of 2004-2015, by linearly interpolating the satellite pixels to the coordinates of each roof surface and averaging the results for all years. The diffuse horizontal irradiation is omitted, as it is the difference between GHI and DNI. 
+
+The shading effects from surrounding buildings and trees and the sky visibility, which is quantified as the sky view factor (SVF), are typically derived from the horizon height of a roof, as explained in  Chapter~\ref{GIS_methods}. The horizon height can be interpreted as the minimum sun altitude to illuminate a given point (in degrees), which is typically computed using a Digital Surface Model (DSM).
+The shading effects are then computed for each time step (e.g. hourly) as the portion of roof surface with a horizon height above the current sun altitude, while the SVF is obtained by integrating the horizon height for all azimuth angles. 
+We compute the average horizon height for each roof as described in Appendix \ref{app:shade} based on the DSM of Switzerland (Table~\ref{tab:bld_landscape}). In the feature set, we include the roof shading, obtained by averaging hourly shading effects, the SVF and 9 of the DSM-derived horizons for azimuths of 60$^\circ$-300$^\circ$ in bins of 30$^\circ$. Table \ref{tab:chile_features} summarizes all 15 features considered in the feature selection procedure.
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\begin{tabular}{lll}
+\hline
+\textbf{Roof features} & \textbf{Horizontal irradiation}          & \textbf{Shade and skyview}         \\ \hline
+Aspect angle           & Annual global irradiation (GHI)          & \textit{Roof shading}              \\
+Tilt angle             & \textit{Annual direct irradiation (DNI)} & \textit{Skyview factor (SVF)}      \\
+                       &                                          & 9 $\times$ horizon height (30$^\circ$ angle bins) \\ \hline
+\end{tabular}
+\caption{All available features for the estimation of rooftop solar irradiation. Italic features may not be readily available or are computationally demanding to compute.}
+\label{tab:chile_features}
+\end{table}
+
+The data set is standardized and split into training and test data, covering separate geographic areas of Switzerland (see \ref{fig:chile_case_study}). We use the Swiss Romandie area for training and the remaining country for testing. This boundary is chosen as it represents a cultural and language border which divides all three geographic terrains of Switzerland, namely the Alps, the Plateau (where most buildings are situated) and the Jura mountains. We randomly select 100,000 samples for training and 1,000,000 samples for testing with no noticeable reduction in the model performance. We choose six cities inside the test area, shown in \ref{fig:chile_case_study}, for which we will predict the aggregated annual PV potential in order to test the performance of the proposed method at city level. The cities are selected to cover different population sizes, geographic areas and altitudes. The details for each city are shown in Table \ref{tab:chile_cities}. 
+
+\begin{figure}[tb]
+\centering\includegraphics[width=0.5\linewidth]{images/Figs/train_test_w_cities.png}
+\caption{Geographic location of training and testing data (Swiss Romandie area and the remaining Switzerland).}
+\label{fig:chile_case_study}
+\end{figure}
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\begin{tabular}{lcccccc}
+\hline
+\textbf{City} & \textbf{Inhabitants} & \textbf{Area ($km^2$)} & \textbf{\# buildings} & \textit{\textbf{$A_{roof}$ ($km^2$)}} & \textbf{$A_{roof}$ / inhab.} & \textbf{Altitude ($m$)} \\ \hline
+Zürich        & 409,241              & 91.9                & 46,888                & 13.77                         & 33.65 $m^2$                & 400                   \\
+Basel         & 171,513              & 23.9                & 11,122                & 6.27                          & 36.55                   & 260                   \\
+Luzern        & 81,401               & 37.4                & 5,940                 & 3.25                          & 39.95                   & 435                   \\
+Lugano        & 63,494               & 86.2                & 10,052                & 3.1                           & 48.85                   & 270                   \\
+Davos         & 10,937               & 284                 & 2,582                 & 1.21                          & 110.49                  & 1,560                 \\
+Interlaken    & 5,592                & 4.3                 & 1,025                 & 0.48                          & 85.06                   & 565                   \\ \hline
+\end{tabular}\caption{Characteristics of six cities selected for testing of the presented method. $A_{roof}$ denotes the total roof surface.}
+\label{tab:chile_cities}
+\end{table}
+
+\subsubsection{Feature selection}
+\label{chile_ftrSelect}
+The reduction of the number of features to a small set of easily available variables is one of the key aspects of this work. To obtain such a reduced feature set, we use a recursive selection procedure that can be applied to any ML algorithm. The metric used for the selection is the mean-squared error (MSE), which is obtained using a $k$-fold cross-validation (CV). For this, the training data is randomly split into $k$ subsets (folds), from which $k$ ML models are trained. Each model uses ($k$ – 1) folds for training and the last fold for validation, i.e. to compute the MSE between the target (annual $G_t$) and the predicted value. In this work, we use a 5-fold cross-validation ($k$ = 5). 
+
+Starting from the complete feature set, we iteratively exclude one feature at a time and compute the MSE. The feature whose exclusion causes the lowest change in MSE ($\Delta_{MSE}$) is permanently removed from the set of features. This procedure is repeated until only one feature remains. The $\Delta_{MSE}$ is recorded for each iteration and a threshold for $\Delta_{MSE}$ is chosen, which represents the maximum tolerable increase in MSE. The selected features are those which form the smallest feature set that keeps $\Delta_{MSE}$ below its threshold. As the number of cross-validations increases with $N^2$, where $N$ is the number of features, this procedure may not be applicable for high-dimensional problems, but it is appropriate for the size of the feature set used in this study (up to 15 features). We further aim to obtain a feature set that contains only easily accessible features that can be obtained with a low computational effort. Three out of 15 features, highlighted in Table \ref{tab:chile_features}, are hence excluded before applying the recursive selection. These are (i) the DNI, which is frequently unavailable at measurement stations and not included in some future climate scenarios, (ii) the roof shading and (iii) the SVF, which both require the computation of the horizon height for all azimuth angles, which is the highest computational burden in large-scale PV potential studies. 
+
+\subsubsection{Machine Learning Algorithms}
+
+We compare five of the supervised regression models introduced in Chapter~\ref{ML_models}: (i) Linear Regression (LIN), (ii) K-Nearest Neighbors (KNN), (iii) Support Vector Machines (SVM), (iv) Extreme Learning Machine Ensembles (ELM-E), and (v) Random Forests (RF). In each case, the annual $G_t$ is predicted from the selected features. The architecture of each model is determined through 5-fold cross-validation. Table 3 gives the values of all tuned hyper-parameters. 
+For the ensemble models (RF, ELM-E), we further estimate the model and data uncertainties as described in Chapter~\ref{unc_ML}.
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\begin{tabular}{ccccc}
+\hline
+\textbf{LIN}       & \textbf{KNN}      & \textbf{ELM-E}     & \textbf{SVM}     & \textbf{RF}         \\\hline
+\multirow{3}{*}{-} & $k = 17$   & $m_{ELM} = 45$ & $C = 5 $  & $m_{ftrs} = 3$  \\
+                   & \multirow{2}{*}{} & $n_{est} = 25$ &  $\gamma = 200$ & $m_{leaf} = 3$  \\
+                   &                   &                    & $\varepsilon = 0.1$ & $n_{est} = 500$\\
+\hline
+\end{tabular}
+\caption{Hyperparameters for each Machine Learning algorithm after tuning using $k$-fold cross-validation ($k = 5$).}
+\label{tab:chile_hyperparams}
+\end{table}
+
+\subsection{Results}
+
+\subsection{Feature selection and importance analysis}
+
+As described in \ref{chile_ftrSelect}, we perform recursive feature selection for the reduced set of 12 features, which excludes the DNI, roof shading and SVF. We use the KNN as assessment model due to its high computational efficiency and low error. \textbf{\textit{Figure 4a}} shows the results for the selection procedure as the increase in the cross-validation root-mean squared error (RMSE) for the selected features with respect to the RMSE obtained from the complete feature set (listed in Table \ref{tab:chile_features}). The curve falls steeply for a low number of features, where each additional feature brings a large improvement in performance, and flattens out when six or more features are used. We choose a threshold of $5 kWh/m^2$ as maximum acceptable increase in RMSE, corresponding to approximately 5\% of the modelling RMSE (see Table \ref{tab:chile_results}). This gives a set of six remaining features, and six features are excluded. The removed features are shown in \textbf{\textit{Fig. 4a}} in the order of exclusion, indicating that north-facing horizon heights have the smallest contribution in the modelling, followed by the near-south as well as the east and west horizon heights.
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\begin{tabular}{cccccc}
+\hline
+\textbf{}                    & \textbf{LIN} & \textbf{KNN} & \textbf{ELM-E} & \textbf{SVM} & \textbf{RF} \\ \hline
+\textbf{RMSE ($kWh/m^2$)}       & 157.03       & 115.48       & 117.55         & 113.92       & 94.69       \\
+\textbf{MAE (\% of target)}  & 14.16        & 9.45         & 10.03          & 9.21         & 7.66        \\
+\textbf{MBE (\% of target)}  & -8.84        & -6.38        & -5.16          & -5.88        & -3.87       \\
+\textbf{R$^2$}                  & 0.55         & 0.76         & 0.75           & 0.76         & 0.84        \\
+\textbf{Training time (s)}   & 0.02         & 0.31         & 2.03           & 254.1        & 44.42       \\
+\textbf{Prediction time (s)} & 0.16         & 29.94        & 39.44          & 1178.3       & 33.3        \\ \hline
+\end{tabular}
+\caption{Test errors and computational time for the five ML models, using 100k samples for training and 1M for testing.}
+\label{tab:chile_results}
+\end{table}
+
+The remaining features are shown in \textbf{\textit{Fig. 4b}}, ranked by their importance score. This score is obtained from the built-in feature importance method of the Random Forest algorithm, which quantifies the contribution of each feature to increasing the model performance. The results confirm that all features are relevant to the modelling, with the roof aspect as well as the south-facing horizon height scoring highest, before the roof tilt and GHI. This analysis suggests that three horizon heights, at 120$^\circ$, 180$^\circ$ and 240$^\circ$, are sufficient for a good prediction of annual tilted rooftop irradiation.
+
+\subsubsection{Comparison of ML models}
+
+After choosing the final set of features (see \textbf{\textit{Fig. 4b}}), we apply each of the five ML models to the test data. The models are previously tuned individually using 5-fold cross-validation, yielding the hyper-parameters shown in \ref{tab:chile_hyperparams}. The test errors and execution times for the algorithms are given in \ref{tab:chile_results}. Four error metrics are shown, namely RMSE, mean absolute error (MAE), mean bias error (MBE) and the $R^2$ coefficient of determination ($R^2$), as well as the training and testing times (using a laptop with 4 cores and 8GB RAM). Linear regression is the fastest method but shows large errors. KNN and ELM-E show a similar performance and execution time, with particularly low training times. SVM has a similar error as KNN and ELM-E, but it is very slow in comparison. This is expected, as the SVM is designed for high-dimensional feature spaces rather than large datasets. 
+
+The RF shows the lowest errors with a reasonable execution time. Further tests have shown that this is due to the strong decrease in the error when increasing the size of the training set from 10k to 100k samples. This improvement, caused by a larger training sample, is much smaller for the other algorithms, which suggests that the RF is well suited for modelling large datasets. Using the RF model, the time for estimating the solar irradiation of 1M rooftops is 33.3s, which is considerably less than the hours needed to perform a detailed modelling. \textbf{\textit{Figure 5a}} shows a density graph for RF of the targets against the predicted values and the fitted regression line. We see that the prediction tents to slightly underestimate $G_t$, as many values lie just above the diagonal. \textbf{\textit{Figure 5b}} gives the predicted $G_t$ for a random sample of 50 roofs, with their targets and uncertainties. The predicted values generally lie within one standard deviation of the total uncertainty (error bars). The MAE for the test sample (generalization error) amounts to 7.7\% of the target potential, resulting in an average accuracy of 92.3\%. 
+
+\subsubsection{Large-scale estimation of rooftop solar irradiation patterns}
+
+We use the test results for the RF model to analyze the solar irradiation patterns for roof surfaces in Switzerland with respect to their aspect and tilt angles.\textbf{\textit{ Figure 6a}} shows the predicted annual $G_t$, with flat roofs in the center. The largest irradiation is found for surfaces with a tilt angle of 30-50$^\circ$, which is expected given Switzerland’s latitude. Steep north-facing roofs have the lowest solar irradiation, of less than $700 kWh/m^2$ on average. \textbf{\textit{Figure 6b}} shows the relative uncertainty, as percentage of predicted $G_t$. The relative uncertainty is lowest for the roofs with the highest solar irradiation, while it is high for roofs with low $G_t$. This may be due to a low number of steep roofs and strong shading effects on these. We also observe a relatively high uncertainty for (nearly) flat roofs, which may be due to unpredictable shading effects on these roofs, for example caused by objects installed on the surfaces.
+
+To assess the performance of the model on the large scale, we compute the PV potential for the six cities shown in \ref{tab:chile_cities}. To obtain the PV potential, we follow the method suggested by \cite{portmann_sonnendach.ch:_2016}, which was developed for the dataset used here. The annual $G_t$ is multiplied with the total roof surface, a roof utilization factor (which depends on the roof tilt and the building type), a module efficiency of 17\% and a performance factor of 80\%. Roofs with a surface area below $10 m^2$ and an irradiation below $1000 kWh/m^2$ are excluded. The aggregated PV potential for the selected cities is shown in \textbf{\textit{Fig. 7a}}, while \textbf{\textit{Fig. 7b}} shows the PV potential per inhabitant. The orange bars show the target value, the blue bars show the RF prediction and the error bars indicate the uncertainty. The largest cities clearly have the highest total PV potential, while the small cities (Davos and Interlaken) have the highest potential per inhabitant. It is interesting to see that Lugano has a noticeably higher potential than Luzern, despite a nearly identical roof surface, due to its location south of the Alps. Davos, with its high altitude and large roof area per person, has the highest potential per inhabitant. Comparing the targets and predictions, we see that the difference is small, and in all cases within the estimated uncertainty.
+
+
+
+\subsection{Discussion}
+
+\subsubsection{Limitations}
+The model proposed here reduces the set of features required for a large-scale estimation of annual solar irradiation to the GHI, the roof aspect, the roof tilt as well as three horizon heights, approximately towards south, east and west. While this largely reduces the computation required for such a study, a DSM and a reliable dataset with roof tilt and aspect angles are still necessary. The latter two are only available for cities with a 3D building model (LOD 2 or higher). If such a dataset is not available, a high-resolution DSM or a roof shape classification as proposed by \cite{mohajeri_city-scale_2018} may be used to derive tilt and aspect angles. As the model is trained in Switzerland, it is only applicable to locations with a similar latitude, as the latitude has a major impact on the peak irradiation and the corresponding tilt angle. To extend the area of applicability, results from a study in another geographic area can be added to the training dataset. Finally, we do not specifically address the available area for the installation of PV panels in this work. Studies show that the available area may be much smaller than the total roof surface \cite{assouline_quantifying_2017}, which reduces the estimated large-scale PV potential.
+
+\subsubsection{Application and future work}
+
+The motivation behind this work is to facilitate the study of rooftop PV potentials in areas where no such study has yet been carried out, primarily in similar meteorological and geographic conditions as Switzerland. Applying our model to such a case study will be the principal objective of future work. The model can further be used to predict future PV potentials, accounting for climate as well as urbanization scenarios. The former leads to changes in GHI, while the latter reflects as changes in the number of roofs and the composition of tilt and aspect angles. 
+
+While the estimation of annual irradiation gives a useful indication of the order of magnitude of the large-scale PV potential, a higher temporal resolution is required to assess its seasonal and intra-day variation. Studies in monthly \cite{assouline_large-scale_2018} or hourly \cite{buffat_scalable_2018} resolution may be used for this task. Furthermore, transfer learning techniques may be applied to retrain our model on different latitudes, meteorological conditions and roof characteristics, by using large-scale PV potential studies from other regions or countries.
 
 
 % \section{Technical potential of solar thermal collectors}
@@ -1006,3 +1141,6 @@ This highlights areas and time spans with potentially large inaccuracies.
 Our results may be used to quantify the potential mismatch between PV production and supply, which is relevant for the design of future energy efficient districts and for the formulation of regional and national incentive policies for the diffusion of rooftop PV.
 
 The work presented in this study provides an important contribution for the decarbonisation efforts in Switzerland, as it enables the large-scale modelling of future electricity grids with high shares of rooftop PV using hourly data for individual buildings. The proposed PV assessment method using data mining and uncertainty propagation is transferable to any region or country with sufficient high-quality data, where it can contribute to the transition towards low carbon energy systems.
+
+%SOURCE: Chile paper
+This study provides a Machine Learning algorithm to estimate annual solar irradiation on building rooftops for areas at similar latitudes as Switzerland. The proposed model is trained using data of existing PV potential studies and uses the following six input features: annual GHI, roof tilt, roof aspect and three mean horizon heights for each roof ($120^\circ$, $180^\circ$, $240^\circ$). Comparing five ML algorithms, we found that Random Forests are most suited for this task due to their high accuracy, reasonable execution time and their ensemble structure, which in turn allows for a sound estimation of uncertainties. The obtained results show that the proposed model can effectively learn from existing large-scale datasets of PV potential and accurately estimate annual irradiation for individual rooftops and entire cities. The computational time for estimating solar irradiation at city or even country scale can thereby be reduced from hours to seconds.
