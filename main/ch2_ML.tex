@@ -121,14 +121,21 @@ We use the ML implementations of the \textit{Scikit-learn} library for python \c
 
 \begin{comment}
 % SOURCE: ICAE conference paper
-Extreme Learning Machines, as proposed by Huang et al. [11], are single-layer feed-forward neural networks which are trained using a single-step optimization. The training process of ELM is up to hundreds of times faster than the training of other machine learning algorithms [11]. For our model we aggregate M ELM to an ensemble, as shown in Fig. 1. This is known to improve the generalization performance by reducing the risk of overfitting [6,9,12], and allows to estimate the uncertainty as described in Section 2.2. At the hidden layer of each ELM, the training points $x_i$ of dimensionality d are multiplied by the randomly chosen input weights w and added to the random bias b. An activation function ƒ( ) is applied to the resulting random projections for modelling nonlinear behaviour of the data. We use a sigmoid activation function in this study, which is a common choice for regression problems [12]. The hidden layer is multiplied by the output weights $\beta$ and summed to give the model output $\hat{y}i$ (see Eq.1). During training, only $\beta$ needs to be optimized.
+Extreme Learning Machines, as proposed by Huang et al. [11], are single-layer feed-forward neural networks which are trained using a single-step optimization. The training process of ELM is up to hundreds of times faster than the training of other machine learning algorithms [11]. For our model we aggregate \textit{M} ELM to an ensemble, as shown in Fig. 1. This is known to improve the generalization performance by reducing the risk of overfitting [6,9,12], and allows to estimate the uncertainty as described in Section 2.2. At the hidden layer of each ELM, the training points $x_i$ of dimensionality d are multiplied by the randomly chosen input weights w and added to the random bias b. An activation function ƒ( ) is applied to the resulting random projections for modelling nonlinear behaviour of the data. We use a sigmoid activation function in this study, which is a common choice for regression problems [12]. The hidden layer is multiplied by the output weights $\beta$ and summed to give the model output $\hat{y}i$ (see Eq.1). During training, only $\beta$ needs to be optimized.
 
-For ensemble training, we apply a bootstrap-aggregating (bagging) approach [13] where each ensemble member is trained on one bootstrapped resample of the training data. Each bootstrap replicate is obtained by resampling the N training samples N times uniformly and with replacement. On average, every replicate contains 63.2\% of the original data, with some duplicated samples. At the output, the predictions $\hat{y}_\mathrm{i}^\mathrm{m}$ of each ELM are averaged to give the final estimation $\hat{y}_i$ as shown in Eq. 2. The generation of M bootstrap replicates comes at a computational cost. For the implementation of each ELM, we therefore use the python toolbox hpelm with GPU acceleration [14]. This showed significant speed-up in performance compared to the standard CPU implementation. This implementation allows us to train and to test ELM ensembles with a large number of hidden neurons on our large environmental dataset.
-% EQUATIONS 1 and 2 IN ICAE PAPER
+For ensemble training, we apply a bootstrap-aggregating (bagging) approach [13] where each ensemble member is trained on one bootstrapped resample of the training data. Each bootstrap replicate is obtained by resampling the N training samples N times uniformly and with replacement. On average, every replicate contains 63.2\% of the original data, with some duplicated samples. At the output, the predictions $\hat{y}_\mathrm{i}^\mathrm{m}$ of each ELM are averaged to give the final estimation $\hat{y}_i$ as shown in Eq. 2. The generation of M bootstrap replicates comes at a computational cost. For the implementation of each ELM, we therefore use the python toolbox \textit{hpelm} with GPU acceleration [14]. This showed significant speed-up in performance compared to the standard CPU implementation. This implementation allows us to train and to test ELM ensembles with a large number of hidden neurons on our large environmental dataset.
+
+\begin{equation}
+\label{eq:elm}
+\hat{y}_{i}^{m}=\sum_{j=1}^{L} \beta_{j}^{m} f\left(\mathbf{w}_{j}^{m} \mathbf{x}_{i}+b_{j}^{m}\right), \quad \mathbf{x}_{i} \in \mathbb{R}^{d}, \mathbf{w}^{m} \in \mathbb{R}^{L \times d}, \quad i=1, \ldots, N, \quad m=1, \ldots, M
+\end{equation}
+
+\begin{equation}
+\label{eq:elm_mean}
+\hat{y}_{i}=\frac{1}{M} \sum_{m=1}^{M} \hat{y}_{i}^{m}, \quad i=1, \ldots, N
+\end{equation}
 
 \end{comment}
-
-
 
 \subsection{Classification models}
 
@@ -143,7 +150,7 @@ For ensemble training, we apply a bootstrap-aggregating (bagging) approach [13] 
 \label{unc_ML}
 
 % SOURCE: Initial submission PV paper
-The ensemble structure of both ML algorithms used in this work permits the estimation of uncertainties arising from the modelling process (model uncertainty, $\Hat{\sigma_M}$). The remaining residuals after the subtraction of the model variance are further used to estimate the uncertainty related to the data noise (data uncertainty, $\Hat{\sigma_D}$). 
+The ensemble structure of both ML algorithms used in this work permits the estimation of uncertainties arising from the modelling process (model uncertainty, $\hat{\sigma_M}$). The remaining residuals after the subtraction of the model variance are further used to estimate the uncertainty related to the data noise (data uncertainty, $\hat{\sigma_D}$). 
 This approach enables a specific characterization of the uncertainty for each spatio-temporal point.
 It has been previously used to estimate, for example, wind speed or global solar radiation~\cite{walch_spatio-temporal_2019, wan_probabilistic_2014}.
 
@@ -154,27 +161,27 @@ The model uncertainty is quantified as the standard deviation of the predictions
 
 \begin{equation}
 \label{eq:model_unc}
-  \Hat{\sigma}_M^2 (\mathbf{x}_i) = \frac{1}{N} \sum_{n=1}^N (\Hat{y}_i^n - \Hat{y}_i)^2, \quad i=1,...,L
+  \hat{\sigma}_M^2 (\mathbf{x}_i) = \frac{1}{N} \sum_{n=1}^N (\hat{y}_i^n - \hat{y}_i)^2, \quad i=1,...,L
 \end{equation}
 
-where $\Hat{\sigma}_M$ denotes the model standard deviation, referred to as model uncertainty, $N$ denotes the ensemble length, $\Hat{y}_i$ is the ensemble prediction for sample $\mathbf{x}_i$ and $\Hat{y}_i^n$ is the prediction of ensemble member $n$.
+where $\hat{\sigma}_M$ denotes the model standard deviation, referred to as model uncertainty, $N$ denotes the ensemble length, $\hat{y}_i$ is the ensemble prediction for sample $\mathbf{x}_i$ and $\hat{y}_i^n$ is the prediction of ensemble member $n$.
 
-Additionally to the model variance, we estimate the variance of the data noise by modelling the remaining residuals. They are derived by subtracting the model variance from the squared difference between $\Hat{y}_i$ and the targets $t_i$, as shown below.
+Additionally to the model variance, we estimate the variance of the data noise by modelling the remaining residuals. They are derived by subtracting the model variance from the squared difference between $\hat{y}_i$ and the targets $t_i$, as shown below.
 In order to reduce bias, the out-of-bag (OOB) model output are used, which is the mean of the ensemble members for which a given training data point was not considered (due to bootstrapping) \cite{heskes_practical_1997}. 
 
 \begin{equation}
 \label{eq:data_unc}
-  \Hat{\sigma}_D^2 (\mathbf{x}_i) = \max \{ (t_i - \Hat{y}_i)^2 - \Hat{\sigma}_M^2 (\mathbf{x}_i) , 0 \}, \quad i=1,...,L
+  \hat{\sigma}_D^2 (\mathbf{x}_i) = \max \left\{ (t_i - \hat{y}_i)^2 - \hat{\sigma}_M^2 (\mathbf{x}_i) , 0 \right\}, \quad i=1,...,L
 \end{equation}
  
- where $\Hat{\sigma}_D$ denotes the standard deviation of data noise, referred to as data uncertainty, and $t_i$ is the target value for sample $\mathbf{x}_i$. 
-$\Hat{\sigma}_D$ can only be computed if $t_i$ is known. Thus, a second ML model is trained from the residuals to predict $\Hat{\sigma}_D$ for points with unknown targets. Unless mentioned otherwise, the same hyper-parameters are used in both models.
+ where $\hat{\sigma}_D$ denotes the standard deviation of data noise, referred to as data uncertainty, and $t_i$ is the target value for sample $\mathbf{x}_i$. 
+$\hat{\sigma}_D$ can only be computed if $t_i$ is known. Thus, a second ML model is trained from the residuals to predict $\hat{\sigma}_D$ for points with unknown targets. Unless mentioned otherwise, the same hyper-parameters are used in both models.
 
 The total variance of a variable that is estimated using a ML model is the squared sum of its model uncertainty and its data uncertainty: 
 
 \begin{equation}
 \label{eq:total_unc}
-\sigma^2 (\mathbf{x}_i) = \Hat{\sigma}_M^2 (\mathbf{x}_i) + \Hat{\sigma}_D^2 (\mathbf{x}_i), \quad i=1,...,L
+\sigma^2 (\mathbf{x}_i) = \hat{\sigma}_M^2 (\mathbf{x}_i) + \hat{\sigma}_D^2 (\mathbf{x}_i), \quad i=1,...,L
 \end{equation}
 
 % Source: ICAE paper

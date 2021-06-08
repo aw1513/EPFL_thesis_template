@@ -24,6 +24,9 @@ To link the STATENT data (Section \ref{data_rbd_statent}) to different economic 
 \begin{table}[ht]
 \centering
 \footnotesize
+\caption{Mapping of NOGA codes to sub-sectors of the industry and service sectors}
+\label{tab:noga}
+
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llll}
 \hline
@@ -49,9 +52,8 @@ To link the STATENT data (Section \ref{data_rbd_statent}) to different economic 
                            & Other services             & 19                           & 33, 36-39, 49-53, 58-63, 68-74, 77-82, 85, 90-94, 96 \\ \hline
 \end{tabular}%
 }
-\caption{Mapping of NOGA codes to sub-sectors of the industry and service sectors}
-\label{tab:noga}
 \end{table}
+
 \subsection*{Roads and railways}
 \label{app:roads}
 
@@ -60,6 +62,9 @@ To convert roads and railways of the TLM into vector polygons, they are buffered
 \begin{table}[ht]
 \centering
 \footnotesize
+\caption{Mapping of road and railway widths to road types provided in the TLM.}
+\label{tab:roads}
+
 \begin{tabular}{llll}
 \hline
 \textbf{Type}            & \textbf{Description}    & \textbf{Object ID(s) \cite{swisstopo_swisstlm3d_2018}} & \textbf{Width (m)} \\ \hline
@@ -73,8 +78,6 @@ To convert roads and railways of the TLM into vector polygons, they are buffered
                          & Small train         & 5                               & 3                  \\ \hline
 \multicolumn{4}{l}{* Road width given as line attribute}                                             
 \end{tabular}
-\caption{Mapping of road and railway widths to road types provided in the TLM.}
-\label{tab:roads}
 \end{table}
 
 
@@ -99,6 +102,9 @@ Table \ref{tab:ELM_tuning} shows the trade-off between the model performance (va
 \begin{table}[tb]
 \centering
 \footnotesize
+\caption{Results of the tuning of $m$, showing the trade-off between the validation MSE and training and prediction times (per ELM), for $G_h$ in June. The selected value for $m$ is shown in bold.}
+\label{tab:ELM_tuning}
+
     \begin{tabular}{lccccccc}
     \hline
     \textit{m}          & 50    & 100   & 500   & \textbf{1000}  & 2000  & 5000  & 10000 \\ \hline
@@ -106,8 +112,6 @@ Table \ref{tab:ELM_tuning} shows the trade-off between the model performance (va
     Training time (s)   & 16    & 18    & 18    & \textbf{23}    & 43    & 230   & 1040  \\
     Prediction time (s) & 2.5   & 3.0   & 2.7   & \textbf{3.0}   & 3.4   & 5.4   & 7.8   \\ \hline
     \end{tabular}
-\caption{Results of the tuning of $m$, showing the trade-off between the validation MSE and training and prediction times (per ELM), for $G_h$ in June. The selected value for $m$ is shown in bold.}
-\label{tab:ELM_tuning}
 \end{table}
 
 \subsection*{Random Forest}

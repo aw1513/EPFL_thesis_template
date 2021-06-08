@@ -128,6 +128,9 @@ The performance factor ($PF$) is obtained by multiplying $\eta_{inv}$ with other
 \begin{table}[htbp]
 \centering
 \footnotesize
+\caption{Parameters used in the PV module and inverter efficiency models \cite{dobos_pvwatts_2014, faiman_assessing_2008}.}
+\label{tab:efficiency}
+
     \begin{tabular}{lll}
     \hline
     \textbf{Parameter} & \textbf{Value}     & \textbf{Description}          \\ \hline
@@ -141,8 +144,6 @@ The performance factor ($PF$) is obtained by multiplying $\eta_{inv}$ with other
     $\eta_{nom}$       & 0.96               & Nominal inverter efficiency   \\
     $\eta_{ref}$       & 0.9637             & Reference inverter efficiency \\ \hline
     \end{tabular}
-\caption{Parameters used in the PV module and inverter efficiency models \cite{dobos_pvwatts_2014, faiman_assessing_2008}.}
-\label{tab:efficiency}
 \end{table}
 
 We use the \texttt{pvlib} python package developed by Sandia National Laboratories \cite{holmgren_pvlib_2018} for the computing the POA irradiance and the module and inverter efficiency. All parameter values are shown in Table~\ref{tab:efficiency}.
@@ -210,6 +211,8 @@ We refer to $z$ (in $m$) for the depth in the ground, $r$ (in $m$) for the radia
 \begin{table}[b]
 \footnotesize
 \caption{Physical parameters. Norm values and ranges for Switzerland are obtained from \citep{sia_sondes_2010}.}
+\label{tab:phys_params}
+
 \centering
 \begin{tabular}{lllll}
 \hline
@@ -222,8 +225,6 @@ $\frac{\Delta T}{\Delta z}$ & $K/m$         & Temperature gradient           & $
 $T_0$                       & $^\circ C$    & Surface temperature            &                                                       & \textit{Norm}: 8.5                        \\ \hline
 $\dot{q}_{g}$               & $mW/m^2$      & Geothermal heat flow           & $\dot{q}_{g} = \lambda * \frac{\Delta T}{\Delta z}$   & $40-170$                         \\ \hline
 \end{tabular}
-
-\label{tab:phys_params}
 \end{table}
 
 \textbf{Physical parameters}. The physical parameters are listed in Table~\ref{tab:phys_params}. The \textit{thermal conductivity} $\lambda$ and \textit{thermal diffusivity} $\alpha$ are used in the numerical models. However, the geological properties of different types of rocks are typically provided as $\lambda$ and the \textit{volumetric heat capacity} $\rho C$. For a reference table, see \cite{pahud_geothermal_2002}, p.30 or \cite{sia_sondes_2010}, p.39. From these parameters, the thermal diffusivity is computed as:

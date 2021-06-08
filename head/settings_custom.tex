@@ -42,9 +42,18 @@
 
 \usepackage{tabu}
 \usepackage{algorithm,algorithmicx}
-\usepackage{subcaption}
 \usepackage{lscape}
 \usepackage{multirow, makecell}
 \usepackage{verbatim}
 
 \usepackage[bottom]{footmisc}
+
+\captionsetup{
+    %width=0.9\linewidth, % width of caption is 90% of current textwidth
+    labelfont=bf,        % the label, e.g. figure 12, is bold
+    font=footnotesize,          % the whole caption text (label + content) is small
+    % format=hang,         % no caption text under the label
+}
+\captionsetup[subfigure]{
+    format=plain,   % but allowed in subfigure to save space
+}
