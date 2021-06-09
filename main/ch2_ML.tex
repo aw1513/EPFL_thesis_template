@@ -1,7 +1,7 @@
-\chapter{Machine Learning and uncertainty quantification}
+\chapter{Machine Learning and uncertainties}
 \label{methods_ML}
 
-\vspace{-45pt} % one line spacing corresponds approx to 15 pts
+\vspace{-15pt} % one line spacing corresponds approx to 15 pts
 \begin{tcolorbox}[enhanced,width=\textwidth,size=fbox,
         sharp corners,colframe=black!5!white,drop fuzzy shadow southeast,
         boxrule=3mm, parbox=false] 
@@ -40,6 +40,10 @@ The following sections will provide an overview of the supervised learning and c
 The architecture of each model is determined through a tuning procedure in the training phase, where the parameters defining the model structure (hyper-parameters) are optimized in order to minimize the difference between the prediction and the target. 
 
 \subsection{Feature analysis and selection techniques}
+\label{ML_features}
+
+\textbf{Recursive feature selection.} Recursive feature selection can be applied to any ML algorithm. The metric used for the selection is the mean-squared error (MSE), which is obtained using a $k$-fold cross-validation (CV). For this, the training data is randomly split into $k$ subsets (folds), from which $k$ ML models are trained. Each model uses ($k$ – 1) folds for training and the last fold for validation, i.e. to compute the MSE between the target (annual $G_t$) and the predicted value. In this work, we use a 5-fold cross-validation ($k$ = 5). 
+Starting from the complete feature set, we iteratively exclude one feature at a time and compute the MSE. The feature whose exclusion causes the lowest change in MSE ($\Delta_{MSE}$) is permanently removed from the set of features. This procedure is repeated until only one feature remains. The $\Delta_{MSE}$ is recorded for each iteration and a threshold for $\Delta_{MSE}$ is chosen, which represents the maximum tolerable increase in MSE. The selected features are those which form the smallest feature set that keeps $\Delta_{MSE}$ below its threshold. As the number of cross-validations increases with $N^2$, where $N$ is the number of features, this procedure may not be applicable for very high-dimensional problems.
 
 
 \subsection{Regression models}
@@ -141,8 +145,8 @@ For ensemble training, we apply a bootstrap-aggregating (bagging) approach [13] 
 
  
 \section{Clustering techniques}
-\subsection{K-means clustering}
-\subsection{Density-Based Spatial Clustering of Applications with Noise}
+\textbf{K-means clustering.}
+\textbf{Density-Based Spatial Clustering of Applications with Noise (DBSCAN).}
 
 
 \section{Uncertainties}

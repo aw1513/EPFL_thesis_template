@@ -23,11 +23,15 @@ Relevant physical, geographical and technical constraints for both energy resour
 \label{method_solar}
 % and solar thermal 
 
-\subsection{Hierarchial approach for estimating rooftop solar PV potential}
-
 Rooftop solar energy is defined here as the electrical or thermal energy harvested from installations on building rooftops, using solar photovoltaic (PV) panels or solar thermal collectors (STC), respectively. It accounts for the incoming solar energy, for the roof geometry as well as for the technology behind the modelled panel/collector. 
 \nomenclature[A]{STC}{Solar thermal collector}
 \nomenclature[A]{RPV}{Rooftop photovoltaics}
+
+\subsection{Hierarchial approach for estimating rooftop solar PV potential}
+\label{method_solar_hierarchy}
+
+% SOURCE: CISBAT comparison paper
+To compute the technical rooftop PV potential,  a hierarchical approach has been widely accepted in the literature. It includes (i) physical potential, that is, the amount of solar energy reaching the earth’s surface, (ii) geographic potential, that is, the amount of solar radiation received by the tilted PV panels, which is affected by the geometry of the panel (slope and aspect), the shading from surrounding buildings and trees and the suitable area for the panel installation, and (iii) technical potential, that is, the maximum electricity output considering the technical characteristics of the PV technology (e.g. efficiency and system performance).
 
 \subsection{Physical models}
 \label{phys_models}
@@ -153,7 +157,30 @@ We use the \texttt{pvlib} python package developed by Sandia National Laboratori
 
 \subsubsection{Shading effects and sky view factor}
 
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=.7\linewidth]{images/Figs/horizon.pdf}  
+	\caption{Calculation of viewshed horizons for an example roof, with relevant horizon bins for quantification of shading effects.}
+	\label{fig:horizon_method}
+\end{figure}
+
+To quantify the shading effects, we use GIS to compute horizon maps from a Digital Elevation Model (DEM). 
+The horizon describes the minimum sun elevation angle required to illuminate each pixel of the DEM. 
+Horizon maps are computed for each azimuth angle of the sun (see Figure~\ref{fig:horizon_method} for one example point). From the horizon maps, a binary shading mask of the surface can be derived for each time step, where a $0$ represents a shaded cell, and a $1$ represents a cell that is exposed to the sun.
+
+The derivation of $C_{sh}$ requires a threshold which defines the suitability of a surface for PV installation. Possible fractions of unsuitable area due to shading are compared in~\cite{wiginton_quantifying_2010}. As the reported values vary largely, we redefine the threshold based on our data. We rate all areas that exhibit a lower-than-average direct sun exposure unsuitable for PV. These areas define the \textit{shaded area coefficient}. The threshold is found by averaging the binary shading masks of 150 non-zero time steps (where the sun is above the horizon), as shown in Figure~\ref{fig:horizons}c. Across all time steps and all roof surfaces, the average sun exposure is 42.7\%, so we choose a rounded threshold of 40\%.
+
+The $S_{sh}(t)$ is computed for each time step $t$ as the ratio of the number of illuminated pixels (pixel value $1$ in the binary shading mask) over the total number of pixels with an average sunlight exposure $> 40\%$. The full GIS algorithm is summarized in Algorithm~\ref{alg:shade}. 
+
+The sky view factor (SVF) represents the visible proportion of the sky and is computed from the same horizon maps as the shading effects.
+
 \subsubsection{Available area for solar panel installation}
+
+The geospatial algorithm is used to virtually install PV panels on the tilted roofs by projecting rectangular polygons onto these surfaces, as shown in Fig.~\ref{fig:panels}c. 
+The starting point for this process are the roof polygons and superstructures (Fig.~\ref{fig:panels}a). Panels are installed on the grey areas in Fig~\ref{fig:panels}b, after superstructures (if applicable) and a buffer of 40cm are removed from the polygons~\cite{assouline_large-scale_2018}. The panels are installed in adjacent rows along the roof aspect, starting from the bottom left corner, as described in Algorithm \ref{alg:panels}. It is implemented using the python \texttt{geopandas} library \cite{kelsey_jordahl_geopandas/geopandas:_2019}.
+
+Virtual PV panels were placed in both horizontal and vertical alignments, as no alignment has technical advantages over the other and both are widespread. The alignment that allows the higher number of panels to be installed on each roof is selected as final panel alignment. 
+
 
 \subsection{Configuration of solar panels on flat roofs}
 \label{app_flat}
