@@ -1,4 +1,6 @@
 \appendix
+\addcontentsline{toc}{chapter}{Appendix} % adds an entry to the table of contents
+
 \chapter{Data collection}
 
 \section{Cantonal data sources}
@@ -86,18 +88,43 @@ To convert roads and railways of the TLM into vector polygons, they are buffered
 \section{Tuning of Machine Learning models}
 \label{app:tuning}
 %
-For the tuning of the ML models (see Section~\ref{methods_ML} for details), the mean-squared error (MSE) is used as means to assess performance and is evaluated on a validation set, which is randomly sampled as 20\% of the training data. 
+For the tuning of the ML models (see Section~\ref{methods_ML} for details), the mean-squared error (MSE) is used as means to assess performance and is evaluated on a validation set, which is randomly sampled as 20\% of the training data. A k-fold cross-validation procedure, as suggested in \cite{leuenberger_extreme_2015}, is not applied here as it is beneficial for relatively small data sizes but does not bring significant improvements for large datasets as used here \cite{heskes_practical_1997}.
 
 \subsection*{Extreme Learning Machine Ensemble}
 \label{app:tune_ELM}
 
 To estimate $G_h$ and $G_B$ (Section~\ref{irrad}), we use training data from 11,243 pixel coordinates in Switzerland and for 4,663 hours with non-zero solar radiation, which are split into 12 monthly subsets (see Section~\ref{data_solarRad}).
 The training data for $\rho$ are 365 daily values for each coordinate. 
-The output grid of $(200 \times 200) m^2$ pixels results in a prediction set of 1.04M locations, with 146 non-zero MMH time steps (for $G_h, G_B$) or 12 monthly values (for $\rho$). 
+The output grid of $200 \times 200$ m$^2$ pixels results in a prediction set of 1.04 M locations, with 146 non-zero MMH time steps (for $G_h, G_B$) or 12 monthly values (for $\rho$).  For model training, each variable is normalized to zero mean and unit variance.
 %
-As Extreme Learning Machines (ELM) are single-layer neural networks, the ELM-E has two hyper-parameters that are tuned, (i) the number of nodes of the hidden layer of each neural network $m$, and (ii) the number of ELM in the ensemble $n$. A large $m$ may lead to over-fitting, while a small $m$ may result in a poor performance. % MAKE SURE THESE AGREE WITH ML SECTION
-%
-Table \ref{tab:ELM_tuning} shows the trade-off between the model performance (validation MSE) and the computational time for training and prediction (on the validation set), which exists in the choice of $m$. The given data is for $G_h$ in June, but similar trends exist for the other months, for $G_B$ and $\rho$. The tuning for $n$ is not shown, as it is inhibited only by computational time. The selected hyper-parameters are $m=1000, n=50$ for $G_h$ and $G_B$ and $m=1000, n=30$ for $\rho$.
+As Extreme Learning Machines (ELM) are single-layer neural networks, the ELM-E has two hyper-parameters that are tuned, (i) the number of nodes of the hidden layer of each neural network $m$, and (ii) the number of ELM in the ensemble $n$. While the number of nodes significantly impacts the generalization performance of the algorithm, an increased ensemble size improves the stability of the algorithm and hence $n$ is mainly limited by computational time. % MAKE SURE THESE AGREE WITH ML SECTION
+
+\begin{figure}[tb]
+\centering
+\begin{subfigure}{.32\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{Figs/ELM_error.png}  
+  \caption{}
+  \label{figa:ELM_training}
+\end{subfigure}
+\begin{subfigure}{.32\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=\linewidth]{Figs/ELM_time.png}  
+  \caption{}
+  \label{figb:ELM_training}
+\end{subfigure}
+\caption{ELM tuning, including (a) wall clock time per model and (b) training (TRN), validation (VAL) and test (TST) MSE, both as a function of number of nodes.}
+\label{fig:ELM_training}
+\end{figure}
+
+The tuning of ELM hyper-parameters based on the MSE minimization of the validation data (VAL) is performed by scanning $n$ ranging from 10 to 100 and $m$ from 50 to 10000. Preliminary studies showed that this is a reasonable range, given that higher values come at high computational cost without resulting in significant improvements. Depending on $m$, the wall clock time needed for training a single model can range from few seconds up to 15-20 minutes, as shown in Fig.~\ref{figa:ELM_training}, on a GPU accelerated machine using one K40 NVIDIA card. The optimal number of $n$ and $m$ is hence a trade-off between the computational time required by the model and the exhibited performance on the VAL sample.
+
+The tuning procedure of $G_h$ for the month of June is visualised in Fig.~\ref{figa:ELM_training} and Fig.~\ref{figb:ELM_training}, while a numerical comparison of MSE, training and prediction times is provided in Table~\ref{tab:ELM_tuning}. The computational time (Fig.~\ref{figa:ELM_training}) is dominated by the evaluation of the chosen model on the dense spatial grid used for the GHI predictions (PRED). The MSE for VAL (Fig.~\ref{figb:ELM_training}), representing the model performance, steeply falls before 500 nodes and then stabilizes on low values without significant improvement when further increasing $m$, suggesting a minimum model size of $m = 500$. While the given data is for $G_h$ in June, similar trends exist for the other months, for $G_B$ and $\rho$. 
+Considering also the computational time, which constantly increases with $m$, we choose the model hyper-parameters as a trade-off between performance and computational efficiency. 
+The selected hyper-parameters are $m=1000, n=50$ for $G_h$ and $G_B$ and $m=1000, n=30$ for $\rho$.
+The model performance on the test set (TST) shows a-posteriori that this choice is appropriate.
 
 \begin{table}[tb]
 \centering
@@ -117,7 +144,7 @@ Table \ref{tab:ELM_tuning} shows the trade-off between the model performance (va
 \subsection*{Random Forest}
 \label{app:tune_RF}
 
-Random Forests are used for two separate models, to estimate $C_{pv}$ (Section~\ref{panels}) and $C_{sh}$ (Section~\ref{shade}). Due to the smaller size of the data as compared to the ELM-E, a 5-fold cross-validation is applied. It splits the data into 5 subsets, from which 5 separate models are trained and validated each on a different subset. 
+Random Forests are used for two separate models, to estimate $C_{\mathit{pv}}$ (Section~\ref{panels}) and $C_{sh}$ (Section~\ref{shade}). Due to the smaller size of the data as compared to the ELM-E, a 5-fold cross-validation is applied. It splits the data into 5 subsets, from which 5 separate models are trained and validated each on a different subset. 
 The RF has three main hyper-parameters which can be tuned: the number of trees in the ensemble ($n$), the minimum number of samples in each leaf node ($l$), and the number of features ($m$) which are randomly considered for splitting at each node. $m$ determines the level of randomization within each decision tree, $l$ impacts the level of smoothing of the predictions, while $n$ improves the robustness of the model, and is primarily limited by computational time \cite{breiman_random_2001}.
 The selected hyper-parameters for both models are  $l = 3$, $m = 5$ and $n = 1000$. It should be noted that the RF is much less prone to small deviations in the model hyper-parameters than the ELM-E.
 
@@ -129,11 +156,11 @@ The selected hyper-parameters for both models are  $l = 3$, $m = 5$ and $n = 100
 \label{app:virtualPV}
 
 Algorithm~\ref{alg:panels} details the geospatial algorithm that is implemented to virtually install PV panels on roof surfaces. It uses the python \texttt{geopandas} library \cite{kelsey_jordahl_geopandas/geopandas:_2019}. 
-The output of the geospatial algorithm, $C_{pv}$, is calculated for each roof surface as the ratio between the roof area covered by $N_{panels}$ virtual panels, each of area $A_{panel}$, and the tilted area $A_{t}$ of the roof surfaces: 
+The output of the geospatial algorithm, $C_{\mathit{pv}}$, is calculated for each roof surface as the ratio between the roof area covered by $N_{\mathit{panels}}$ virtual panels, each of area $A_{\mathit{panel}}$, and the tilted area $A_{t}$ of the roof surfaces: 
 
 \begin{equation}
 \label{eq:cpv}
-C_{pv} = \frac{N_{panels} \times A_{panel}}{A_t}
+C_{\mathit{pv}} = \frac{N_{\mathit{panels}} \times A_{\mathit{panel}}}{A_t}
 \end{equation}
 
 \begin{algorithm}[htbp]
@@ -160,7 +187,7 @@ The computation of these maps is the most computationally expensive step in the 
 
 \begin{enumerate}
     \item Horizon maps are computed in bins of $5^\circ$ for south-east to south-west sun azimuths (110-250$^\circ$), and in bins of $10^\circ$ for east (60-110$^\circ$) and west (250-300$^\circ$) azimuths, where solar radiation is low. Thus, only 38 maps need to be computed.
-    \item The horizon distance is 100m, i.e. a radius of 100m is considered around each pixel to compute horizons. In Switzerland, where few high-rise buildings exist, this threshold is suitable to estimate the shading effects from surrounding trees and buildings.
+    \item The horizon distance is 100 m, i.e. a radius of 100 m is considered around each pixel to compute horizons. In Switzerland, where few high-rise buildings exist, this threshold is suitable to estimate the shading effects from surrounding trees and buildings.
     \item The algorithm is implemented using the GRASS GIS engine~\cite{neteler_grass_2012}. The Swiss terrain is split into 16 sub-regions and processed in parallel to reduce the computational time from $\sim$1000 to $\sim$30 hours. 
     
 \end{enumerate}
@@ -185,21 +212,21 @@ The computation of these maps is the most computationally expensive step in the 
 
 \subsection*{Sky view factor}
 
-The sky view factor is computed from similar horizon maps as described above for 32 equally spaced azimuth bins and a horizon distance of 100m, using the $skyview$ add-on for GRASS GIS~\cite{zaksek_sky-view_2011}. The computation is performed in parallel over 64 sub-regions.
+The sky view factor is computed from similar horizon maps as described above for 32 equally spaced azimuth bins and a horizon distance of 100 m, using the \textit{skyview} add-on for GRASS GIS~\cite{zaksek_sky-view_2011}. The computation is performed in parallel over 64 sub-regions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Uncertainty propagation for tilted radiation}
 \label{unc_Gt}
 
-The variance and covariance of the three addends in Eq.~(\ref{eq:irrad}) (labelled $B, D, R$ in Eq.~(\ref{eq:irrad_unc})) are computed from the mean and variance of the horizontal radiation ($G_{B,D,h}$, $\sigma^2_{GB,GD,Gh}$), the partly shaded factor ($(1-S_{sh})$, $\sigma^2_{sh}$) and the sky view factor ($SVF$, $\sigma^2_{SVF}$) such that:
+The variance and covariance of the three addends in Eq.~(\ref{eq:irrad}) (labelled $B, D, R$ in Eq.~(\ref{eq:irrad_unc})) are computed from the mean and variance of the horizontal radiation ($G_{B,D,h}$, $\sigma^2_{GB,GD,Gh}$), the partly shaded factor ($(1-S_{sh})$, $\sigma^2_{sh}$) and the sky view factor ($\mathit{SVF}$, $\sigma^2_{\mathit{SVF}}$) such that:
 
 \begin{equation}
 \begin{aligned}
 % Definition of variance of beam component
-\sigma^2_{B} & = F_{B}^2 (\sigma^2_{Ssh} G_B^2 + \sigma^2_{GB} (1-S_{sh})^2 + \sigma^2_{Ssh} \sigma^2_{GB}) \\
+\sigma^2_{B} & = F_{B}^2 (\sigma^2_{\mathit{Ssh}} G_B^2 + \sigma^2_{GB} (1-S_{sh})^2 + \sigma^2_{\mathit{Ssh}} \sigma^2_{GB}) \\
 % Definition of variance of diffuse component     
-\sigma^2_{D} & = F_{D}^2 (\sigma^2_{SVF} G_D^2 + \sigma^2_{GD} SVF^2 + \sigma^2_{SVF} \sigma^2_{GD}) \\
+\sigma^2_{D} & = F_{D}^2 (\sigma^2_{\mathit{SVF}} G_D^2 + \sigma^2_{GD} \mathit{SVF}^2 + \sigma^2_{\mathit{SVF}} \sigma^2_{GD}) \\
 % Definition of variance of reflected component
 \sigma^2_{R}&  = F_{R}^2 \sigma^2_{Gh}
 \end{aligned}
@@ -211,13 +238,13 @@ Under the assumptions in Section~\ref{unc_prop}, we derive the covariances betwe
 \begin{equation}
 \begin{aligned}
 % covariance between direct and diffuse
-\mathrm{Cov}(B, D) & = F_{B}  F_{D} \times (\mathrm{Cov}(G_B, G_D) \times \mathrm{Cov}(S_{sh}, SVF) \\
-& + G_B  G_D \times \mathrm{Cov}(S_{sh}, SVF) \\
-& + (1-S_{sh}) \times SVF \times \mathrm{Cov}(G_B, G_D)) \\
+\mathrm{Cov}(B, D) & = F_{B}  F_{D} \times (\mathrm{Cov}(G_B, G_D) \times \mathrm{Cov}(S_{sh}, \mathit{SVF}) \\
+& + G_B  G_D \times \mathrm{Cov}(S_{sh}, \mathit{SVF}) \\
+& + (1-S_{sh}) \times \mathit{SVF} \times \mathrm{Cov}(G_B, G_D)) \\
 % covariance between direct and reflected
 \mathrm{Cov}(B, R) & = F_{B}  F_{R} \times (1-S_{sh}) \times \mathrm{Cov}(G_B, G_h) \\
 % covariance between diffuse and reflected
-\mathrm{Cov}(D, R) & = F_{D}  F_{R} \times SVF  \times      \mathrm{Cov}(G_D, G_h) 
+\mathrm{Cov}(D, R) & = F_{D}  F_{R} \times \mathit{SVF}  \times      \mathrm{Cov}(G_D, G_h) 
 \end{aligned}
 \end{equation}
 

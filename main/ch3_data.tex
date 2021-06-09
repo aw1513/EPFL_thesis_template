@@ -90,10 +90,27 @@ To create a homogeneous dataset of vector polygons, relevant line data, namely r
 Other TLM objects used in Chapter \ref{geothermal} are buffered by $1m$ to account for the imprecision of the TLM.
 
 \subsection{Digital Elevation models}
-\textbf{Digital Terrain Model.} Two types of surface datasets are used for the projection of PV potential: A Digital Terrain Model (DTM) and a Digital Surface Model (DSM) of Switzerland. The DTM is a high-resolution surface model, without considering vegetation and constructions. It is available at national scale as pixels of $(2\times2)m^2$ resolution. The DTM is derived from Light Detection and Ranging (LiDaR) data that was collected in the period from 2000-2008 and has been updated from 2010-2016.
+\label{data_DEM}
+\textbf{Digital Terrain Model.} Two types of surface datasets are used for the estimation of PV potential: A Digital Terrain Model (DTM) and a Digital Surface Model (DSM) of Switzerland. The DTM is a high-resolution surface model, without considering vegetation and constructions. It is available at national scale as pixels of $2\times2$ m$^2$ resolution. The DTM is derived from Light Detection and Ranging (LiDaR) data that was collected in the period from 2000-2008 and has been updated from 2010-2016.
+%
+It contains information on coordinates (x,y) and altitude (z). In addition, we consider several spatial features derived from the DTM at various spatial scales, including terrain slope and curvature (see Table \ref{tab:DTM_ftrs} for a complete list). These features have been computed by \citet{robert_spatial_2012} for an aggregation level of $250 \times 250$ m$^2$.
 
-\textbf{Digital Surface Model.} The DSM is a complete model of the landscape, including all visible landscape elements. As the DTM it is available  in $(2\times2)m^2$ resolution from LiDaR data that was collected in the period from 2000-2008, but contrary to the DSM is has not been updated. More recent DSMs have however been created for individual cantons in Switzerland at a resolution of $(0.5\times0.5)m^2$. 
+\begin{table}[htb]
+\centering
+\footnotesize
+\begin{tabular}{cll}
+\hline
+\textbf{Coordinates} & \textbf{Derived features} & \textbf{Scales} \\ \hline
+x                    & slope                           & 250m (small)    \\
+y                    & directional slope (NS, EW)      & 1.75km (med)    \\
+z                    & curvature (DoG)                 & 3.75km (big)    \\ \hline
+\end{tabular}
+\caption{Spatial features of the DTM (x,y,z) and additional features derived from the DTM. All derived features are available for each scale~\cite{robert_spatial_2012}.}
+\label{tab:DTM_ftrs}
+\end{table}
 
+\textbf{Digital Surface Model.} The DSM is a complete model of the landscape, including all visible landscape elements. As the DTM it is available  in $(2\times2)m^2$ resolution from LiDaR data that was collected in the period from 2000-2008, but contrary to the DSM is has not been updated. More recent DSMs have however been created for individual cantons in Switzerland at a resolution of $0.5\times0.5$ m$^2$. 
+%
 We use the higher-resolution and more updated DSM for the canton of Geneva to improve the estimation of RPV potential.
 This has two-fold reasons. Firstly, the spatial resolution of the updated DSM is 16 times higher, and secondly, the newer period of construction accounts for some buildings which have been built after the completion of the first DSM.
 An analysis of the RBD shows that 9.32\% of buildings in Switzerland have been constructed in the period of 2006-2015, corresponding approximately to the time span between the two studies. In Geneva, this fraction is comparable (7.28\%).
@@ -126,7 +143,7 @@ For the potential studies in Part~\ref{potential}, we have used solar radiation 
 \multirow{3}{*}{\textit{Temperature}}     & Max. temp.   & $1 \times 1 km^2$    & daily         & 2004-2015      & MeteoSwiss \cite{meteoswiss_daily_2017}     & \ref{solar}              \\
                                  & HDD                 & $200 \times 200m^2$  & daily         & averaged      & Eq.~\ref{eq:hdd}     & \ref{geothermal}, \ref{hybrid_chapter} \\
                                  & CDD                 & $200 \times 200m^2$  & daily         & averaged      & Eq.~\ref{eq:cdd}    & \ref{geothermal}         \\ \hline
-\multicolumn{7}{l}{* Deg. min.: degree minutes on a longitude-latitude grid (1.25 deg. min. $\approx (1.6 \times 2.3)km^2$)}   
+\multicolumn{7}{l}{* Deg. min.: degree minutes on a longitude-latitude grid (1.25 deg. min. $\approx 1.6 \times 2.3$ km$^2$)}   
 \end{tabular}
 \end{table}
 
@@ -134,14 +151,34 @@ For the potential studies in Part~\ref{potential}, we have used solar radiation 
 \subsection{Solar radiation}
 \label{data_solarRad}
 
+\begin{figure}[tb]
+\centering
+\begin{subfigure}{.49\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{Figs/yr_raw.png}  
+  \caption{}
+  \label{figa:GHI_patterns}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=\linewidth]{Figs/hours.png}  
+  \caption{}
+  \label{figb:GHI_patterns}
+\end{subfigure}
+\caption{(a) Yearly global solar irradiation from satellite data, (b) hourly distribution of global solar radiation at selected location, averaged for 2004-2015.}
+\label{fig:GHI_patterns}
+\end{figure}
+
 % SOURCE: PV paper (original draft)
-\textbf{Global and direct horizontal radiatio (GHI/DIR).} To estimate RPV potential for Switzerland, we use satellite data for global horizontal radiation (GHI), also known as surface incoming shortwave radiation, and direct beam radiation (DIR) provided by MeteoSwiss\cite{stockli_daily_2013}. The radiation describes the total solar power at the earth's surface, given in $W/m^2$. The solar energy is referred to as irradiation, given in $Wh/m^2$. The data are available as hourly values for the period from 2004-2015 on a longitude-latitude grid of 1.25 degree minutes, equivalent to approximately $(1.6 \times 2.3)km^2$.  
+\textbf{Global and direct horizontal radiatio (GHI/DIR).} To estimate RPV potential for Switzerland, we use satellite data for global horizontal radiation (GHI), also known as surface incoming shortwave radiation, and direct beam radiation (DIR) provided by MeteoSwiss\cite{stockli_daily_2013}. The radiation describes the total solar power at the earth's surface, given in W/m$^2$. The solar energy is referred to as irradiation, given in Wh/m$^2$. The data are available as hourly values for the period from 2004-2015 on a longitude-latitude grid of 1.25 degree minutes, equivalent to approximately $1.6 \times 2.3$ km$^2$ (see Fig.~\ref{figa:GHI_patterns}).  
 \nomenclature[A]{GHI}{Global horizontal radiation}
 \nomenclature[A]{DIR}{Direct beam radiation}
 
-We average the 12 years of satellite data in order to obtain an average year in hourly resolution, i.e. $12 \times 365$ time steps for $11,243$ satellite pixels. This reduces the variability of the radiation data, and furthermore allows the estimation of long-term RPV potential without bias due to extreme meteorological events of a specific year.
+We average the 12 years of satellite data in order to obtain an average year in hourly resolution, i.e. $12 \times 365$ time steps for 11,243 satellite pixels (see Fig.~\ref{figb:GHI_patterns}). This reduces the variability of the radiation data, and furthermore allows the estimation of long-term RPV potential without bias due to extreme meteorological events of a specific year. Furthermore, all hours with constantly zero GHI measurements are removed (i.e. night hours). The remaining 10-17 day hours result in $\sim~3-6$ million hourly values for GHI and DIR per month, depending on the month. 
 
-\textbf{Surface albedo.} A dataset for surface reflectance, also referred to as surface albedo, is available at the same spatio-temporal resolution as the global and direct horizontal radiation. In particular in Switzerland, where a large part of the country is covered by mountains, the surface albedo plays an important role in the quantification of the reflected solar radiation component \cite{kahl_bright_2019}. As the surface albedo shows low variations throughout the day, the data is aggregated to daily values, before being averaged across the 12 years as described above.
+\textbf{Surface albedo.} A dataset for surface reflectance, also referred to as surface albedo, is available at the same spatio-temporal resolution as the global and direct horizontal radiation. In particular in Switzerland, where a large part of the country is covered by mountains, the surface albedo plays an important role in the quantification of the reflected solar radiation component \cite{kahl_bright_2019}. As the surface albedo shows low variations throughout the day, the data is aggregated to daily values, before being averaged across the 12 years as described above. 
 
 All solar radiation data has been derived by MeteoSwiss from Meteosat Second Generation (MSG) satellite observations using the Heliomont algorithm~\cite{stockli_heliomont_2017}. It was developed to improve the quality of the results, particularly in Switzerland's Alpine territories. 
 \citet{ineichen_long_2014} performed a comprehensive validation of various satellite-based products against measurement data, and found a negligible bias of the hourly satellite data across 18 measurement stations. 
@@ -149,7 +186,7 @@ The standard deviation for hourly global and direct radiation is 19\% and 39\%, 
 
 \subsection{Temperature}
 
-\textbf{Maximum daily air temperature.} Air temperature data, including the daily mean, maximum and minimum air temperature, is available from MeteoSwiss on a grid of $1 \times 1 km^2$ for Switzerland \cite{meteoswiss_daily_2017}. 
+\textbf{Maximum daily air temperature.} Air temperature data, including the daily mean, maximum and minimum air temperature, is available from MeteoSwiss on a grid of $1 \times 1$ km$^2$ for Switzerland \cite{meteoswiss_daily_2017}. 
 In contrast to the solar radiation, MeteoSwiss uses near-surface air temperature measurements from meteorological stations, which are interpolated in three dimensions, with further adjustments to account for temperatures in high mountain areas \cite{meteoswiss_daily_2017}.
 For coherence with the solar radiation data described above, we collect daily air temperature data for the years of $2004-2015$. 
 We use maximum air temperature in the estimation of RPV potential (Chapter~\ref{solar}) as the maximum solar yield occurs around midday when temperatures are near their daily maximum, resulting in a conservative estimate of the PV panel efficiency.
@@ -164,15 +201,15 @@ The HDD is defined in the norm SIA 2028 as the sum of the heating degrees for ea
 \end{equation}
 
 where $d_m$ is the number of days of each month and $T_{m}$ is the daily mean temperature on day $d$ in month $m$ of year $y$. 
-We use gridded daily mean air temperature data for 20 years ($1991-2011$) \cite{meteoswiss_daily_2017} to compute the HDD for each of the $1 \times 1 km^2$ pixels of the temperature grid (see above). The time span of  $1991-2011$ is chosen such as to yield results that are comparable to the tabulated HDD in \cite{sia_klimadaten_2010}.
-The HDD is then spatially interpolated to a resolution of $200 \times 200m^2$ using a Random Forest algorithm (see Section \ref{RF}) with the pixel coordinates and the altitude (obtained from DTM) as features.
+We use gridded daily mean air temperature data for 20 years ($1991-2011$) \cite{meteoswiss_daily_2017} to compute the HDD for each of the $1 \times 1$  km$^2$ pixels of the temperature grid (see above). The time span of  $1991-2011$ is chosen such as to yield results that are comparable to the tabulated HDD in \cite{sia_klimadaten_2010}.
+The HDD is then spatially interpolated to a resolution of $200 \times 200$ m$^2$ using a Random Forest algorithm (see Section \ref{RF}) with the pixel coordinates and the altitude (obtained from DTM) as features.
 
 \textbf{Cooling degree days (CDD).} In contrast to the HDD, no Swiss norm exists for the computation of CDD. We hence obtain the CDD from \cite{christenson_climate_2006} using a reference temperature of $18 ^\circ C$:
 \begin{equation}
 \label{eq:cdd}
     CDD = \frac{1}{20} \sum_{y=1}^{20} \sum_{d=1}^{d_m} (T_{m}(d, m, y)-18) \quad \forall T_{m} (d, m, y) \geq 18 ^\circ C. 
 \end{equation}
-for the same timespan ($1991-2011$) and spatial resolution ($1 \times 1 km^2$) as the HDD, which is then interpolated to pixels of $200 \times 200m^2$ as described above.
+for the same timespan ($1991-2011$) and spatial resolution ($1 \times 1$ km$^2$) as the HDD, which is then interpolated to pixels of $200 \times 200$ m$^2$ as described above.
 
 \section{Subsurface data [\textit{PRELIMINARY}]}
 \label{data_geo}
