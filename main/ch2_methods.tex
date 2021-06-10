@@ -31,7 +31,14 @@ Rooftop solar energy is defined here as the electrical or thermal energy harvest
 \label{method_solar_hierarchy}
 
 % SOURCE: CISBAT comparison paper
-To compute the technical rooftop PV potential,  a hierarchical approach has been widely accepted in the literature. It includes (i) physical potential, that is, the amount of solar energy reaching the earth’s surface, (ii) geographic potential, that is, the amount of solar radiation received by the tilted PV panels, which is affected by the geometry of the panel (slope and aspect), the shading from surrounding buildings and trees and the suitable area for the panel installation, and (iii) technical potential, that is, the maximum electricity output considering the technical characteristics of the PV technology (e.g. efficiency and system performance).
+To compute the technical rooftop PV potential,  a hierarchical approach, shown in Fig.~, has been widely accepted in the literature \cite{assouline_quantifying_2017,ramirez_camargo_spatio-temporal_2015,izquierdo_method_2008,wiginton_quantifying_2010}. It includes (i) physical potential, that is, the amount of solar energy reaching the earth’s surface, (ii) geographic potential, that is, the amount of solar radiation received by the tilted PV panels, which is affected by the geometry of the panel (slope and aspect), the shading from surrounding buildings and trees and the suitable area for the panel installation, and (iii) technical potential, that is, the maximum electricity output considering the technical characteristics of the PV technology (e.g. efficiency and system performance).
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{images/Figs/hierarchy.png}  
+	\caption{Hierarchical approach for estimating rooftop PV potential. Source: \citet{assouline_estimation_2017}}
+	\label{fig:solar_hierarchy}
+\end{figure}
 
 \subsection{Physical models}
 \label{phys_models}
@@ -44,13 +51,32 @@ To compute the potential energy output, firstly the amount of solar power reachi
 \subsubsection{Plane-of-array radiation}
 \label{app:irrad}
 
+\begin{figure}[htb]
+\centering
+\begin{subfigure}[t]{.43\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/Figs/poa.pdf}  
+  \label{figa:solar_geom}
+  \subcaption{}
+\end{subfigure}
+\begin{subfigure}[t]{.53\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/Figs/diffuse_components.png}  
+  \label{figb:solar_geom}
+  \subcaption{}
+\end{subfigure}
+\caption{Geometrical models for calculating (a) the angle of incidence of direct beam radiation on a tilted plane, and (b) the isotropic, circumsolar and horizon diffuse components (Source: \citet{brownson_44_nodate}).}
+\label{fig:solar_geom}
+\end{figure}
+
+
 Widely accepted physical and empirical models are used to compute the plane-of-array (POA) radiation.
 %
 The $G_{Bt}$ is computed from $G_B$ and the angle of incidence of the sun rays on the tilted panel ($\theta$) \cite{gulin_estimation_2013}:
 
 \begin{equation}
 \label{eq:direct}
-    G_{Bt} = G_{B} * max \left( 0, \frac{\cos(\theta)}{\cos(\theta_Z)} \right)
+    G_{Bt} = G_{B} * \max \left( 0, \frac{\cos(\theta)}{\cos(\theta_Z)} \right)
 \end{equation}
 \begin{equation}
 \label{eq:dir_angle}
@@ -159,10 +185,41 @@ We use the \texttt{pvlib} python package developed by Sandia National Laboratori
 
 \begin{figure}[htb]
 	\centering
-	\includegraphics[width=.7\linewidth]{images/Figs/horizon.pdf}  
-	\caption{Calculation of viewshed horizons for an example roof, with relevant horizon bins for quantification of shading effects.}
+	\begin{subfigure}[t]{.49\textwidth}
+		\centering
+		% include second image
+		\includegraphics[trim=100 0 130 0, clip, width=.9\linewidth]{Figs/horizon.pdf}  
+		\subcaption{}
+	\end{subfigure}
+	\begin{subfigure}[t]{.49\textwidth}
+		\centering
+		% include second image
+		\includegraphics[width=\linewidth]{images/Figs/skyview_point_w_star.pdf}  
+		\subcaption{}
+		\label{figb:horizon_method}
+	\end{subfigure}
+	\caption{Viewshed horizons for an example roof, (a) conceptual graph with relevant horizon bins for quantification of shading effects, (b) polar plot of horizon height and visible sky proportion ($\mathit{SVF} = 0.3$), with an example sun position for Switzerland (September, 15h UTC).}
 	\label{fig:horizon_method}
 \end{figure}
+
+\begin{figure}[htb]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		% include second image
+		\includegraphics[height=.9\linewidth]{images/Figs/demo_vis_09_15h_w_cross.pdf}  
+		\subcaption{}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		% include second image
+		\includegraphics[height=.9\linewidth]{images/Figs/svf_w_legend.pdf}  
+		\subcaption{}
+	\end{subfigure}
+	\caption{Raster-based (a) cast shadows for one example hour (15h UTC in September, see star in Fig.\ref{figb:horizon_method}) and (b) sky view factor for an area of $200\times200$ m$^2$ in Geneva, Switzerland. The cross on the figures shows the point for which the horizon map is shown in Fig.\ref{figb:horizon_method}.}
+	\label{fig:raster_svf_ssh}
+\end{figure}
+
 
 To quantify the shading effects, we use GIS to compute horizon maps from a Digital Elevation Model (DEM). 
 The horizon describes the minimum sun elevation angle required to illuminate each pixel of the DEM. 
@@ -187,7 +244,7 @@ Virtual PV panels were placed in both horizontal and vertical alignments, as no 
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=.8\linewidth]{Figs/flat_panels2.pdf}  
+	\includegraphics[width=.7\linewidth]{Figs/flat_panels2.pdf}  
 	\caption{Geometric model for calculating mutual shading between panel rows, simplified in 2 dimensions and assuming infinite length of the panel rows.}
 	\label{fig:flat_concept}
 \end{figure}
