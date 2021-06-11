@@ -144,7 +144,7 @@ where $G_{Bt}$, $G_{Dt}$ and $G_{Rt}$ are direct, diffuse and reflected tilted r
 The $C_{sh}$ represents the fraction of roof surface that is unshaded in less than 40\% of the daylight hours and is hence unsuitable for PV installation (see Section~\ref{shade}). The $S_{sh}(t)$ denotes the portion of the remaining roof area ($1 - C_{sh}$) that is shaded at each time step $t$. 
 We treat $C_{sh}$ and $C_{\mathit{pv}}$, the proportion of roof area available to install PV panels, as independent factors. They are separately computed and it is assumed that no relevant overlap exists between the two factors. 
 %
-State of the art hourly physical models, described in Chapter~\ref{phys_models} (orange boxes in Fig.~\ref{fig:workflow_PV}), are used to obtain the tilted radiation components ($G_{Bt}, G_{Dt}, G_{Rt}$) 
+State of the art hourly physical models, described in Chapter~\ref{app:efficiency} (orange boxes in Fig.~\ref{fig:workflow_PV}), are used to obtain the tilted radiation components ($G_{Bt}, G_{Dt}, G_{Rt}$) 
 We use the anisotropic Perez model \cite{perez_modeling_1990} to estimate $G_{Dt}$ , which is the overall most accurate diffuse radiation model \cite{noorian_evaluation_2008, loutzenhiser_empirical_2007}. 
 The $G_{Rt}$ is computed using monthly mean albedo data (see Section~\ref{irrad}). This allows to account for snow cover in high-altitude locations, where a large albedo significantly increases the PV production on steep roofs~\cite{kahl_bright_2019}.
 
@@ -173,7 +173,7 @@ Dimension & $P \times t$ & $R \times t$ & $R \times t$ & $R$   & $R$     & $R$  
 Unit     & W/m$^2$    & W/m$^2$  & -                          & -                  & -                    & -                     & -                             
 \\
 Method      & ML & PM & GIS & GIS & GIS+ML & GIS+ML & PM \\
-Section      & \ref{irrad}  & \ref{phys_models}     & \ref{shade}       & \ref{svf} & \ref{shade} & \ref{panels} & \ref{phys_models} 
+Section      & \ref{irrad}  & \ref{app:irrad}     & \ref{shade}       & \ref{svf} & \ref{shade} & \ref{panels} & \ref{app:efficiency} 
 \\  
 \hline 
 \end{tabular}
@@ -435,7 +435,7 @@ For a more realistic representation of PV panels on flat roofs, we assume PV pan
 The tilt angle and row spacing is chosen as a trade-off between the total PV output and the capacity factor, which is a proxy of the economic feasibility.
 We have simulated different configurations and found a technically optimal trade-off for a tilt angle of $30^\circ$ and a spacing of one panel height at the Swiss latitude.
 
-The installation strategy on flat roofs impacts the PV potential in multiple ways: (i) tilted radiation increases due to the panel tilt of $30^\circ$, (ii) $C_{\mathit{pv}}$ decreases due to the spacing of the rows, (iii) mutual shading between adjacent rows of panels increases the hourly shaded fraction and (iv) the sky view factor is reduced. The $S_{sh}$ and the $\mathit{SVF}$ of flat roofs are hence multiplied with an additional hourly shading factor ($S_{\mathit{flat}}(t)$) and sky view factor ($\mathit{SVF}_{\mathit{flat}}$), respectively, which we have simulated using the geometric model explained in Chapter~\ref{app_flat}. 
+The installation strategy on flat roofs impacts the PV potential in multiple ways: (i) tilted radiation increases due to the panel tilt of $30^\circ$, (ii) $C_{\mathit{pv}}$ decreases due to the spacing of the rows, (iii) mutual shading between adjacent rows of panels increases the hourly shaded fraction and (iv) the sky view factor is reduced. The $S_{sh}$ and the $\mathit{SVF}$ of flat roofs are hence multiplied with an additional hourly shading factor ($S_{\mathit{flat}}(t)$) and sky view factor ($\mathit{SVF}_{\mathit{flat}}$), respectively, which we have simulated using the geometric model explained in Appendix~\ref{app_flat}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -677,7 +677,7 @@ The uncertainty is proportional to the shaded area coefficient and is hence high
 
 %%%%%%%%%%%%%%% Gt %%%%%%%%%%%%%%%%%%%%%%%
 
-To compute $G_t$ from Eq.~(\ref{eq:irrad}) and its uncertainty $\sigma_{Gt}$ from Eq.~(\ref{eq:irrad_unc}), we combine the tilted radiation $G_{Bt,Dt,Rt}$ (Section \ref{phys_models}) with the $S_{sh}$ (Section \ref{shade}) and the SVF (Section \ref{svf}).
+To compute $G_t$ from Eq.~(\ref{eq:irrad}) and its uncertainty $\sigma_{Gt}$ from Eq.~(\ref{eq:irrad_unc}), we combine the tilted radiation $G_{Bt,Dt,Rt}$ (Section \ref{app:irrad}) with the $S_{sh}$ (Section \ref{shade}) and the SVF (Section \ref{svf}).
 
 Figure~\ref{fig:Sh}a shows the bias-corrected unshaded fraction $(1-S_{sh})$ for roofs of different tilts and aspects for four example hours in June. 
 The patterns of $S_{sh}$ follow the trajectory of the sun, with shading on west-facing surfaces in the morning hours and shaded east-facing roofs in the evening.
@@ -757,7 +757,7 @@ These results suggest that during summer the sky is clearer in the morning, whil
 \label{fig:pv_roof}
 \end{figure}
 
-To obtain the technical PV potential ($E_{PV}$) and its uncertainty ($\sigma_{PV}$), Eqs.~(\ref{eq:pv}) and (\ref{eq:pv_unc}) are applied to $G_t$, $A_{PV}$, the module efficiency ($\eta_{PV}$) and the performance factor ($\mathit{PF}$), which are obtained as described in Section~\ref{phys_models}.
+To obtain the technical PV potential ($E_{PV}$) and its uncertainty ($\sigma_{PV}$), Eqs.~(\ref{eq:pv}) and (\ref{eq:pv_unc}) are applied to $G_t$, $A_{PV}$, the module efficiency ($\eta_{PV}$) and the performance factor ($\mathit{PF}$), which are obtained as described in Section~\ref{app:efficiency}.
 %
 Figure~\ref{fig:pv_roof} shows the annual $E_{PV}$ for Switzerland, grouped by its three main characteristics: tilt, aspect and roof area. For comparability, the values are normalized by the total roof area ($A_t$). 
 Fig.~\ref{fig:pv_roof}a shows the potential with respect to roof tilt (x-axis) and roof area (y-axis), indicating the highest potential for large roofs ($> 500$ m$^2$) with shallow tilt. 
@@ -1219,7 +1219,7 @@ The performance of the CNN for the test set shows an accuracy of 93\% and an int
 Based on the results of the pixel-wise image segmentation, a post-processing algorithm has been developed as part of this thesis.
 Post-processing is necessary to link the detected areas to the existing building stock. It further allows to add contextual information, such as the size, tilt and orientation of the underlying roof, and to remove false positive pixels outside buildings. The post-processing is performed through a series of geospatial processing steps: First, the detected pixels are intersected with the roof shapes (see Section~\ref{data_geometry}). The shapes are buffered by 3 m to account for the frequent misalignments between the roof shapes and the images. Second, the pixels within roofs/buildings are clustered to groups of at least 3 m$^2$ of surface to eliminate further scattered pixels. Third, the clusters are aggregated per roof, converted from pixels to polygons (shapes) and projected onto the roof by dividing their area by the cosine of the roof tilt.
 
-To further estimate the number of RPV panels that could be installed on the rooftop available area, we apply a geospatial algorithm based on Section~\ref{panels}, which virtually installs RPV panels by projecting rectangular polygons of size 1.6 m$^2$ onto the rooftops. In contrast to Section~\ref{panels}, RPV panels are (virtually) installed only on the newly estimated shapes representing the available area, without leaving any buffer to the edge of these shapes. On flat roofs, panels are installed along the main aspect of the roof, simulating a “triangular” panel arrangement, namely rows of opposite orientation that are tilted at 15°, adopting the scenario for east-west-facing rows detailed in Section\ref{scenario_EW}.
+To further estimate the number of RPV panels that could be installed on the rooftop available area, we apply a geospatial algorithm based on Section~\ref{panels}, which virtually installs RPV panels by projecting rectangular polygons of size 1.6 m$^2$ onto the rooftops. In contrast to Section~\ref{panels}, RPV panels are (virtually) installed only on the newly estimated shapes representing the available area, without leaving any buffer to the edge of these shapes. On flat roofs, panels are installed along the main aspect of the roof, simulating a “triangular” panel arrangement, namely rows of opposite orientation that are tilted at 15°, adopting the scenario for east-west-facing rows detailed in Section \ref{scenario_EW}.
 
 \subsubsection{Case study}
 

@@ -17,21 +17,19 @@ This chapter borrows from the articles \citep{walch_big_2020,walch_quantifying_2
 
 Spatio-temporal modelling of renewable energy potentials integrates physical models of the renewable resources and technologies with geospatial operations using Geographic Information Systems (GIS).
 The present chapter introduces state-of-the-art modelling approaches for two types of renewables addressed in this thesis, namely rooftop solar energy (Section \ref{method_solar}) and shallow geothermal energy (Section \ref{geo_method}). 
+\nomenclature[A]{GIS}{Geographic Information Systems}
 Relevant physical, geographical and technical constraints for both energy resources are outlined and popular modelling approaches are summarized, such as to justify the methods used in the large-scale estimation of rooftop solar potential (Chapter \ref{solar}) and shallow geothermal potential (Chapter \ref{geothermal}).
 
 \section{Rooftop solar energy}
 \label{method_solar}
+\label{method_solar_hierarchy}
 % and solar thermal 
 
-Rooftop solar energy is defined here as the electrical or thermal energy harvested from installations on building rooftops, using solar photovoltaic (PV) panels or solar thermal collectors (STC), respectively. It accounts for the incoming solar energy, for the roof geometry as well as for the technology behind the modelled panel/collector. 
+Rooftop solar energy is defined here as the electrical or thermal energy harvested from installations on building rooftops, using solar photovoltaic (PV) panels or solar thermal collectors (STC), respectively. 
+While we focus on the estimation of solar photovoltaic (PV) potential, which is currently the most frequently deployed solar technology on rooftops \cite{kaufmann_schweizerische_2017}, most parts of the methodology (except the techological model of the solar PV panels) are transferable to STC. 
 \nomenclature[A]{STC}{Solar thermal collector}
 \nomenclature[A]{RPV}{Rooftop photovoltaics}
-
-\subsection{Hierarchial approach for estimating rooftop solar PV potential}
-\label{method_solar_hierarchy}
-
-% SOURCE: CISBAT comparison paper
-To compute the technical rooftop PV potential,  a hierarchical approach, shown in Fig.~, has been widely accepted in the literature \cite{assouline_quantifying_2017,ramirez_camargo_spatio-temporal_2015,izquierdo_method_2008,wiginton_quantifying_2010}. It includes (i) physical potential, that is, the amount of solar energy reaching the earth’s surface, (ii) geographic potential, that is, the amount of solar radiation received by the tilted PV panels, which is affected by the geometry of the panel (slope and aspect), the shading from surrounding buildings and trees and the suitable area for the panel installation, and (iii) technical potential, that is, the maximum electricity output considering the technical characteristics of the PV technology (e.g. efficiency and system performance).
+This section reviews state-of-the-art approaches to model the hourly energy yield of rooftop-mounted solar PV systems in the context of large-scale potential studies, and justifies the choice of the empirical models (Section~\ref{phys_models}), geospatial techniques (Section~\ref{GIS_methods}) and the modelling approach for PV panels on flat roofs (Section~\ref{app_flat}) used in the large-scale rooftop PV potential estimation presented in Chapter~\ref{solar}. We hereby do not claim to provide a complete review of existing modelling approaches, but rather give an overview of the relevant modelling steps and outline popular computational methods for each step.
 
 \begin{figure}[tb]
 	\centering
@@ -40,11 +38,56 @@ To compute the technical rooftop PV potential,  a hierarchical approach, shown i
 	\label{fig:solar_hierarchy}
 \end{figure}
 
-\subsection{Physical models}
+% SOURCE: CISBAT comparison paper
+To compute the technical rooftop PV potential,  a hierarchical approach, shown in Fig.~\ref{fig:solar_hierarchy}, has been widely accepted in the literature \cite{assouline_quantifying_2017,ramirez_camargo_spatio-temporal_2015,izquierdo_method_2008,wiginton_quantifying_2010}. It includes (i) \textit{physical potential}, that is, the amount of solar energy reaching the earth’s surface, (ii) \textit{geographic potential}, that is, the amount of solar radiation received by the tilted PV panels, which is affected by the geometry of the panel (slope and aspect), the shading from surrounding buildings and trees and the suitable area for the panel installation, and (iii) \textit{technical potential}, that is, the maximum electricity output considering the technical characteristics of the PV technology (e.g. efficiency and system performance).
+
+After obtaining the maximum feasible electricity output, one may consider additional environmental, economic or social considerations to refine the estimated size of the system. A fourth step may thus be an \textit{economic potential} focused on sizing the systems under given constraints. Economic considerations such as technology cost are not taken into account in most large-scale studies. Instead, these are typically assessed in separate studies that use the technical PV potential as input, in smaller-scale case studies as well as in hybrid potential assessments. An analysis of \textit{market potential} is beyond the scope of this work. 
+
+\textbf{Physical potential.} The incoming solar radiation (also referred to as irradiance, in W/m$^2$), consists of three compotents: (i) a direct or beam component ($G_B$), which describes the direct incoming solar radiation on a horizontal plane, (ii) a diffuse component ($G_D$), which is diffracted for example through the atmosphere and through cloud coverage, and (iii) a surface reflected component $G_R$, which is driven by the ground surface reflectance, also known as albedo ($\rho$), but which can be omitted for horizontal planes \cite{assouline_estimation_2017}. Omitting $G_R$, the global horizontal solar radiation $G_h$ is given by \cite{assouline_estimation_2017}:
+\begin{equation}
+\label{eq:Gh_method}
+G_{h} = G_{B} + G_{D}
+\end{equation}
+While most large-scale studies of RPV potential use satellite data or station measurements to obtain $G_h, G_B, G_D$ (e.g. \cite{bodis_high-resolution_2019,buffat_scalable_2018,ramirez_camargo_spatio-temporal_2015,calcabrini_simplified_2019}), empirical models exist to derive these from related variables such as the sunshine duration and the extra-terrestrial solar radiation \cite{assouline_estimation_2017}. 
+In other cases, (geo)-statistical methods have been developed to estimate solar radiation. 
+These include averaging the nearest neighbours \cite{klauser_solarpotentialanalyse_2016}, geostatistical methods such as kriging \cite{alsamamra_comparative_2009,rehman_spatial_2000} as well as machine learning approaches such as Support Vector Machines \cite{assouline_quantifying_2017}, Random Forests \cite{assouline_large-scale_2018} and neural networks \cite{hocaoglu_hourly_2008,notton_neural_2013,sahin_application_2013}. As averaging tends to oversimplify the modelling, and kriging is computationally intensive and requires modelling of anisotropic spatial correlations and stationarity of the process, the data-driven machine learning algorithms have recently gained much attention due to their performance and speed \cite{kanevski_machine_2009}. 
+Most models do not estimate the uncertainty related to modelling horizontal irradiance, which is an important aspect if the results are processed further.
+A further review of different modelling techniques for horizontal solar radiation is provided in \cite{zhang_review_2018}.
+
+\textbf{Geographic potential.} The solar power received by RPV panels is driven by two factors: (i) the incoming solar radiation on the tilted panels, and (ii) the available area for installing PV, sometimes also quantified as the number of panels that can be installed on a rooftop. As the global horizontal radiation, the tilted radiation ($G_t$) is composed of a direct ($G_{Bt}$), a diffuse ($G_{Dt}$) and a reflected ($G_{Rt}$) component, such that \cite{assouline_estimation_2017}:
+\begin{equation}
+\label{eq:POA}
+G_{t} = G_{Bt} + G_{Dt} + G_{Rt}
+\end{equation}
+
+The three components in Eq.~\ref{eq:POA} describe the plane-of-array (POA) radiation, obtained from empirical models (Section~\ref{phys_models}), which represents the radiation received by a fully unshaded PV panel in an open space. 
+In urban environments, however, direct shading and a reduced sky visibility from surrounding buildings or other built-up objects, referred to as the sky view factor (SVF), can significantly impact the electricity yield of a PV panel. 
+Hence, many studies of rooftop PV potential use geospatial techniques based on 2D or 3D models of the urban environment, detailed in Section~\ref{GIS_methods}, to quantify shading effects and the SVF (e.g.~\cite{desthieux_solar_2018,calcabrini_simplified_2019,wegertseder_combining_2016,jakubiec_method_2013}).
+As these are included across the literature in the form of different factors, partially due to different spatial and temporal resolutions of RPV studies, we do not provide a generalised formulation to include these factors in Eq.~\ref{eq:POA}. However, in Chapter~\ref{solar_comparison} we will attempt to formulate such a generalisation for studies carried out in Switzerland.
+
+The available area for installing PV or STC ($A_{PV}$) is potentially the factor that varies most between different studies of RPV potential, as it is strongly dependent on the scale of the study and on the available rooftop data. 
+Rooftop available area is either quantified as constant factors (e.g. \cite{iea_potential_2002,wegertseder_combining_2016,portmann_sonnendach.ch:_2016}) or derived from building data (\cite{ramirez_camargo_spatio-temporal_2015,assouline_quantifying_2017,hong_development_2017}) and aerial imagery \cite{mainzer_assessment_2017} using geospatial techniques or image processing. 
+As the required geospatial input data may not be available across entire study areas and the computational time for these methods may be prohibitively high, sampling techniques \cite{izquierdo_method_2008}, the use of building prototypes \cite{wegertseder_combining_2016} and extrapolation techniques using ML \cite{assouline_quantifying_2017,assouline_large-scale_2018} based on geospatial methods are frequently used in large-scale studies. 
+A review of statistical and geospatial techniques for quantifying the available roof area is provided in Section~\ref{GIS_methods}, differentiating between the quantification of the total roof area, the useful roof area and the roof suitability for PV installations.
+
+\textbf{Technical potential.} The conversion of global radiation to PV potentials is driven by three factors: the efficiency of the PV panel ($\eta_{PV}$), the inverter efficiency ($\eta_\mathit{inv}$) and other losses ($\eta_\mathit{losses}$), which are multiplied with the tilted radiation ($G_t$) and the available area for PV installation ($A_{PV}$):
+\begin{equation}
+    P_{PV} = G_t \times A_{PV} \times \eta_{PV} \times \eta_\mathit{inv} \times \eta_\mathit{losses}
+\end{equation}
+While few studies use constant values for panel and inverter efficiencies \cite{assouline_quantifying_2017,assouline_large-scale_2018,klauser_solarpotentialanalyse_2016}, the majority of the reviewed studies use analytical or empirical models to quantify the efficiencies as a function of radiation, temperature, wind speed and technical characteristics of PV systems. The level of detail of these models ranges from the analytical modelling of invidual cells and their arrangement in a PV panel \cite{buffat_scalable_2018} to entirely coefficient-based empirical models \cite{mainzer_assessment_2017} (see Section~\ref{phys_models}). Other losses, however, are accounted for as constant loss factors in most studies. These may account for panel soiling, degradation, network and wiring losses, partial shading of panels and other factors.
+
+\begin{comment}
+The panel efficiency is dependent on the selected technology and lies typically between 15-20\%. The performance ratio considers several external factors affecting the system’s performance, such as operating temperature, panel obstruction or converter losses. It can thus be calculated using an analytical formula [9], in most large-scale studies it is however approximated as 80\% [3], [5], [6]. Given the global irradiance on tilted surfaces Gt, the useful rooftop area AR, the power factor PF and the panel efficiency $\eta_{PV}$, the total PV power output per rooftop $P_{PV}$ (in $W$) can hence be calculated as:
+\end{comment}
+
+\subsection{Empirical models}
 \label{phys_models}
 
+Empirical models are widely used in the modelling of the electricity yield of RPV systems, as they allow to estimate relevant physical variables with little computational effort and from widely available data. 
+In particular, empirical models are used in the literature (i) to quantify the plane-of-array (POA) radiation, namely the tilted radiation components ($G_{Bt}, G_{Dt}, G_{Rt}$) incident to the inclined PV panels, and (ii) for modelling solar PV technology, more specifically the efficiency of the PV panel and the inverter, which converts the direct current (DC) PV output to "grid-level" alternating current (AC). 
+
 %% SOURCE: Research plan
-To compute the potential energy output, firstly the amount of solar power reaching a tilted panel/collector surface must be computed. This quantity is defined as global solar irradiance and given in W/m2. It consists of 3 components: a direct or beam component, a diffuse component and a reflected component (see Figure 3a). They are calculated from measurements of global horizontal (GHI), direct normal (DNI) and diffuse horizontal irradiance (DHI). Direct normal irradiance is converted to the tilted beam component via a geographic projection shown in Figure 3b. Diffuse tilted irradiance is more complex to determine due to its diffracted nature. Several models exist with different assumptions and hence varying complexity. Gueymard [15] compared several of these models and compared their approximation errors under different operating conditions. While no model clearly outperforms the other models, his analysis shows the Klucher method [16] amongst the best in most scenarios. The reflected component is given by another geometric conversion based on the ground’s surface reflectance. The mathematical formulae for the conversions are demonstrated for example by Gulin et al. [17].
+%To compute the potential energy output, firstly the amount of solar power reaching a tilted panel/collector surface must be computed. This quantity is defined as global solar irradiance and given in W/m2. It consists of 3 components: a direct or beam component, a diffuse component and a reflected component (see Figure 3a). They are calculated from measurements of global horizontal (GHI), direct normal (DNI) and diffuse horizontal irradiance (DHI). Direct normal irradiance is converted to the tilted beam component via a geographic projection shown in Figure 3b. Diffuse tilted irradiance is more complex to determine due to its diffracted nature. Several models exist with different assumptions and hence varying complexity. Gueymard [15] compared several of these models and compared their approximation errors under different operating conditions. While no model clearly outperforms the other models, his analysis shows the Klucher method [16] amongst the best in most scenarios. The reflected component is given by another geometric conversion based on the ground’s surface reflectance. The mathematical formulae for the conversions are demonstrated for example by Gulin et al. [17].
 
 % Figure 3: a) three solar irradiance components reach a solar panel: direct (beam), diffuse and reflected irradiance; b) geometry for calculating the angle of incidence of direct beam irradiance on a tilted plane;  , : surface tilt & azimuth, z : apparent sun zenith,  : angle of incidence [17]
 
@@ -56,35 +99,37 @@ To compute the potential energy output, firstly the amount of solar power reachi
 \begin{subfigure}[t]{.43\textwidth}
   \centering
   \includegraphics[width=\linewidth]{images/Figs/poa.pdf}  
+    \subcaption{}
   \label{figa:solar_geom}
-  \subcaption{}
 \end{subfigure}
 \begin{subfigure}[t]{.53\textwidth}
   \centering
   \includegraphics[width=\linewidth]{images/Figs/diffuse_components.png}  
+    \subcaption{}
   \label{figb:solar_geom}
-  \subcaption{}
 \end{subfigure}
 \caption{Geometrical models for calculating (a) the angle of incidence of direct beam radiation on a tilted plane, and (b) the isotropic, circumsolar and horizon diffuse components (Source: \citet{brownson_44_nodate}).}
 \label{fig:solar_geom}
 \end{figure}
 
-
-Widely accepted physical and empirical models are used to compute the plane-of-array (POA) radiation.
-%
-The $G_{Bt}$ is computed from $G_B$ and the angle of incidence of the sun rays on the tilted panel ($\theta$) \cite{gulin_estimation_2013}:
+To compute the direct, diffuse and reflected tilted irradiance components $G_{Bt}$, $G_{Dt}$ and $G_{Rt}$, empirical and geometrical models are widely accepted in the literature. 
+The direct component is obtained from a geometrical projection of the horizontal $G_B$ on the angle of incidence of the sun rays on the tilted panel ($\theta$) (see Fig.~\ref{figa:solar_geom}). Mathematicaly, this projection is defined as \cite{gulin_estimation_2013}:
 
 \begin{equation}
 \label{eq:direct}
     G_{Bt} = G_{B} * \max \left( 0, \frac{\cos(\theta)}{\cos(\theta_Z)} \right)
 \end{equation}
+
+where
 \begin{equation}
 \label{eq:dir_angle}
 \cos(\theta) = \sin(\beta) \sin(\theta_Z) \cos(\gamma_S - \gamma) + \cos(\beta) \cos(\theta_Z) 
 \end{equation}
 
 The angles $\theta_Z$ and $\gamma_S$ describe the sun zenith and azimuth angles, respectively, while roof tilt and aspect are given by $\beta$ and $\gamma$.
-%
+
+Diffuse tilted irradiance is more complex to determine due to its diffracted nature. Several models exist with different assumptions and hence varying complexity. \citet{assouline_estimation_2017} reviews these different models and compares the temporal resolutions for which they are applicable.
+Of the methods listed in \citet{assouline_estimation_2017} , the Perez model ~\cite{perez_modeling_1990} is the most frequently used model in the reviewed literature \cite{buffat_scalable_2018,jakubiec_method_2013,mainzer_assessment_2017,wegertseder_combining_2016}, and will also be used throughout this thesis.
 The empirical formula for $G_{Dt}$ using the Perez model is given by~\cite{perez_modeling_1990}:
 
 \begin{equation}
@@ -94,9 +139,9 @@ G_{Dt} = G_D * \left[ (1 - F_1) \left( \frac{1 + \cos \beta}{2} \right)
        + F_2 \sin \beta \right]
 \end{equation}
 
-where $F_1$ and $F_2$ are empirically fitted functions for the circumsolar and horizon brightness, and $a$, $b$ are geometric angles. The derivation of these factors is described in \cite{loutzenhiser_empirical_2007}.
-%
-The calculation of $G_{Rt}$ from the surface albedo $\rho$ is given by \cite{duffie_solar_2013}:
+where $F_1$ and $F_2$ are empirically fitted functions for the circumsolar and horizon brightness, and $a$, $b$ are geometric angles. The derivation of these factors is described in \cite{loutzenhiser_empirical_2007}. The three addends in Eq.~\ref{eq:diffuse} represent an isotropic component, a circumsolar component originating from the sun disk (modelled as a point source) and a horizon component respectively, as shown in Fig.~\ref{figb:solar_geom}.
+
+The reflected radiation ($G_{Rt}$) is again obtained from a widely used geometric projection based on the surface albedo $\rho$, which is defined as \cite{duffie_solar_2013}:
 
 \begin{equation}
 \label{eq:reflected}
@@ -114,11 +159,6 @@ G_{Bt} = F_B G_B, \quad G_{Dt} = F_D G_D, \quad G_{Rt} = F_R G_h
 \subsubsection{PV module and inverter efficiency}
 \label{app:efficiency}
 
-For the calculation of technical potential, PV and solar thermal potentials must be separated. The conversion of global irradiance to PV potentials is driven by two types of losses: the panel efficiency and the performance ratio. The panel efficiency is dependent on the selected technology and lies typically between 15-20\%. The performance ratio considers several external factors affecting the system’s performance, such as operating temperature, panel obstruction or converter losses. It can thus be calculated using an analytical formula [9], in most large-scale studies it is however approximated as 80\% [3], [5], [6]. Given the global irradiance on tilted surfaces Gt, the useful rooftop area AR, the power factor PF and the panel efficiency $\eta_{PV}$, the total PV power output per rooftop $P_{PV}$ (in $W$) can hence be calculated as:
-
-\begin{equation}
-    P_{PV} = G_t \times A_R \times \eta_{PV} \times PF 
-\end{equation}
 The module and inverter efficiencies are computed using the \textit{PVWatts} model developed by the National Renewable Energy Laboratory (NREL) \cite{dobos_pvwatts_2014}. The DC power output of a PV panel is modelled as a function of the tilted radiation $G_t$ and the cell temperature $T_{cell}$:
 
 \begin{equation}
@@ -231,96 +271,39 @@ The $S_{sh}(t)$ is computed for each time step $t$ as the ratio of the number of
 
 The sky view factor (SVF) represents the visible proportion of the sky and is computed from the same horizon maps as the shading effects.
 
+\begin{comment}
+\subsection{Solar thermal heat generation}
+
+The computation of the technical potential of a solar thermal collector is more complex to compute, as the solar thermal collector is typically coupled with a heat pump and a hot water tank. In the thermal application, the temperature of the collector and the ambience also play a larger role. Some studies still consider a constant efficiency value [27], while several studies suggest to consider temperature and incident irradiance [11], [28], [29].
+\end{comment}
+
 \subsubsection{Available area for solar panel installation}
+
+
+Based on the an early study of RPV potential in Europe \cite{iea_potential_2002}, we identify three factors of the rooftop available area that are accounted for in different ways in the literature, namely (i) the total roof area, (ii) the roof exposure or suitability and (iii) the roof utilisation. 
+
+\begin{comment}
+% For individual roofs, panels can be custom-fitted based on aerial photographs ~\cite{ordonez_analysis_2010} to realistically estimate the maximum available area, taking into account the rooftop geometry as well as any obstructing objects inhibiting the placement of solar panels (roof superstructures).
+% Custom-fitting however is not scalable to entire cities or regions, requiring either image processing \cite{mainzer_assessment_2017} or high-resolution 3D building models \cite{engel_effiziente_nodate} for a detailed estimation of the available area.
+% As the required input data is not available for many study areas and the computational time for these methods may be prohibitively high, approximative approaches are widely used in the literature.
+These range from using standard tabulated factors based on expert opinions [26], statistical methods [7] and extrapolation techniques based on Machine Learning [3]. Assouline et al. [14] provide a detailed analysis of these methods. 
+
+Focus primarily on radiation: Buffat, Desthieux; compute for individual systems: Calcabrini; 
+Wegertseder: 25\% of useful roof area for res., 30\% for housing blocks, 50\% for high-rise towers
+
+strzalka: manually excluding roofs with windows etc., otherwise using all areas
+
+exclude small areas and strongly shaded areas: Hong (per time step)
+
+Thus, many studies employ constant value methods \cite{assouline_estimation_2017}, which assume a constant ratio of available area. 
+These ratios may be formulated with reference to territorial areas or population count \cite{izquierdo_method_2008,iea_potential_2002,wiginton_quantifying_2010,bodis_high-resolution_2019}, based on building prototypes \cite{wegertseder_combining_2016} or formulated as a constant fraction of individual roofs~\cite{portmann_sonnendach.ch:_2016}. 
+In studies where detailed roof data is available through building cadastres 
+Full rooftops \cite{bodis_high-resolution_2019}, rooftop avail area fraction ()
 
 The geospatial algorithm is used to virtually install PV panels on the tilted roofs by projecting rectangular polygons onto these surfaces, as shown in Fig.~\ref{fig:panels}c. 
 The starting point for this process are the roof polygons and superstructures (Fig.~\ref{fig:panels}a). Panels are installed on the grey areas in Fig~\ref{fig:panels}b, after superstructures (if applicable) and a buffer of 40cm are removed from the polygons~\cite{assouline_large-scale_2018}. The panels are installed in adjacent rows along the roof aspect, starting from the bottom left corner, as described in Algorithm \ref{alg:panels}. It is implemented using the python \texttt{geopandas} library \cite{kelsey_jordahl_geopandas/geopandas:_2019}.
 
 Virtual PV panels were placed in both horizontal and vertical alignments, as no alignment has technical advantages over the other and both are widespread. The alignment that allows the higher number of panels to be installed on each roof is selected as final panel alignment. 
-
-
-\subsection{Configuration of solar panels on flat roofs}
-\label{app_flat}
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=.7\linewidth]{Figs/flat_panels2.pdf}  
-	\caption{Geometric model for calculating mutual shading between panel rows, simplified in 2 dimensions and assuming infinite length of the panel rows.}
-	\label{fig:flat_concept}
-\end{figure}
-
-In this work, panels on flat roofs are not modelled as flat panels on the surface, but instead they are modelled as rows of south-facing panels. For this, the tilt angle ($\beta$) and the distance between adjacent rows of panels ($D$) have to be chosen. We use a 2-dimensional geometric model, shown in Figure~\ref{fig:flat_concept}, to simulate the PV output of roofs with different panel configurations (i.e. different values for $\beta$ and $D$). The optimal parameters are then selected as a trade-off between the simulated PV output and the economic feasibility (indicated by the capacity factor).
-
-The simulation also accounts for mutual shading between panel rows, which reduces the direct tilted radiation and the skyview factor.
-The additional direct shading ($S_{\mathit{flat}}$) of a panel at a time $t$ is given by the ratio of the shaded panel height ($H_s$) to the total panel height ($H$). For computational reasons, we only consider distances which are integer multiples of the projected panel height, i.e. $D=n*H \cos{\beta}$. $S_{\mathit{flat}}(t)$ is hence given by:
-
-\begin{equation}
-\label{eq:flat_Sh}
-    S_{\mathit{flat}}(t) = \frac{H_s}{H} =  \frac{1 - n \frac{\tan{\theta_Z}}{\tan{\beta}}}
-               {1 + \frac{\tan{\theta_Z}}{\tan{\beta}}}
-\end{equation}
-
-where $\theta_z$ denotes the zenith angle of the sun. As $S_{sh}$ is bounded in the interval $[0,1]$, the minimum and maximum zenith angles for the mutual shading effects are:
-
-\begin{equation}
-\begin{aligned}
-\label{eq:flat_theta}
-    \theta_{min} & = 90^\circ - \tanh(\tfrac{\tan{\beta}}{n} ) \\
-    \theta_{max} & = 90^\circ
-\end{aligned}
-\end{equation}
-
-In addition to direct shading, the installation of adjacent panel rows reduces the skyview factor ($\mathit{SVF}_{\mathit{flat}}$). The SVF is computed as the fraction of a semisphere placed in the center of the panel that is covered by the previous panel row. In the 2D case, this fraction is represented by the angle $\alpha$ shown in Fig.~\ref{fig:flat_concept}. The $\mathit{SVF}_{\mathit{flat}}$ is hence computed as:
-
-\begin{equation}
-\begin{aligned}
-\label{eq:flat_svf}
-    \mathit{SVF}_{\mathit{flat}} & = \frac{\alpha}{\pi} \\
-    \tan{\alpha} & = \frac{\tan{\beta}}{2 n + 1}
-\end{aligned}
-\end{equation}
-
-To choose the optimal tilt angle and distance between panel rows, we compute the annual PV output per unit area of roof surface ($\mathit{Ssh}_{\mathit{out}}$, in kWh$_{\mathit{pv}}$/m$^2_{\mathit{roof}}$) and the annual capacity factor ($\mathit{CF}$, in kWh$_{\mathit{pv}}$/kWp):
-
-\begin{equation}
-\begin{aligned}
-\label{eq:flat_pv}
-    \mathit{PV}_{\mathit{out}} &= \sum_t G_t(t) * \bar{A}_{\mathit{panels}} * \eta_{PV} \\
-    \mathit{CF} &= \frac{A_{\mathit{cap}}}{\bar{A}_{\mathit{panels}}} \mathit{PV}_{\mathit{out}}
-\end{aligned}
-\end{equation}
-
-where $\bar{A}_{\mathit{panels}}$ denotes the normalized panelled area, i.e. the PV panel area per unit of roof surface (in m$^2_{\mathit{panels}}$/m$^2_{\mathit{roof}}$), and $A_{\mathit{cap}}$ denotes the area required to install a peak power of 1 kWp. $A_{\mathit{cap}}$ is estimated at 6 m$^2$/kWp. $\bar{A}_{\mathit{panels}}$ is given by:
-\begin{equation}
-\label{eq:flat_n_norm}
-    \bar{A}_{\mathit{panels}} = \frac{1}{(n+1) \cos{\beta}}
-\end{equation}
-
-\begin{figure}[tb]
-	\centering
-	\begin{subfigure}{.49\textwidth}
-		\centering
-		% include second image
-		\includegraphics[width=.8\linewidth]{Figs/mututal_pv_out.png}  
-	\end{subfigure}
-	\begin{subfigure}{.49\textwidth}
-		\centering
-		% include first image
-		\includegraphics[width=.8\linewidth]{Figs/mututal_cap_factor.png}  
-	\end{subfigure}
-	\caption{a) PV output per unit of roof area and b) capacity factor, for different configurations of panel tilt and distance between panels on flat rooftops}
-	\label{fig:flat_panels}
-\end{figure}
-
-The results for simulating $\mathit{PV}_{\mathit{out}}$ and $\mathit{CF}$ for different $\beta$ and $n$ is shown in Figure \ref{fig:flat_panels}.
-The simulation assumes a nominal horizontal radiation of 1000 W/m$^2$ and accounts for the effects of mutual shading between rows ($S_{\mathit{flat}}$ and $\mathit{SVF}_{\mathit{flat}}$). 
-DR in Fig.~\ref{fig:flat_panels} denotes the "distance ratio", i.e. the integer multiple $n$. While total PV output is largest for rows without spacing, this configuration is the least economically feasible, as it has the lowest $\mathit{CF}$. If panel rows are placed with some spacing, the PV output is higher and the capacity factor peaks at a panel tilt of 25$^\circ$-50$^\circ$. 
-Based on these results, we choose a panel tilt of 30$^\circ$ and a distance of 1 panel height ($n=1$) for flat roofs as a trade-off between PV output and capacity factor.
-
-\begin{comment}
-\subsection{Solar thermal heat generation}
-
-The computation of the technical potential of a solar thermal collector is more complex to compute, as the solar thermal collector is typically coupled with a heat pump and a hot water tank. In the thermal application, the temperature of the collector and the ambience also play a larger role. Some studies still consider a constant efficiency value [27], while several studies suggest to consider temperature and incident irradiance [11], [28], [29].
 \end{comment}
 
 \section{Shallow geothermal energy}

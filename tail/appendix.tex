@@ -214,6 +214,87 @@ The computation of these maps is the most computationally expensive step in the 
 
 The sky view factor is computed from similar horizon maps as described above for 32 equally spaced azimuth bins and a horizon distance of 100 m, using the \textit{skyview} add-on for GRASS GIS~\cite{zaksek_sky-view_2011}. The computation is performed in parallel over 64 sub-regions.
 
+
+
+\section{Configuration of solar panels on flat roofs}
+\label{app_flat}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=.7\linewidth]{Figs/flat_panels2.pdf}  
+	\caption{Geometric model for calculating mutual shading between panel rows, simplified in 2 dimensions and assuming infinite length of the panel rows.}
+	\label{fig:flat_concept}
+\end{figure}
+
+In this work, panels on flat roofs are not modelled as flat panels on the surface, but instead they are modelled as rows of south-facing panels. For this, the tilt angle ($\beta$) and the distance between adjacent rows of panels ($D$) have to be chosen. We use a 2-dimensional geometric model, shown in Figure~\ref{fig:flat_concept}, to simulate the PV output of roofs with different panel configurations (i.e. different values for $\beta$ and $D$). The optimal parameters are then selected as a trade-off between the simulated PV output and the economic feasibility (indicated by the capacity factor).
+
+The simulation also accounts for mutual shading between panel rows, which reduces the direct tilted radiation and the skyview factor.
+The additional direct shading ($S_{\mathit{flat}}$) of a panel at a time $t$ is given by the ratio of the shaded panel height ($H_s$) to the total panel height ($H$). For computational reasons, we only consider distances which are integer multiples of the projected panel height, i.e. $D=n*H \cos{\beta}$. $S_{\mathit{flat}}(t)$ is hence given by:
+
+\begin{equation}
+\label{eq:flat_Sh}
+    S_{\mathit{flat}}(t) = \frac{H_s}{H} =  \frac{1 - n \frac{\tan{\theta_Z}}{\tan{\beta}}}
+               {1 + \frac{\tan{\theta_Z}}{\tan{\beta}}}
+\end{equation}
+
+where $\theta_z$ denotes the zenith angle of the sun. As $S_{sh}$ is bounded in the interval $[0,1]$, the minimum and maximum zenith angles for the mutual shading effects are:
+
+\begin{equation}
+\begin{aligned}
+\label{eq:flat_theta}
+    \theta_{min} & = 90^\circ - \tanh(\tfrac{\tan{\beta}}{n} ) \\
+    \theta_{max} & = 90^\circ
+\end{aligned}
+\end{equation}
+
+In addition to direct shading, the installation of adjacent panel rows reduces the skyview factor ($\mathit{SVF}_{\mathit{flat}}$). The SVF is computed as the fraction of a semisphere placed in the center of the panel that is covered by the previous panel row. In the 2D case, this fraction is represented by the angle $\alpha$ shown in Fig.~\ref{fig:flat_concept}. The $\mathit{SVF}_{\mathit{flat}}$ is hence computed as:
+
+\begin{equation}
+\begin{aligned}
+\label{eq:flat_svf}
+    \mathit{SVF}_{\mathit{flat}} & = \frac{\alpha}{\pi} \\
+    \tan{\alpha} & = \frac{\tan{\beta}}{2 n + 1}
+\end{aligned}
+\end{equation}
+
+To choose the optimal tilt angle and distance between panel rows, we compute the annual PV output per unit area of roof surface ($\mathit{Ssh}_{\mathit{out}}$, in kWh$_{\mathit{pv}}$/m$^2_{\mathit{roof}}$) and the annual capacity factor ($\mathit{CF}$, in kWh$_{\mathit{pv}}$/kWp):
+
+\begin{equation}
+\begin{aligned}
+\label{eq:flat_pv}
+    \mathit{PV}_{\mathit{out}} &= \sum_t G_t(t) * \bar{A}_{\mathit{panels}} * \eta_{PV} \\
+    \mathit{CF} &= \frac{A_{\mathit{cap}}}{\bar{A}_{\mathit{panels}}} \mathit{PV}_{\mathit{out}}
+\end{aligned}
+\end{equation}
+
+where $\bar{A}_{\mathit{panels}}$ denotes the normalized panelled area, i.e. the PV panel area per unit of roof surface (in m$^2_{\mathit{panels}}$/m$^2_{\mathit{roof}}$), and $A_{\mathit{cap}}$ denotes the area required to install a peak power of 1 kWp. $A_{\mathit{cap}}$ is estimated at 6 m$^2$/kWp. $\bar{A}_{\mathit{panels}}$ is given by:
+\begin{equation}
+\label{eq:flat_n_norm}
+    \bar{A}_{\mathit{panels}} = \frac{1}{(n+1) \cos{\beta}}
+\end{equation}
+
+\begin{figure}[tb]
+	\centering
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		% include second image
+		\includegraphics[width=.8\linewidth]{Figs/mututal_pv_out.png}  
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		% include first image
+		\includegraphics[width=.8\linewidth]{Figs/mututal_cap_factor.png}  
+	\end{subfigure}
+	\caption{a) PV output per unit of roof area and b) capacity factor, for different configurations of panel tilt and distance between panels on flat rooftops}
+	\label{fig:flat_panels}
+\end{figure}
+
+The results for simulating $\mathit{PV}_{\mathit{out}}$ and $\mathit{CF}$ for different $\beta$ and $n$ is shown in Figure \ref{fig:flat_panels}.
+The simulation assumes a nominal horizontal radiation of 1000 W/m$^2$ and accounts for the effects of mutual shading between rows ($S_{\mathit{flat}}$ and $\mathit{SVF}_{\mathit{flat}}$). 
+DR in Fig.~\ref{fig:flat_panels} denotes the "distance ratio", i.e. the integer multiple $n$. While total PV output is largest for rows without spacing, this configuration is the least economically feasible, as it has the lowest $\mathit{CF}$. If panel rows are placed with some spacing, the PV output is higher and the capacity factor peaks at a panel tilt of 25$^\circ$-50$^\circ$. 
+Based on these results, we choose a panel tilt of 30$^\circ$ and a distance of 1 panel height ($n=1$) for flat roofs as a trade-off between PV output and capacity factor.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Uncertainty propagation for tilted radiation}
