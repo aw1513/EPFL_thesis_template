@@ -74,7 +74,40 @@ A review of statistical and geospatial techniques for quantifying the available 
 \begin{equation}
     P_{PV} = G_t \times A_{PV} \times \eta_{PV} \times \eta_\mathit{inv} \times \eta_\mathit{losses}
 \end{equation}
-While few studies use constant values for panel and inverter efficiencies \cite{assouline_quantifying_2017,assouline_large-scale_2018,klauser_solarpotentialanalyse_2016}, the majority of the reviewed studies use analytical or empirical models to quantify the efficiencies as a function of radiation, temperature, wind speed and technical characteristics of PV systems. The level of detail of these models ranges from the analytical modelling of invidual cells and their arrangement in a PV panel \cite{buffat_scalable_2018} to entirely coefficient-based empirical models \cite{mainzer_assessment_2017} (see Section~\ref{phys_models}). Other losses, however, are accounted for as constant loss factors in most studies. These may account for panel soiling, degradation, network and wiring losses, partial shading of panels and other factors.
+While several studies use constant values for panel and inverter efficiencies \cite{assouline_quantifying_2017,wegertseder_combining_2016,romero_rodriguez_assessment_2017,ordonez_analysis_2010,hong_development_2017}, many high-resolution PV potential studies use analytical or empirical models to quantify the efficiencies as a function of radiation, temperature, wind speed and technical characteristics of PV systems. The level of detail of these models ranges from the analytical modelling of invidual cells and their arrangement in a PV panel \cite{buffat_scalable_2018} to entirely coefficient-based empirical models \cite{mainzer_assessment_2017} (see Section~\ref{phys_models}). Other losses, however, are accounted for as constant loss factors in most studies. These may account for panel soiling, degradation, network and wiring losses, partial shading of panels and other factors.
+
+An overview of these parameters used to estimate the physical, geographic and technical PV potential and a summary of popular methods to compute these parameters is provided in Table~\ref{tab:solar_methods_compare}.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Parameters for estimating the physical, geographic and technical potential and a (non-exhaustive) review of methods to compute these parameters.}
+\label{tab:solar_methods_compare}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llllll}
+\hline
+\textbf{Type} & \textbf{Parameters} & \textbf{Unit} & \textbf{Description} & \textbf{Methods (selected)} & \textbf{References} \\ \hline
+\multirow{4}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Physical}\\ \textit{potential}\end{tabular}} & \multirow{4}{*}{$G_h, G_B, G_D$} & \multirow{4}{*}{W/m$^2$} & \multirow{4}{*}{\begin{tabular}[c]{@{}l@{}}Global, direct, diffuse\\ horizontal solar radiation\end{tabular}} & Satellite / measured data & \cite{bodis_high-resolution_2019,buffat_scalable_2018,ramirez_camargo_spatio-temporal_2015,calcabrini_simplified_2019} \\
+ &  &  &  & Empirical models & \cite{assouline_estimation_2017} \\
+ &  &  &  & Kriging &  \cite{alsamamra_comparative_2009,rehman_spatial_2000}  \\
+ &  &  &  & Machine Learning & \cite{assouline_quantifying_2017,assouline_large-scale_2018,hocaoglu_hourly_2008,notton_neural_2013,sahin_application_2013} \\ \hline
+\multirow{11}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Geographic}\\ \textit{potential}\end{tabular}} & $G_t$ & \multirow{4}{*}{W/m$^2$} & Tilted (POA) radiation & $G_t = G_{Bt} + G_{Dt} + G_{Rt}$ &  \\
+ & $G_{Bt}, G_{Rt}$ &  & Direct, reflected component & Geometric projection & \cite{gulin_estimation_2013} \\
+ & \multirow{2}{*}{$G_{Dt}$} &  & \multirow{2}{*}{Diffuse component} & Perez model & \cite{perez_modeling_1990, buffat_scalable_2018,jakubiec_method_2013,mainzer_assessment_2017,wegertseder_combining_2016} \\
+ &  &  &  & Other (Hay, Liu-Jordan, Klein etc.) & \cite{desthieux_solar_2018,izquierdo_method_2008, assouline_estimation_2017}  \\ \cline{2-6} 
+ & \multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}SVF / \\ Shading\end{tabular}} & \multirow{3}{*}{-} & \multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}Sky view factor /\\ Shaded roof area\end{tabular}} & Fisheye images &  \cite{calcabrini_simplified_2019}\\
+ &  &  &  & Digital surface model/LiDaR & \cite{jakubiec_method_2013,desthieux_solar_2018,hong_development_2017} \\
+ &  &  &  & Roof fraction (constant) & \cite{mainzer_assessment_2017,wiginton_quantifying_2010, izquierdo_method_2008} \\ \cline{2-6} 
+ & \multirow{4}{*}{APV} & \multirow{4}{*}{m$^2$} & \multirow{4}{*}{Available roof area} & Entire roof area & \cite{ramirez_camargo_spatio-temporal_2015,buffat_scalable_2018,hong_development_2017} \\
+ &  &  &  & Roof fraction (constant) & \cite{iea_potential_2002,wegertseder_combining_2016,portmann_sonnendach.ch:_2016,wiginton_quantifying_2010}  \\
+ &  &  &  & Derived from geospatial data & \cite{assouline_large-scale_2018,ordonez_analysis_2010, mainzer_assessment_2017} \\
+ &  &  &  & Extrapolation to the large-scale & \cite{izquierdo_method_2008, wegertseder_combining_2016,assouline_quantifying_2017} \\ \hline
+\multirow{6}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Technical}\\ \textit{potential}\end{tabular}} & \multirow{2}{*}{$\eta_{PV}$} & \multirow{2}{*}{-} & \multirow{2}{*}{\begin{tabular}[c]{@{}l@{}}PV panel, inverter \\ efficiency\end{tabular}} & Empirical model & \cite{jakubiec_method_2013,ramirez_camargo_spatio-temporal_2015,lukac_buildings_2014,buffat_scalable_2018,mainzer_assessment_2017,calcabrini_simplified_2019} \\
+ &  &  &  & Constant value &  \cite{wegertseder_combining_2016,romero_rodriguez_assessment_2017,ordonez_analysis_2010,assouline_quantifying_2017,hong_development_2017,bodis_high-resolution_2019} \\
+ & $\eta_{\mathit{losses}}$ & - & \begin{tabular}[c]{@{}l@{}}System losses (Soiling, wiring,\\ degradation etc.)\end{tabular} & Constant value & \cite{klauser_solarpotentialanalyse_2016,buffat_scalable_2018,mainzer_assessment_2017,lorenz_regional_2011,bodis_high-resolution_2019} \\ \hline
+\end{tabular}
+}
+\end{table}
 
 \begin{comment}
 The panel efficiency is dependent on the selected technology and lies typically between 15-20\%. The performance ratio considers several external factors affecting the system’s performance, such as operating temperature, panel obstruction or converter losses. It can thus be calculated using an analytical formula [9], in most large-scale studies it is however approximated as 80\% [3], [5], [6]. Given the global irradiance on tilted surfaces Gt, the useful rooftop area AR, the power factor PF and the panel efficiency $\eta_{PV}$, the total PV power output per rooftop $P_{PV}$ (in $W$) can hence be calculated as:
@@ -94,7 +127,7 @@ In particular, empirical models are used in the literature (i) to quantify the p
 \subsubsection{Plane-of-array radiation}
 \label{app:irrad}
 
-\begin{figure}[htb]
+\begin{figure}[tb]
 \centering
 \begin{subfigure}[t]{.43\textwidth}
   \centering
@@ -159,7 +192,10 @@ G_{Bt} = F_B G_B, \quad G_{Dt} = F_D G_D, \quad G_{Rt} = F_R G_h
 \subsubsection{PV module and inverter efficiency}
 \label{app:efficiency}
 
-The module and inverter efficiencies are computed using the \textit{PVWatts} model developed by the National Renewable Energy Laboratory (NREL) \cite{dobos_pvwatts_2014}. The DC power output of a PV panel is modelled as a function of the tilted radiation $G_t$ and the cell temperature $T_{cell}$:
+In contrast to the modelling of the POA radiation, a variety of different empirical models exist to compute the electricity yield of PV panels. These methods commonly use the PV cell temperature as input
+To model different PV technologies, \citet{buffat_scalable_2018} use 
+
+In this work, the module and inverter efficiencies are computed using the \textit{PVWatts} model developed by the National Renewable Energy Laboratory (NREL) \cite{dobos_pvwatts_2014}. The DC power output of a PV panel is modelled as a function of the tilted radiation $G_t$ and the cell temperature $T_{cell}$:
 
 \begin{equation}
 \label{eq:Pdc}
