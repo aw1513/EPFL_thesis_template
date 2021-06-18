@@ -94,15 +94,15 @@ An overview of these parameters used to estimate the physical, geographic and te
 \multirow{11}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Geographic}\\ \textit{potential}\end{tabular}} & $G_t$ & \multirow{4}{*}{W/m$^2$} & Tilted (POA) radiation & $G_t = G_{Bt} + G_{Dt} + G_{Rt}$ &  \\
  & $G_{Bt}, G_{Rt}$ &  & Direct, reflected component & Geometric projection & \cite{gulin_estimation_2013} \\
  & \multirow{2}{*}{$G_{Dt}$} &  & \multirow{2}{*}{Diffuse component} & Perez model & \cite{perez_modeling_1990, buffat_scalable_2018,jakubiec_method_2013,mainzer_assessment_2017,wegertseder_combining_2016} \\
- &  &  &  & Other (Hay, Liu-Jordan, Klein etc.) & \cite{desthieux_solar_2018,izquierdo_method_2008, assouline_estimation_2017}  \\ \cline{2-6} 
+ &  &  &  & Other (Hay, Liu-Jordan, Klein) & \cite{desthieux_solar_2018,izquierdo_method_2008,singh_estimation_2015, assouline_estimation_2017}  \\ \cline{2-6} 
  & \multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}SVF / \\ Shading\end{tabular}} & \multirow{3}{*}{-} & \multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}Sky view factor /\\ Shaded roof area\end{tabular}} & Fisheye images &  \cite{calcabrini_simplified_2019}\\
- &  &  &  & Digital surface model/LiDaR & \cite{jakubiec_method_2013,desthieux_solar_2018,hong_development_2017} \\
+ &  &  &  & Digital surface model/LiDaR & \cite{jakubiec_method_2013,desthieux_solar_2018,hong_development_2017,strzalka_large_2012} \\
  &  &  &  & Roof fraction (constant) & \cite{mainzer_assessment_2017,wiginton_quantifying_2010, izquierdo_method_2008} \\ \cline{2-6} 
  & \multirow{4}{*}{APV} & \multirow{4}{*}{m$^2$} & \multirow{4}{*}{Available roof area} & Entire roof area & \cite{ramirez_camargo_spatio-temporal_2015,buffat_scalable_2018,hong_development_2017} \\
  &  &  &  & Roof fraction (constant) & \cite{iea_potential_2002,wegertseder_combining_2016,portmann_sonnendach.ch:_2016,wiginton_quantifying_2010}  \\
  &  &  &  & Derived from geospatial data & \cite{assouline_large-scale_2018,ordonez_analysis_2010, mainzer_assessment_2017} \\
  &  &  &  & Extrapolation to the large-scale & \cite{izquierdo_method_2008, wegertseder_combining_2016,assouline_quantifying_2017} \\ \hline
-\multirow{6}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Technical}\\ \textit{potential}\end{tabular}} & \multirow{2}{*}{$\eta_{PV}$} & \multirow{2}{*}{-} & \multirow{2}{*}{\begin{tabular}[c]{@{}l@{}}PV panel, inverter \\ efficiency\end{tabular}} & Empirical model & \cite{jakubiec_method_2013,ramirez_camargo_spatio-temporal_2015,lukac_buildings_2014,buffat_scalable_2018,mainzer_assessment_2017,calcabrini_simplified_2019} \\
+\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Technical}\\ \textit{potential}\end{tabular}} & \multirow{2}{*}{$\eta_{PV}, \eta_{\mathit{inv}}$} & \multirow{2}{*}{-} & \multirow{2}{*}{\begin{tabular}[c]{@{}l@{}}PV panel, inverter \\ efficiency\end{tabular}} & Empirical model & \cite{jakubiec_method_2013,ramirez_camargo_spatio-temporal_2015,lukac_buildings_2014,buffat_scalable_2018,mainzer_assessment_2017,calcabrini_simplified_2019} \\
  &  &  &  & Constant value &  \cite{wegertseder_combining_2016,romero_rodriguez_assessment_2017,ordonez_analysis_2010,assouline_quantifying_2017,hong_development_2017,bodis_high-resolution_2019} \\
  & $\eta_{\mathit{losses}}$ & - & \begin{tabular}[c]{@{}l@{}}System losses (Soiling, wiring,\\ degradation etc.)\end{tabular} & Constant value & \cite{klauser_solarpotentialanalyse_2016,buffat_scalable_2018,mainzer_assessment_2017,lorenz_regional_2011,bodis_high-resolution_2019} \\ \hline
 \end{tabular}
@@ -161,7 +161,7 @@ where
 
 The angles $\theta_Z$ and $\gamma_S$ describe the sun zenith and azimuth angles, respectively, while roof tilt and aspect are given by $\beta$ and $\gamma$.
 
-Diffuse tilted irradiance is more complex to determine due to its diffracted nature. Several models exist with different assumptions and hence varying complexity. \citet{assouline_estimation_2017} reviews these different models and compares the temporal resolutions for which they are applicable.
+Diffuse tilted irradiance is more complex to determine due to its diffracted nature. Several models exist with different assumptions and hence varying complexity. \citet{assouline_estimation_2017} review these different models and compares the temporal resolutions for which they are applicable.
 Of the methods listed in \citet{assouline_estimation_2017} , the Perez model ~\cite{perez_modeling_1990} is the most frequently used model in the reviewed literature \cite{buffat_scalable_2018,jakubiec_method_2013,mainzer_assessment_2017,wegertseder_combining_2016}, and will also be used throughout this thesis.
 The empirical formula for $G_{Dt}$ using the Perez model is given by~\cite{perez_modeling_1990}:
 
@@ -192,44 +192,47 @@ G_{Bt} = F_B G_B, \quad G_{Dt} = F_D G_D, \quad G_{Rt} = F_R G_h
 \subsubsection{PV module and inverter efficiency}
 \label{app:efficiency}
 
-In contrast to the modelling of the POA radiation, a variety of different empirical models exist to compute the electricity yield of PV panels. These methods commonly use the PV cell temperature as input
-To model different PV technologies, \citet{buffat_scalable_2018} use 
+In contrast to the modelling of the POA radiation, various empirical models exist to compute the electricity yield of PV systems. 
+To compute the panel efficency ($\eta_{PV}$), the most detailed models simulate the maximum power point of the PV panel using single-diode current voltage equations \cite{strzalka_large_2012,buffat_scalable_2018}.
+Most studies use a more generalised approach, which models $\eta_{PV}$ as a function of $G_t$, the PV cell temperature (derived from the ambient temperature) and the nominal performance rating of the PV panel \cite{jakubiec_method_2013,calcabrini_simplified_2019,singh_estimation_2015,ramirez_camargo_spatio-temporal_2015,mainzer_assessment_2017}. \citet{jakubiec_method_2013} compare PV efficiency models for widely used tools for two test buildings.
 
-In this work, the module and inverter efficiencies are computed using the \textit{PVWatts} model developed by the National Renewable Energy Laboratory (NREL) \cite{dobos_pvwatts_2014}. The DC power output of a PV panel is modelled as a function of the tilted radiation $G_t$ and the cell temperature $T_{cell}$:
-
+A general formulation of the DC power output of a PV panel ($P_{dc}$) is formulated in the \textit{PVWatts} model developed by the National Renewable Energy Laboratory (NREL) \cite{dobos_pvwatts_2014}, which is used in similar formulations for example in \cite{jakubiec_method_2013,ramirez_camargo_spatio-temporal_2015,singh_estimation_2015,calcabrini_simplified_2019}. 
+In this work, we follow these studies, modelling the DC power output of a PV panel as:
 \begin{equation}
 \label{eq:Pdc}
-    P_{dc} = \frac{G_{t}}{1000} P_{dc0} (1 + \gamma_{pdc}(T_{cell}-T_{ref}))
+    P_{dc} = \frac{G_{t}}{1000} P_{dc0} (1 + \gamma_\mathit{pdc}(T_\mathit{cell}-T_\mathit{ref}))
 \end{equation}
-
-where $P_{dc0}$ is the DC rating of the panel, $\gamma_{pdc}$ is its temperature coefficient and $T_{ref}$ is the reference temperature.
+where $G_t$ is the tilted radiation, $P_{dc0}$ is the DC rating of the panel,  $\gamma_\mathit{pdc}$ is its temperature coefficient, $T_\mathit{cell}$ is the cell temperature and $T_\mathit{ref}$ is the reference temperature.
 %
-We use average panel specifications of mid-range 60-cell mono-crystalline PV modules, the most frequently used technology in Switzerland \cite{buffat_scalable_2018}, from three market-leading manufacturers (JA Solar, Jinko Solar, Trinasolar).
+We use average panel specifications of mid-range 60-cell mono-crystalline PV modules, the most frequently used technology in Switzerland \cite{buffat_scalable_2018}, from three market-leading manufacturers (JA Solar, Jinko Solar, Trinasolar). The values are reported in Table~\ref{tab:efficiency}.
 %
-The \textit{PVSyst} model~\cite{faiman_assessing_2008} is used to derive $T_{cell}$ from $G_t$ and the ambient temperature $T_{amb}$:
-
-\begin{equation}
-    T_{cell} = T_{amb} + G_t \frac{\alpha (1 - \eta_m)}{U}
-\end{equation}
-
-where $\alpha$ denoted the absorption coefficient, $\eta_m$ denotes the module efficiency and $U$ is the heat transfer component. 
-%
-From the DC power output and the area of a PV panel ($A_{panel}$), we compute the module efficiency $\eta_{PV}$:
+From the DC power output and the area of a PV panel ($A_\mathit{panel}$), the module efficiency $\eta_{PV}$ is computed as:
 
 \begin{equation}
 \label{eq:eff}
-    \eta_{PV} = \frac{P_{dc}}{G_{t} * A_{panel} }
+    \eta_{PV} = \frac{P_{dc}}{G_{t} * A_\mathit{panel} }
 \end{equation}
-
-The empirical loss formula for the inverter efficiency ($\eta_{inv}$) in \textit{PVWatts} is given by:
+With the exception of \cite{calcabrini_simplified_2019}, the cell temperature is computed in the literature through a linear combination of the ambient temperature $T_\mathit{amb}$ and $G_t$, whereby $G_t$ is multiplied with a constant coefficient based on nominal operating conditions and corrected for the roof absorptivity and radiative heat losses \cite{jakubiec_method_2013}.
+%
+In this work, we use the \textit{PVSyst} model~\cite{faiman_assessing_2008} to derive $T_{cell}$ from $G_t$ and $T_\mathit{amb}$:
 
 \begin{equation}
+    T_\mathit{cell} = T_\mathit{amb} + G_t \frac{\alpha (1 - \eta_m)}{U}
+\end{equation}
+where $\alpha$ denoted the absorption coefficient, $\eta_m$ denotes the module efficiency and $U$ is the heat transfer component, for which we use default values for rooftop-mounted PV systems as suggested by Sandia National Laboratories \cite{holmgren_pvlib_2018} (Table~\ref{tab:efficiency}).
+
+In contrast to Eq.~\ref{eq:Pdc}, which is based on physical principles, the inverter effiency ($\eta_\mathit{inv}$) is modelled using a fully empirical formula with three free parameters. Out of the various sets of coefficients in the literature \cite{mainzer_assessment_2017,lukac_buildings_2014}, we use the empirical loss formula from \textit{PVWatts}, also used in \cite{buffat_scalable_2018}, for consistency with Eq.~\ref{eq:Pdc}. It is defined as \cite{dobos_pvwatts_2014}:
+
+\begin{equation}
+\label{eq:inv}
     \eta_{inv} = \frac{\eta_{nom}}{\eta_{ref}} \left( -0.0162 * \zeta - \frac{0.0059}{\zeta} + 0.9858 \right)
 \end{equation}
 
-where $\zeta = P_{dc}/P_{dc0}$, $\eta_{nom}$ is the nominal inverter efficiency and $\eta_{ref}$ is the reference efficiency. 
+where $\zeta = P_{dc}/P_{dc0}$, $\eta_{nom}$ is the nominal inverter efficiency and $\eta_{ref}$ is the reference efficiency (see Table \ref{tab:efficiency} for values used in this work). 
 %
-The performance factor ($PF$) is obtained by multiplying $\eta_{inv}$ with other system losses. These include soiling, degradation, mismatch, wiring and connection losses and are estimated as 14\% \cite{dobos_pvwatts_2014}. 
+
+Multiplying  $\eta_{inv}$ with other system losses $\eta_\mathit{losses}$, including soiling, degradation, mismatch, wiring and connection losses, yields the performance factor (\textit{PF}) \cite{klauser_solarpotentialanalyse_2016}. 
+These additional losses are estimated throughout this work as 14\% \cite{dobos_pvwatts_2014}. For computing the POA irradiance and the module and inverter efficiency, we use the \texttt{pvlib} python package developed by Sandia National Laboratories \cite{holmgren_pvlib_2018}.
 
 \begin{table}[htbp]
 \centering
@@ -240,24 +243,24 @@ The performance factor ($PF$) is obtained by multiplying $\eta_{inv}$ with other
     \begin{tabular}{lll}
     \hline
     \textbf{Parameter} & \textbf{Value}     & \textbf{Description}          \\ \hline
-    $P_{dc0}$          & $285 Wp$           & Nameplate DC rating           \\
-    $\gamma_{pdc}$     & $-0.39\%/ ^\circ C$& Temperature coefficient       \\
-    $T_{ref}$          & $25^\circ C$       & Cell reference temperature    \\
+    $P_{dc0}$          & 285 Wp           & Nameplate DC rating           \\
+    $\gamma_{pdc}$     & $-0.39$ \%/°C& Temperature coefficient       \\
+    $T_{ref}$          & 25 °C       & Cell reference temperature    \\
     $\alpha$           & 0.9                & Absorption coefficient        \\
     $\eta_m$           & 0.17               & Nominal module efficiency     \\
-    $U$                & $15 W/m^2K$        & Heat transfer component       \\
-    $A_{panel}$        & $1.6 m^2$          & PV panel area                 \\
-    $\eta_{nom}$       & 0.96               & Nominal inverter efficiency   \\
-    $\eta_{ref}$       & 0.9637             & Reference inverter efficiency \\ \hline
+    $U$                & 15 W/m$^2K$        & Heat transfer component       \\
+    $A_\mathit{panel}$        & 1.6 m$^2$          & PV panel area                 \\
+    $\eta_\mathit{nom}$       & 0.96               & Nominal inverter efficiency   \\
+    $\eta_\mathit{ref}$       & 0.9637             & Reference inverter efficiency \\ \hline
     \end{tabular}
 \end{table}
-
-We use the \texttt{pvlib} python package developed by Sandia National Laboratories \cite{holmgren_pvlib_2018} for the computing the POA irradiance and the module and inverter efficiency. All parameter values are shown in Table~\ref{tab:efficiency}.
 
 \subsection{Geospatial techniques}
 \label{GIS_methods}
 
 \subsubsection{Shading effects and sky view factor}
+
+Cite Nguyen and Pearce (important contribution) 
 
 \begin{figure}[htb]
 	\centering
