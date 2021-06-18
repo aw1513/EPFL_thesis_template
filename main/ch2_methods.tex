@@ -258,17 +258,21 @@ These additional losses are estimated throughout this work as 14\% \cite{dobos_p
 \subsection{Geospatial techniques}
 \label{GIS_methods}
 
+In the context of large-scale studies of solar PV potential, geospatial methods are used to accurately quantify shading effects, the sky view factor and the available area for PV installation. The primary inputs for these methods are 2D building or roof geometries in vector format, as well as 3D Light Detection and Ranging (LiDaR) point clouds or digital elevation models (DEM) in raster format. While LiDaR data has a higher spatial resolution and is hence used for building or neighbourhood-scale studies, DEMs are mostly used for studies at regional scale for reasons of computational efficiency. 
+
+In the following, we summarize existing methods to compute shading, SVF and available area, with a focus on methods that are scalable to entire cities or regions.
+Alternative approaches, including constant-value methods and extrapolation techniques, are reviewed in \cite{assouline_estimation_2017}.
+
 \subsubsection{Shading effects and sky view factor}
 
-Cite Nguyen and Pearce (important contribution) 
-
-\begin{figure}[htb]
+\begin{figure}[tb]
 	\centering
 	\begin{subfigure}[t]{.49\textwidth}
 		\centering
 		% include second image
 		\includegraphics[trim=100 0 130 0, clip, width=.9\linewidth]{Figs/horizon.pdf}  
 		\subcaption{}
+        \label{figa:horizon_method}
 	\end{subfigure}
 	\begin{subfigure}[t]{.49\textwidth}
 		\centering
@@ -277,7 +281,7 @@ Cite Nguyen and Pearce (important contribution)
 		\subcaption{}
 		\label{figb:horizon_method}
 	\end{subfigure}
-	\caption{Viewshed horizons for an example roof, (a) conceptual graph with relevant horizon bins for quantification of shading effects, (b) polar plot of horizon height and visible sky proportion ($\mathit{SVF} = 0.3$), with an example sun position for Switzerland (September, 15h UTC).}
+	\caption{Horizon modelling for an example roof. (a) Conceptual graph with relevant horizon bins for quantification of shading effects, (b) polar plot of horizon height and visible sky proportion ($\mathit{SVF} = 0.3$), with an example sun position for Switzerland (September, 15h UTC).}
 	\label{fig:horizon_method}
 \end{figure}
 
@@ -288,27 +292,36 @@ Cite Nguyen and Pearce (important contribution)
 		% include second image
 		\includegraphics[height=.9\linewidth]{images/Figs/demo_vis_09_15h_w_cross.pdf}  
 		\subcaption{}
+        	\label{figa:raster_svf_ssh}
 	\end{subfigure}
 	\begin{subfigure}{.49\textwidth}
 		\centering
 		% include second image
 		\includegraphics[height=.9\linewidth]{images/Figs/svf_w_legend.pdf}  
 		\subcaption{}
+        	\label{figb:raster_svf_ssh}
 	\end{subfigure}
-	\caption{Raster-based (a) cast shadows for one example hour (15h UTC in September, see star in Fig.\ref{figb:horizon_method}) and (b) sky view factor for an area of $200\times200$ m$^2$ in Geneva, Switzerland. The cross on the figures shows the point for which the horizon map is shown in Fig.\ref{figb:horizon_method}.}
+	\caption{Raster-based (a) cast shadows for one example hour (15h UTC in September, see star in Fig.\ref{figb:horizon_method}) and (b) sky view factor for an area of $200\times200$ m$^2$ in Geneva, Switzerland. The cross on the figures shows the point for which the horizon height is shown in Fig.\ref{figb:horizon_method}.}
 	\label{fig:raster_svf_ssh}
 \end{figure}
 
+The computation of shading effects and the SVF follow a common 3D modelling approach, known as shadow casting \cite{levinson_solar_2009,desthieux_solar_2018}, ray tracing \cite{jakubiec_method_2013} or viewshed computation \cite{nguyen_incorporating_2012}. 
+As shown conceptually in Fig.~\ref{figa:horizon_method}, a 3D model of the environment is used to obtain the horizon height for each aspect angle. 
+%
+This horizon height ($\theta_\mathit{min}$ in Fig.~\ref{figa:horizon_method}) describes the visible proportion of the sky for a specific aspect angle ($\gamma$ in Fig.~\ref{figa:horizon_method}), and may also be interpreted as the minimum sun elevation angle required to illuminate a given point. 
+%
+The horizon height for all aspect angles can be visualised as a polar plot, from which the SVF is derived as the visible sky fraction (Fig.~\ref{figb:horizon_method}). The polar plot further indicates whether the given point is shaded during a particular hour of the year based on the sun position (see star in Fig.~\ref{figb:horizon_method}).
 
-To quantify the shading effects, we use GIS to compute horizon maps from a Digital Elevation Model (DEM). 
-The horizon describes the minimum sun elevation angle required to illuminate each pixel of the DEM. 
-Horizon maps are computed for each azimuth angle of the sun (see Figure~\ref{fig:horizon_method} for one example point). From the horizon maps, a binary shading mask of the surface can be derived for each time step, where a $0$ represents a shaded cell, and a $1$ represents a cell that is exposed to the sun.
+While fisheye images \cite{calcabrini_simplified_2019} or LiDaR point clouds \cite{bill_3d_2016,jakubiec_method_2013} may be used for horizon computations, DEMs are by far the most widely used input data, as they enable the computation of horizon heights for an entire region \cite{suri_new_2004}.
+Using a DEM to compute the horizon heights yields a set of raster maps, one for each azimuth angle.
+From these, maps of cast shadows (Fig.~\ref{figa:raster_svf_ssh}) can be computed for any sun position, by selecting the horizon map corresponding to the sun azimuth angle and applying a binary filter to the raster values, setting all values below the sun altitude to 1 (sun exposure) and all values above the sun altitude to 0 (cast shadow).
+%
+The sky view factor is obtained from the same set of horizon maps, which are combined to obtain the SVF for each pixel (Fig.~\ref{figb:raster_svf_ssh}). The SVF is independent of the sun position and hence constant with time. 
 
-The derivation of $C_{sh}$ requires a threshold which defines the suitability of a surface for PV installation. Possible fractions of unsuitable area due to shading are compared in~\cite{wiginton_quantifying_2010}. As the reported values vary largely, we redefine the threshold based on our data. We rate all areas that exhibit a lower-than-average direct sun exposure unsuitable for PV. These areas define the \textit{shaded area coefficient}. The threshold is found by averaging the binary shading masks of 150 non-zero time steps (where the sun is above the horizon), as shown in Figure~\ref{fig:horizons}c. Across all time steps and all roof surfaces, the average sun exposure is 42.7\%, so we choose a rounded threshold of 40\%.
+While some studies compute PV potential at the level of individual pixels \cite{buffat_scalable_2018,ramirez_camargo_spatio-temporal_2015}, the results are often aggregated per building or roof surface \cite{assouline_quantifying_2017,assouline_large-scale_2018,klauser_solarpotentialanalyse_2016}. To aggregate shading effects or the sky view factor per roof, existing methods use 2D building or roof geometries, which are geospatially intersected with the raster maps to average all pixels within a given roof/building. This geospatial overlay further reduces the data storage requirements for the maps of shading and SVF, as all non-relevant areas for rooftop RPV potential are excluded.
 
-The $S_{sh}(t)$ is computed for each time step $t$ as the ratio of the number of illuminated pixels (pixel value $1$ in the binary shading mask) over the total number of pixels with an average sunlight exposure $> 40\%$. The full GIS algorithm is summarized in Algorithm~\ref{alg:shade}. 
-
-The sky view factor (SVF) represents the visible proportion of the sky and is computed from the same horizon maps as the shading effects.
+In this work, we use the shadow casting and SVF computation method as detailed above. We use the open-source GRASS-GIS computational engine, which supports the computation of horizon heights \cite{suri_new_2004} and the sky view factor \cite{zaksek_sky-view_2011} and which is used in several of the reviewed studies \cite{ramirez_camargo_spatio-temporal_2015,nguyen_incorporating_2012,buffat_scalable_2018}. 
+Further details regarding the implementation of the shading and SVF computation for scalability to the national scale for Switzerland are provided Appendix~\ref{app:shade}.
 
 \begin{comment}
 \subsection{Solar thermal heat generation}
@@ -319,7 +332,13 @@ The computation of the technical potential of a solar thermal collector is more 
 \subsubsection{Available area for solar panel installation}
 
 
-Based on the an early study of RPV potential in Europe \cite{iea_potential_2002}, we identify three factors of the rooftop available area that are accounted for in different ways in the literature, namely (i) the total roof area, (ii) the roof exposure or suitability and (iii) the roof utilisation. 
+Based on the an early study of RPV potential in Europe \cite{iea_potential_2002}, we identify three factors of the rooftop available area that are accounted for in different ways in the literature, namely (i) the total roof area, (ii) the roof utilisation and (iii) the roof exposure or suitability. 
+
+The total roof area
+
+The roof exposure/suitability
+
+The roof utilisation
 
 \begin{comment}
 % For individual roofs, panels can be custom-fitted based on aerial photographs ~\cite{ordonez_analysis_2010} to realistically estimate the maximum available area, taking into account the rooftop geometry as well as any obstructing objects inhibiting the placement of solar panels (roof superstructures).
@@ -348,13 +367,18 @@ Virtual PV panels were placed in both horizontal and vertical alignments, as no 
 \section{Shallow geothermal energy}
 \label{geo_method}
 
-This section provides an overview of the concept behind the estimation of the technical potential for borehole heat exchangers (BHE). It introduces the parameters used in the estimation (Section \ref{geo_params}) and summarizes the analytical methods for simulating the thermodynamic processes in the ground, which form the basis for the potential estimation (Section X, XX). Different analys
+As discussed in Section ~\ref{REN_CH}, ground-source heat pumps (GSHPs) using vertical closed-loop borehole heat exchangers (BHEs) are by far the most widely used technology to extract shallow geothermal energy in Switzerland \cite{blum_statistik_2016}.
+%
+Focusing on closed-loop BHEs, this section reviews state-of-the-art analytical models to assess the technical geothermal potential of shallow GSHPs. The technical potential is hereby defined as the heat energy that may be annually extracted from a field of BHEs by a ground source heat pump (GSHP) system.
 
-In this work, the technical geothermal potential for BHSs is defined as:
+To estimate the technical potential, the following factors must be taken into account: 
+(i) The depletion of the ground when boreholes are placed too close to each other or too much heat is extracted; (ii) the sizing, geometry and material of the BHE tubes; (iii) the efficiency of the heat pumps that transfer the extracted heat to domestic heating and hot water applications. 
 
-\textbf{The heat energy ($E_Q$) that may be \textit{sustainably} extracted from a field of BHEs, each of length $H$ and spaced apart by a distance $B$, by a ground source heat pump (GSHP) system with a heat extraction power $Q$ during an annual operational time $t_{op}$. }
 
-The key condition for a \textit{sustainable} extraction of energy from the ground is to keep the mean temperature of the borehole fluid above the freezing temperature ($-1.5^\circ C$ \citep{wagner_erdsondenpotenzial_2014}) during the time of operation. This condition is a limiting factor on the total heat that can be extracted from the ground and plays a key role in the estimation of the large-scale BHE potential estimation.
+In current design practice, laid out by the Swiss society of engineers and architects (SIA), the technical requirement for a long-term extraction of energy from the ground is to keep the mean temperature of the borehole fluid ($T_{mf}$) above the freezing temperature ($-1.5^\circ C$) during the time of operation \citep{sia_sondes_2010}.
+
+
+This section provides an overview of the concept behind the estimation of the technical potential for borehole heat exchangers (BHE). It introduces the parameters used in the estimation (Section \ref{geo_params}) and summarizes the analytical methods for simulating the thermodynamic processes in the ground, which form the basis for the potential estimation (Section X, XX).
 
 With appropriately dimensioned and spaced boreholes, a large-scale potential can be defined in $kWh/m^2$. This potential may be computed at annual temporal scales (using an annual mean heat extraction rate), at monthly scales (using the heat degree days as weighting function) or at hourly scales (using hourly load profiles).
 The aim here is to define a maximum amount of energy that can be extracted from the ground without negatively affecting the long-term ground temperature. Energy demand is on purpose not taken into account. 
