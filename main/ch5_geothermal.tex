@@ -116,7 +116,10 @@ The model represents each BHE as a Finite Line Source (FLS), from which energy i
 Additional heat transfer from groundwater flow is neglected in the model, which may result in some differences between the estimated and the real technical potential.
 The simulation of the heat extraction potential requires three types of inputs, namely (i) ground data, (ii) technical parameters and (iii) design variables.
 The ground data 
-are the thermal conductivity ($\lambda$), the thermal diffusivity ($\alpha$), and the undisturbed ground temperature ($T_g$), which is computed at any depth $z$ from the annual mean surface temperature ($T_0$) and the temperature gradient ($\delta T/\delta z$) as \cite{sia_sondes_2010}:
+are the thermal conductivity ($\lambda$), the thermal diffusivity ($\alpha$), and the undisturbed ground temperature ($T_g$), which is computed at any depth $z$ from the annual mean surface temperature ($T_0$) and the temperature gradient ($\delta T/\delta z$) using Eq.~\ref{eq:Tg} and subtracting a tolerance of 1 °C (see Chapter \ref{geo_params}).
+
+\begin{comment}
+as \cite{sia_sondes_2010}:
 
 
 \begin{equation}
@@ -125,6 +128,8 @@ are the thermal conductivity ($\lambda$), the thermal diffusivity ($\alpha$), an
 \end{equation}
 
 where the $1 ^\circ C$ is a tolerance that is subtracted to account for uncertainties in the estimation of $T_0$.
+\end{comment}
+
 The $\lambda$ and $\alpha$ have been derived from 3D models of the subsurface for various depths \cite{asit_vd_cadastre_2019-1, sitg_cadastre_2019}, the $T_0$ has been estimated from measurement data \cite{assouline_machine_2019} and the $\delta T/\delta z$ is constant (see Table \ref{tab:data}).
 
 The technical parameters include the borehole thermal resistance ($R_b$), the borehole radius ($r_b$) and the annual operating time of the BHEs ($t_{op}$), defined as the typical number of full-load hours of a heat pump at a given altitude \cite{sia_sondes_2010}. 
@@ -217,12 +222,16 @@ This optimisation is constrained by two factors: the maximum BHE depth $H_{max}$
 The $H_{max}$ is limited by local conditions and regulations (see Section \ref{data_geo}).
 The $q_{min}$ represents a proxy of the economic feasibility of a GSHP system. 
 We propose to derive $q_{min}$ from the nominal heat extraction rate $q_{nom}$, which represents current installation practices. 
-Using the data provided in the SIA norm, $q_{nom}$ can be approximated as \cite{sia_sondes_2010}:
+Based on the data provided in the SIA norm, $q_{nom}$ can be approximated as shown in Eq.~\ref{eq:q_nom}.
+
+\begin{comment}
+as \cite{sia_sondes_2010}:
 
 \begin{equation}
 \label{eq:q_nom}
     q_{nom} \approx \frac{T_g - T_{mf, min}}{11.5} \ \left( 10.6 \lambda + 11.2 + 2 \left( \frac{\lambda}{\alpha} - 2 \right) \right)
 \end{equation}
+\end{comment}
 
 To soften this constraint, we set $q_{min}$ at 80\% of $q_{nom}$, which corresponds to the expected power loss for domestic installations with multiple BHEs under the given operating conditions \cite{sia_sondes_2010}.
 The optimisation problem may hence be formulated as: 

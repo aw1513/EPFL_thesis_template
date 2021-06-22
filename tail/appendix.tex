@@ -330,3 +330,164 @@ Under the assumptions in Section~\ref{unc_prop}, we derive the covariances betwe
 \end{equation}
 
 where the covariances $\mathrm{Cov}(G_h, G_D)$ and $\mathrm{Cov}(G_B, G_D)$ are computed from $\sigma_{Gh}, \sigma_{GB}$ and $\sigma_{GD}$ in analogy to Eq.~(\ref{eq:unc_GD}).
+
+%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Geothermal potential estimation}
+
+\section{Analytical models and comparison}
+\label{app:allModels}
+
+As explained in Section~\ref{geo_models}, three analytical solutions exist for modelling the thermal dynamics in the ground due to heat extraction from a BHE: the Finite Line Source (FLS), the Infinite Line Source (ILS) and Eskilson's approximation (Esk) \cite{pahud_geothermal_2002}. The transient and steady-state behaviour of the three models is explained below, followed by a comparison in terms of accuracy (with respect to the FLS) and computational time. The comparison is performed based on own simulations using the equations provided below.
+
+\textbf{Finite Line Source (FLS)}. 
+The FLS describes the most accurate analytic model used in the literature. It is a solution to the heat conduction equation that satisfies the boundary conditions $T(r, z=0, t=0) = 0$. The g-function of the transient solution is given by \citep{pahud_geothermal_2002}:
+
+\begin{equation}
+\label{eq:FLS}
+    \mathrm{g}_{FLS}(r, z, t) = \frac{1}{2} \int_{D}^{D+H} \left( \frac{1}{r_+} \mathrm{erfc}\left(\frac{r_+}{\sqrt{4 \alpha t}}\right) - \frac{1}{r_-}\mathrm{erfc}\left(\frac{r_-}{\sqrt{4 \alpha t}}\right) \right) ds
+\end{equation}
+
+where
+\begin{equation*}
+    r_+ = \sqrt{r^2 + (z - s)^2}, \quad r_- = \sqrt{r^2 + (z + s)^2}
+\end{equation*}
+
+\begin{equation*}
+   \mathrm{erfc}(x) = \frac{2}{\sqrt{\pi}} \int_{x}^{\infty} e^{-\mu^2} d\mu
+\end{equation*}
+
+The steady-state solution (valid for $t > t_{ss}$) is defined as:
+
+\begin{equation}
+\label{eq:FLS_ss}
+    \mathrm{g}_{FLS,ss}(r, z) = \frac{1}{2} \int_{D}^{D+H} \left( \frac{1}{r_+} - \frac{1}{r_-} \right) ds
+\end{equation}
+For many borehole applications, the mean temperature along the borehole length is of interest. This can be obtained by integrating $\mathrm{g}_{FLS}(r, z, t) $ along the $z$-axis. \citet{claesson_analytical_2011} provide the analytical solution described in Section~\ref{geo_models}.
+
+\begin{comment}
+
+\begin{equation}
+\label{eq:FLS_int}
+    \mathrm{g}_{FLS}(r, \overline{z}, t) = \frac{1}{2} \int_{\frac{1}{\sqrt{4 \alpha t}}}^{\infty}  e^{- r^2 s^2} \ \frac{I_{ls}(Hs, Ds)}{H s^2} \ ds
+\end{equation}
+
+where
+\begin{equation*}
+    I_{ls}(h, d) = 2\ \mathrm{ierf}(h) + 2\ \mathrm{ierf}(h + 2d) - \mathrm{ierf}(2h + 2d) - \mathrm{ierf}(2d)
+\end{equation*}
+
+\begin{equation*}
+    \mathrm{ierf}(x) = \int_0^x \mathrm{erf}(u) du 
+                     = x \ \mathrm{erf}(x) - \frac{1}{\sqrt{\pi}} (1 - e^{-x^2})
+    \qquad
+    \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-\mu^2} d \mu 
+\end{equation*}
+
+\\
+The FLS can be simplified under certain assumptions by simpler models, namely the infinite line source model (ILS) and an asymptotic approximation of the FLS model, here referred to as Eskilson's approximation (Esk). A comparison of all methods is provided in Section~\ref{comparison}.
+\\
+\end{comment}
+
+\textbf{Infinite Line Source (ILS)}. The ILS approximation is defined as \citep{poppel_grenzabstande_2017}:
+
+\begin{equation}
+\label{eq:ILS}
+    \mathrm{g}_{ILS}(r, t) = \frac{1}{2} \int_\frac{r^2}{4 \alpha t}^\infty \frac{e^{-u}}{u}du 
+                  = \frac{1}{2} E_1\left(\frac{r^2}{4 \alpha t}\right)
+\end{equation}
+
+The error between the ILS and FLS is negligible for $t < 0.1 t_s$ \citep{claesson_conductive_1988}, making it particularly suitable for short and medium-term analyses. For $t<t_s$, it is accurate with a bounded error (see \ref{comparison}), but as it does not reach a steady state (due to the assumed infinite length), it is not suitable for modelling ground temperature at $t>t_s$.
+\\
+
+\textbf{Eskilson's approximation (Esk)}.
+\citet{eskilson_thermal_1987} proposes to model the temperature drop along the borehole as a function of the two asymptotes of the FLS model. The lower asymptote is valid for $t < t_s$ and represents the transient behaviour ($\mathrm{g}_{Esk, trans}$). For $t > t_s$, the upper asymptote represents the (quasi) steady-state ($\mathrm{g}_{Esk, qss}$). The g-function of the asymptotic approximation is hence defined as:
+
+\begin{equation}
+    g_{Esk}(r, t) = \left\{
+        \begin{matrix}
+            \mathrm{g}_{Esk, trans} & t_{min} < t < t_s   \\ 
+            \mathrm{g}_{Esk, qss}    & t > t_s           
+        \end{matrix} 
+\right.
+\end{equation}
+
+The \textit{transient asymptote} is an approximation of the ILS \citep{wagner_erdwarmesonden._2019}. Two equivalent formulations of $\mathrm{g}_{Esk, trans}$ exist. The first is derived from the mathematical approximation of the exponential integral $E_1$ in Eq.~\ref{eq:ILS}, while the second represents the physical process. The expressions are \citep{pahud_geothermal_2002}: 
+
+\begin{equation}
+\label{eq:Esk_trans}
+    \mathrm{g}_{Esk, trans}(r, t) = \frac{1}{2} \left(\ln\left(\frac{4 \alpha t}{r^2}\right) - \gamma\right)
+                                  = \ln\left(\frac{H}{2 r}\right) + \frac{1}{2} \ln\left(\frac{t}{t_s}\right), \quad
+    t_{min} < t < t_s
+\end{equation}
+
+While the second expression is more intuitive, the first provides more information on the validity of the approach. It is derived from the following approximation of the exponential integral:
+
+\begin{equation}
+\label{eq:apx}
+    E_1\left(x\right) \approx \ln\left(\frac{1}{x}\right) - \gamma, \quad x \ll 1
+\end{equation}
+
+where $\gamma$ is Euler's constant (0.57221...). To obtain Eq.~\ref{eq:Esk_trans}, we substitute Eq.~\ref{eq:apx} in Eq.~\ref{eq:ILS}.
+Equation~\ref{eq:apx} approximates the ILS for all $x < 0.05$ with negligible error. For $x = r^2/(4 \alpha t)$ and $r = r_b$ (the borehole wall), this gives a minimum time for the transient asymptote of:
+
+\begin{equation}
+    t_{min} = \frac{5 r_b^2}{\alpha}, \quad r_b \ll H
+\end{equation}
+
+The values of $t_{min}$ typically lie below 6 h, so the condition is fulfilled for all timescales of interest.
+
+If the temperature at larger distances from the borehole is of interest ($r \gg r_b$), for example for modelling borehole fields, the condition for the validity of Eq.~\ref{eq:Esk_trans} becomes:
+
+\begin{equation}
+\label{eq:r_cond}
+    r < \sqrt{(0.2 \alpha t )}
+\end{equation}
+
+The interaction between boreholes is only of interest in the long term. On this temporal scale, we obtain $r_{dim} < 18$ m for the planning horizon of 50 years, $r_{qss} < 0.15H$ for $t_s$ and $r_{ss} < 0.4H$ for $t_{ss}$.
+
+The \textit{steady-state asymptote} approximates the steady-state solution of the FLS (Eq.~\ref{eq:FLS_ss}). We refer to it as \textit{quasi steady-state}. According to \citet{eskilson_thermal_1987}, the quasi steady-state is given by:
+
+\begin{equation}
+\label{eq:Esk_qss}
+    \mathrm{g}_{Esk, qss}(r) = \ln\left(\frac{H}{2 r}\right), \quad t > t_s
+\end{equation}
+
+From Eqs.~\ref{eq:Esk_trans} and \ref{eq:Esk_qss} it is easy to see that the two asymptotes intersect at $t = t_s$.
+As the Esk model is practically equivalent to the ILS solution for $t_{min} < t < t_s$ (provided Eq.~\ref{eq:r_cond} is fulfilled), the transient asymptote has a negligible error with respect to the FLS for $t < 0.1 t_s$, and a bounded error for $t = t_s$. The transient asymptote also has a bounded error with respect to the FLS.
+
+\subsection*{Model comparison}
+\label{comparison}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\linewidth]{Figs/FLS_ILS_Esk_compare_ts.pdf}
+    \caption{a) Temporal dynamics of the temperature variation along the borehole (shape of the "g-function") for the Finite Line Source (FLS), Infinite Line Source (ILS) and asymptotic (Esk) models, b) relative error for the temperature variation, as percentage of the $\Delta T_{FLS}$. The time duration of peak (red) and seasonal (grey) effects are highlighted.}
+    \label{fig:T_dynamics}
+\end{figure}
+
+As mentioned above, the approximations of the FLS model are valid under certain assumptions, but may significantly speed-up the modelling time (even though the formulation in Eq.~\ref{eq:FLS_int} is already much faster than Eq.~\ref{eq:FLS}). To understand the ranges of validity and the error induced by the use of the approximations, we compare the different models for different time scales and distances to the borehole. All examples are shown for a borehole of 100m length, but the patterns are nearly identical for longer BHE's. In general, the temperature drop ($\Delta T$) along the borehole is smaller for larger $H$, hence leading to smaller absolute, but similar relative errors. 
+
+Figure~\ref{fig:T_dynamics} shows a comparison between the models for different time scales at the borehole wall ($r = r_b$). We can see that for short time scales (red/grey), all models have a negligible error (up to $1\%$). 
+Hence, any approximation may be used to model both peak and seasonal effects. At larger time scales, the ILS model starts to diverge from the FLS solution. 
+This is expected, as the ILS never reaches a steady-state due to its infinite length. In this context, \citet{bandos_finite_2009} provide a formulation for a semi-infinite line source (SILS), which does reach a steady state. 
+
+The Esk model is quasi-equivalent to the ILS for $t_{min} < t < t_s$, and reaches its steady-state for $t > t_s$. The figure shows that the upper asymptote overestimates the steady-state temperature by $3.7\%$, with the largest error occurring around $t = t_s$ ($\approx 8\%$). These percentages are valid for all borehole lengths. 
+For typical boreholes of $H=100-200m$, the time scales with the maximum error (around $t_s$) correspond to the time scales of highest interest. 
+As the absolute difference is relatively small, this may not have a large impact for modelling individual boreholes, and the asymptotic steady-state $\mathrm{g}_{Esk, qss}$ can be safely used. For modelling large borehole fields, however, the error accumulates, which can lead to significant differences in the estimated potential. For large-scale studies, the exact FLS solution should hence be used.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\linewidth]{Figs/FLS_ILS_compare_r.pdf}
+    \caption{a) Temperature field with distance to the BHE (length 100m) on logarithmic scale. The Infinite Line Source (with $\mathrm{g}_{Esk, qss}$ for $t = t_{ss}$) is shown for comparison (dashed lines). b) Absolute error (in $\circ$C) for the ILS model. The example shows a BHE of 100m length.}
+    \label{fig:r_field}
+\end{figure}
+
+To assess the effect of adjacent boreholes, the temperature fields at large distances from the borehole ($5m < r < H$) are of interest. As seasonal and peak effects have a penetration depth that is lower than the minimum borehole distance of $5m$, only long-term effects are relevant. Figure~\ref{fig:r_field} shows the temperature drop in the ground for three long-term time intervals: the typical planning horizon ($t_{dim}$) for BHEs of 50 years, the quasi-steady-state $t_s$, where the temperature drop has reached around $95\%$ of its final value, and the actual steady state ($t_{ss}$). For comparison, also a short horizon of 1 year is shown.
+
+While the temperature drop increases logarithmically for small distances, it trails off for distances that approach the borehole length $H$. In this range, Eq.~\ref{eq:apx} is no longer valid, so the transient asymptote cannot be used. This can be seen by the unrealistic steady-state solution, which represents the Esk steady-state asymptote (see Eq.~\ref{eq:Esk_qss}). It reaches a value of $0$ at $H/2$ and has negative values after, which is infeasible.
+
+As Fig.~\ref{fig:T_dynamics} suggests, the error between the ILS and the FLS model increases with time, up to $0.1-0.3 ^\circ$C for the radii of interest. While this may  be negligible for a single neighbor, the error accumulates for borehole fields.  The exact FLS solution should hence be used for modelling large-scale geothermal potentials.
+
+

@@ -367,29 +367,81 @@ Virtual PV panels were placed in both horizontal and vertical alignments, as no 
 \section{Shallow geothermal energy}
 \label{geo_method}
 
+ADD REFERENCES
+
 As discussed in Section ~\ref{REN_CH}, ground-source heat pumps (GSHPs) using vertical closed-loop borehole heat exchangers (BHEs) are by far the most widely used technology to extract shallow geothermal energy in Switzerland \cite{blum_statistik_2016}.
 %
-Focusing on closed-loop BHEs, this section reviews state-of-the-art analytical models to assess the technical geothermal potential of shallow GSHPs. The technical potential is hereby defined as the heat energy that may be annually extracted from a field of BHEs by a ground source heat pump (GSHP) system.
+Focusing on closed-loop BHEs, this section reviews state-of-the-art analytical models to assess the technical geothermal potential of shallow GSHPs. The technical potential is hereby defined as the heat energy that may be annually extracted from a field of BHEs by a GSHP system ($Q_{GSHP}$), which is computed as (cf. \cite{pahud_geothermal_2002}):
+\begin{equation}
+\label{eq:Q_field_method}
+    Q_{GSHP}=q_{max} \times t_{op} \times H \times N_{BHE}
+\end{equation}
+where $q_{max}$ is the heat extraction rate from the boreholes (in W/m), $t_{op}$ is the operating time of the system (in h), $H$is the borehole depth (in m) and $ N_{BHE}$ is the number of installed BHEs.
 
 To estimate the technical potential, the following factors must be taken into account: 
 (i) The depletion of the ground when boreholes are placed too close to each other or too much heat is extracted; (ii) the sizing, geometry and material of the BHE tubes; (iii) the efficiency of the heat pumps that transfer the extracted heat to domestic heating and hot water applications. 
+% The interaction of these components is a dynamical process that changes over time, which is described by the thermal response of the BHEs.
 
-
-In current design practice, laid out by the Swiss society of engineers and architects (SIA), the technical requirement for a long-term extraction of energy from the ground is to keep the mean temperature of the borehole fluid ($T_{mf}$) above the freezing temperature ($-1.5^\circ C$) during the time of operation \citep{sia_sondes_2010}.
-
-
-This section provides an overview of the concept behind the estimation of the technical potential for borehole heat exchangers (BHE). It introduces the parameters used in the estimation (Section \ref{geo_params}) and summarizes the analytical methods for simulating the thermodynamic processes in the ground, which form the basis for the potential estimation (Section X, XX).
-
-With appropriately dimensioned and spaced boreholes, a large-scale potential can be defined in $kWh/m^2$. This potential may be computed at annual temporal scales (using an annual mean heat extraction rate), at monthly scales (using the heat degree days as weighting function) or at hourly scales (using hourly load profiles).
-The aim here is to define a maximum amount of energy that can be extracted from the ground without negatively affecting the long-term ground temperature. Energy demand is on purpose not taken into account. 
-This is due to the fact that multiple operation modes exist, e.g. individual BHEs or entire fields that are connected to heat distribution networks. The separation between supply and demand also allows to simulate scenarios of "hybrid" systems, where the demand is covered by different sources.
-
-\begin{figure}
+\begin{figure}[bt]
     \centering
     \includegraphics[width=0.7\linewidth]{Figs/BHE_layout.png}
     \caption[Single BHE installation and its effects on the temperature in the ground.]{Single BHE installation and its effects on the temperature in the ground. The arrows on the top indicate the natural heat flux from the environment, those on the bottom indicate the geothermal heat flux. The dashed lines are isothermal lines, while the continuous lines represent the heat flow in the stationary state. Source: \citet{wagner_erdsondenpotenzial_2014}}
     \label{fig:BHE}
 \end{figure}
+
+The depletion of the ground is driven by changes in the subsurface temperature, which occur when heat is extracted (or injected) at a faster rate than it is regenerated from the natural heat flux. This heat flux is caused by the heat in the earth's core (geothermal heat flux) and by the heat in the ambient air, as shown in Fig.~\ref{fig:BHE}.
+As heat is extracted from the ground, so-called \textit{thermal plumes} are formed around the BHE (dashed lines in Fig.~\ref{fig:BHE}). Their magnitude and extent depends on the borehole design, particularly the depth and heat extraction rate, as well as on the thermal properties of the ground.
+%
+When boreholes are spaced too close to each other, thermal plumes may overlap, which causes \textit{thermal interference} between these boreholes and leads to an increased cooling of the subsurface. In this work, quantifying the thermal interference is of high importance, as thermal interference significantly reduces the potential borehole installation density.
+
+Thermal interference between boreholes is assessed in the literature using an analytical model, developed by \citet{eskilson_thermal_1987}, which simulates the thermodynamic behaviour of BHEs based on the thermal ground properties as well as the sizing, geometry and material of the BHEs.
+%
+To formulate a technical potential for closed-loop GSHPs, related studies combine the this analytical model with norms for the current BHE design practice, using primarily the geothermal norms of the Association of German Engineers (VDI) \cite{vdi_vdi_2019} and the Swiss Society of Engineers and Architects (SIA) \cite{sia_sondes_2010}.
+The parameters required for the analytical model and their values given by the SIA norm (relevant for Switzerland) will be introduced in Section~\ref{geo_params}.
+
+Both the VDI and SIA norms require the BHEs to be designed and operated such that the mean temperature of the borehole fluid ($T_{mf}$) never drops below its freezing temperature ($T_\mathit{mf,min}=-1.5$ °C \cite{sia_sondes_2010}), such that:
+
+\begin{equation}
+\label{eq:T_mf_min}
+T_{mf} \geq T_\mathit{mf,min} = -1.5 \text{°C}
+\end{equation}
+
+The variables in Eq.~\ref{eq:Q_field_method} ($q_{max}$, $t_{op}$, $H$, $N_{BHE}$) must hence be chosen such as to fulfil this technical requirement.
+%
+The relationship between these variables and the $T_{mf}$ is expressed by the borehole temperature profile, which describes the temperature changes inside and around a BHE.
+A general model of this temperature profile, proposed by \citet{claesson_conductive_1988}, is introduced in Section~\ref{model_intro}, while Section~\ref{geo_models} details the analytical formulas used to estimate the thermodynamic processes in the ground.
+
+While heat extraction is the dominant mode of operation of GSHPs in Europe \cite{lund_direct_2020}, GSHPs can also be used for heat injection, for example for space cooling applications \cite{kavanaugh_geothermal_2014}, whereby the same physical principles (Sections ~\ref{model_intro} and \ref{geo_models}) apply.
+As heat injection is not addressed in the SIA or VDI norms, studies addressing the potential of GSHPs for heat injection \cite{aditya_environmental_2020,miglani_methodology_2018,michopoulos_potential_2011} use the standards of the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) \cite{kavanaugh_geothermal_2014} for borehole sizing. For cooling-dominated systems, the temperature requirement from Eq.~\ref{eq:T_mf_min} is inverted, limiting the maximum fluid temperature $T_\mathit{mf,max}$:
+\begin{equation}
+\label{eq:T_mf_max}
+T_{mf} \leq T_\mathit{mf,max}
+\end{equation}
+In addition to the BHEs, a GSHP system contains a heat pump (HP), which is used to transfer the heat extracted from the ground to the building heating or cooling systems (see Fig. \ref{fig:HP}), as these typically require different temperatures than those provided by the BHE. HPs have a high system efficiency, expressed through the coefficient of performance (COP), making GSHPs a very energy efficient technology for building thermal energy supply. Based on the COP, the heat supplied to the building heating ($Q_\mathit{heat}$) and cooling ($Q_\mathit{cool}$) systems is computed as \cite{kavanaugh_geothermal_2014}: 
+\begin{equation}
+\label{eq:COP_heat}
+Q_\mathit{heat}=Q_\mathit{extr}\ \frac{COP_\mathit{heat}}{\left(COP_\mathit{heat}-1\right)}
+\end{equation}
+
+\begin{equation}
+\label{eq:COP_cool}
+Q_\mathit{cool}=Q_\mathit{inj}\ \frac{COP_\mathit{cool}}{\left(COP_\mathit{cool}+1\right)}
+\end{equation}
+where $Q_\mathit{extr}$ and $Q_\mathit{inj}$ are the extracted and injected heat from/to the BHEs and $COP_\mathit{heat}$/$COP_\mathit{cool}$ are the COPs for heating and cooling, respectively. In neighbourhood or redional-scale studies of the technical GSHP potential, the COP is typically chosen as a constant value \cite{miglani_methodology_2018,schiel_gis-based_2016,perego_techno-economic_2019}, while for studies at building scale, the COP often is modelled as a function of temperature \cite{fraga_heat_2018,liu_feasibility_2017,stene_residential_2005}.
+
+\begin{figure}[bt]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/Figs/GSHP.png}
+    \caption{Working principle of a GSHP in heating cycle. Cold air is moved from the house to the heat pump, where it is heated from the compressed heat extracted from the ground. The ground loop liquid is cooled and transported back to the ground, where it is again heated. \cite{gns_science_n.z._geothermal_2016}}
+    \label{fig:HP}
+\end{figure}
+
+\begin{comment}
+This section provides an overview of the concept behind the estimation of the technical potential for borehole heat exchangers (BHE). It introduces the parameters used in the estimation (Section \ref{geo_params}) and summarizes the analytical methods for simulating the thermodynamic processes in the ground, which form the basis for the potential estimation (Section X, XX).
+
+With appropriately dimensioned and spaced boreholes, a large-scale potential can be defined in $kWh/m^2$. This potential may be computed at annual temporal scales (using an annual mean heat extraction rate), at monthly scales (using the heat degree days as weighting function) or at hourly scales (using hourly load profiles).
+The aim here is to define a maximum amount of energy that can be extracted from the ground without negatively affecting the long-term ground temperature. Energy demand is on purpose not taken into account. 
+This is due to the fact that multiple operation modes exist, e.g. individual BHEs or entire fields that are connected to heat distribution networks. The separation between supply and demand also allows to simulate scenarios of "hybrid" systems, where the demand is covered by different sources.
 
 This report summarizes the methods used to quantify the impact of a BHE installation on the short-term and long-term temperature in the ground, and consequently on the temperature of the heat extraction fluid inside the borehole. The case of a single borehole is shown in Fig.~\ref{fig:BHE}. The heat extracted by the borehole of length $H$ (in the center) leads to a temperature drop in the ground. This effect reduces with the distance $r$ to the center of the borehole, as indicated by the dashed lines that represent isothermal conditions. The temperature drop does not happen instantly, but the temperature reduces gradually over the years, until a \textit{steady state} is reached. In the steady state, the extracted heat equals exactly the energy flux from the environment (the air and sun on the surface, and the geothermal heat flux in the ground). The heat flow in this stationary state is shown by the continuous lines in Fig.~\ref{fig:BHE}. As a rule of thumb, the radius around the borehole which is impacted by the temperature drop in steady state is between $H/2$ and $H$. At distances further away from the borehole, the temperature drop can always be neglected \cite{pahud_geothermal_2002}, p. 49.
 
@@ -401,19 +453,21 @@ This lower ground temperature may cause the temperature of the heat carrier flui
 In order to sustain a given heat extraction power and keep a close spacing between boreholes, the depth of the boreholes can be increased. This increases the ground volume from which heat is extracted, but may not be possible due to the ground materials or regulations. 
 On the other side, a shorter borehole length means that heat is extracted at a higher rate, which also increases the temperature drop. This can be compensated by either reducing the heat extraction power (which lowers the efficiency of the system) or by increasing the borehole spacing.
 
+\end{comment}
+
 \subsection{Parameters}
 \label{geo_params}
 The parameters involved in the modelling of the thermodynamic behaviour of borehole heat exchangers can be divided into three groups: 
 
 \begin{enumerate}
-\item \textbf{Physical parameters} are determined by the geological and hydrological conditions of the ground, and subject to various large-scale studies. Seasonal effects are neglected, as boreholes typically have a length $> 50m$, which is far beyond the penetration depth of seasonal variations in the ground.
+\item \textbf{Physical parameters} are determined by the geological and hydrological conditions of the ground, and are the subject of various large-scale studies \cite{signorelli_regional_2004,majorowicz_estimation_2009,tian_improved_2020}. Seasonal temperature variations in the ground are neglected, as boreholes typically have a length $> 50m$, which is far beyond the penetration depth of seasonal variations in the ground \cite{stauffer_thermal_2013}.
 
-\item \textbf{Technical parameters} are derived from the materials and the technology of the BHEs. We use norm values found in the literature as constants and do not address the impact of variations in the technical parameters on the BHE potential.
+\item \textbf{Technical parameters} are derived from the materials and the technology of the BHEs. In this work, we use norm values found in the literature as constants and do not address the impact of variations in the technical parameters on the BHE potential.
 
-\item \textbf{Design parameters} are related to the dimensioning of the boreholes and the borehole fields, in order to estimate a \textit{sustainable} BHE potential. These parameters and the impact of their variation on the BHE potential are the main subject of the analysis. 
+\item \textbf{Design parameters} are related to the sizing of the BHEs and the borehole fields, in order to estimate a technical potential of GSHPs. These parameters and the impact of their variation on the GSHP potential are the main subject of this section. 
 \end{enumerate}
 
-We refer to $z$ (in $m$) for the depth in the ground, $r$ (in $m$) for the radial distance to the center of a BHE, $t$ (in $h$ or $a$) for the time and $T$ (in $^\circ C$ or $K$) for the temperature. 
+We refer to $z$ (in m) for the depth in the ground, $r$ (in m) for the radial distance to the center of a BHE, $t$ (in hours or years) for the time and $T$ (in °C or K) for the temperature. 
 
 \begin{table}[b]
 \footnotesize
@@ -434,52 +488,43 @@ $\dot{q}_{g}$               & $mW/m^2$      & Geothermal heat flow           & $
 \end{tabular}
 \end{table}
 
-\textbf{Physical parameters}. The physical parameters are listed in Table~\ref{tab:phys_params}. The \textit{thermal conductivity} $\lambda$ and \textit{thermal diffusivity} $\alpha$ are used in the numerical models. However, the geological properties of different types of rocks are typically provided as $\lambda$ and the \textit{volumetric heat capacity} $\rho C$. For a reference table, see \cite{pahud_geothermal_2002}, p.30 or \cite{sia_sondes_2010}, p.39. From these parameters, the thermal diffusivity is computed as:
+\textbf{Physical parameters}. The physical parameters are listed in Table~\ref{tab:phys_params}. The \textit{thermal conductivity} $\lambda$ and \textit{thermal diffusivity} $\alpha$ are used in the analytical models. However, the geological properties of different types of rocks are typically provided as $\lambda$ and the \textit{volumetric heat capacity} $\rho C$. From these parameters, the thermal diffusivity is computed as \cite{pahud_geothermal_2002}:
 
 \begin{equation}
     \alpha = \frac{\lambda}{\rho C}
 \end{equation}
+In the literature, the values for $\rho C$ and $\lambda$ are either derived from measurement data and interpolated using geostatistical kriging \cite{tian_improved_2020,munoz_estimating_2015} or Machine Learning~\cite{assouline_machine_2019}, obtained from 3D underground models \cite{garcia-gil_gis-supported_2015,groupe_de_travail_pgg_evaluation_2011} or, most frequently, mapped from tabulated values in the literature based on the present rock types~\cite{perego_techno-economic_2019,galgaro_empirical_2015,casasso_g.pot:_2016,gemelli_gis-based_2011}. An overview of typical thermal conductivity and heat capacity values for rock types found in Switzerland are provided in the SIA norm \cite{sia_sondes_2010} and by \cite{pahud_geothermal_2002}.
+
+If hydro-geological data is available, the thermal conductivity can be adjusted to account for conductive heat transfer due to groundwater movement \cite{viesi_gis-supported_2018,assouline_machine_2019}, using the ground saturation level and the darcy velocity as input \cite{viesi_gis-supported_2018}. 
+Advective heat transfer is neglected in the model proposed by \citet{eskilson_thermal_1987}.
+Analytical models accounting for advective heat transfer have been used for example in \cite{garcia-gil_gis-supported_2015,alcaraz_advection_2016,alcaraz_t-i-ger_2017,attard_novel_2020}.
+As the hyrdo-geological input data required for these advective-conductive models is not available at the regional scale for Switzerland, this thesis focuses on the conductive heat transfer model \cite{claesson_conductive_1988}. A similar approximation is applied in most related regional-scale studies, including\cite{perego_techno-economic_2019,galgaro_empirical_2015,casasso_g.pot:_2016,rivera_increased_2017,schiel_gis-based_2016}.
 
 Another important physical parameter is the \textit{undisturbed ground temperature} $T_g(z)$. In particular, the temperature at half of the borehole depth ($z = H/2$) is of interest. If no data is available for estimating $T_g$ directly, it can be extrapolated from the \textit{surface temperature} $T_0$ and the \textit{temperature gradient} $\Delta T/\Delta z$: 
-
 \begin{equation}
+\label{eq:Tg}
     T_g(z) = T_0 + z * \frac{\Delta T}{\Delta z}
 \end{equation}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{Figs/ground_temperature.png}
-    \caption[Example for the variation in ground temperature for two measurements of ground temperature in Zürich.]{Example for the variation in ground temperature for two measurements of ground temperature in Zürich, showing the influence of altitude and additional surface heating. Source: \citet{huber_bodentemperaturen_2014}.}
+    \caption[Example for the variation in ground temperature for two measurements of ground temperature in Zürich.]{Example for the variation in ground temperature for two measurements of ground temperature in Zürich, showing the influence of altitude (black line) and additional surface heating through the presence of forests (red line). Source: \citet{huber_bodentemperaturen_2014}.}
     \label{fig:T_ground}
 \end{figure}
+The $T_0$ can be obtained either interpolated based on measurements of the near-surface ground temperature \cite{assouline_machine_2019} or derived from measurements of the ambient temperature ($T_\mathit{amb}$). An analysis of different methods to determine $T_0$ is performed in \citep{signorelli_geoscientific_2004}. In the SIA norm, surface temperatures are  approximated from the mean annual $T_\mathit{amb}$ by adding an altitude-dependent term \cite{sia_sondes_2010}. As the actual $T_0$ may deviate from the approximated value (see Fig.~\ref{fig:T_ground} for an example), the SIA norm instructs the addition of a tolerance ($\Delta T$) of $- 1$ K heating for  $+1$ K for cooling applications.
 
-An analysis of different methods to determine $T_0$ is performed in \citep{signorelli_geoscientific_2004} (Chapter 5). In general, the mean annual surface temperature can be approximated from the mean annual ambient temperature $\overline{T_{amb}}$ by adding a difference term ($\Delta T_0$) that depends on the altitude ($z_0$). As the actual ground temperature may vary, the SIA norm instructs the addition of a tolerance ($\Delta T_{H/C}$), such that \citep{sia_sondes_2010}: 
-
-\begin{equation}
-    T_0 = \overline{T_{amb}} + \Delta T_0 + \Delta T_{H/C} 
-\end{equation}
-
-\begin{equation*}
-    \Delta T_0 = \left\{
-        \begin{matrix}
-            1.55 & z_0 < 1000m \\ 1.55 + \frac{z_0 - 1000}{800} * 2.45 & z_0 > 1000m
-        \end{matrix} \right. , \quad 
-    \Delta T_{H/C}  = \left\{
-        \begin{matrix}
-            - 1 K & heating\ (H) \\ +1 K & cooling\ (C)
-        \end{matrix} \right.    
-\end{equation*}
-
+\begin{comment}
 Two examples for an unconsidered variation are shown in Fig.~\ref{fig:T_ground}. The presence of forests (red line) results in the ground temperature being approximately $1K$ lower than that expected from $\overline{T_{amb}}$. \citet{huber_bodentemperaturen_2014} states that, on the other hand, areas with high snow coverage may be up to $4K$ warmer than expected. The second example (black line) shows a case where the actual ground temperature is $1K$ higher than expected due to an altitude difference between the BHE and the weather station. In the Swiss plateau, this difference is approximately $0.47 K$ per $100m$ altitude increase with respect to the weather station \citep{huber_bodentemperaturen_2014}.
 As the ground temperature in fact reflects the ambient temperature of the past, historic measurements should be used to determine the annual mean ambient temperature \citep{huber_bodentemperaturen_2014}. 
+\end{comment}
 
-A final parameter to keep in mind is the (undisturbed) \textit{geothermal heat flow} $\dot{q}_{g}$. It is given by:
+While not being directly used in the analytical model of GSHPs, the (undisturbed) \textit{geothermal heat flow} $\dot{q}_{g}$ plays an important role in the quantification of geothermal resources, as it characterises the natural heat flow in the ground. It is given by \cite{huber_bodentemperaturen_2014}:
 
 \begin{equation}
     \dot{q}_{g} = \lambda * \frac{\Delta T}{\Delta z}
 \end{equation}
-
-The geothermal heat flow is approximately constant across the outer crust of the earth, but may vary in mountain terrain \citep{huber_bodentemperaturen_2014}. This means that a high thermal conductivity  implies a low temperature gradient, and vice versa. The relationship may hence be used to compute $\lambda$ or $ \frac{\Delta T}{\Delta z}$ if other data is unavailable. A map of geothermal heat flows in Switzerland is shown in Fig.~\ref{fig:q_geo}. It was created by Medici and Rybach in 1995 and updated by Sachs and Eberhard in 2010\footnote{The data is now available as open data at:\\ \url{https://opendata.swiss/de/dataset/geothermische-karte-der-schweiz-1-500000}}.
+The geothermal heat flow is approximately constant across the outer crust of the earth, but may vary in mountain terrain \citep{huber_bodentemperaturen_2014}. The relationship may further be used to compute $\lambda$ or $ \frac{\Delta T}{\Delta z}$ if other data is unavailable. A map of geothermal heat flows in Switzerland is shown in Fig.~\ref{fig:q_geo}. It was created by Medici and Rybach in 1995 and updated by Sachs and Eberhard in 2010\footnote{Available at:\\ \url{https://opendata.swiss/de/dataset/geothermische-karte-der-schweiz-1-500000}}.
 
 \begin{figure}
     \centering
@@ -495,37 +540,52 @@ The geothermal heat flow is approximately constant across the outer crust of the
     \label{fig:BHE_cross-sec}
 \end{figure}
 
-\textbf{Technical parameters}. The technical parameters required to determine the large-scale geothermal potential as defined in \ref{definition} are taken as constants based on examples in the literature. The mean fluid temperature inside the borehole ($T_{f, min}$) is set according to \citet{sia_sondes_2010} at $-1.5^\circ C$. To fulfill this condition, the temperature drop inside the borehole needs to be estimated. This requires knowledge of the borehole radius ($r_B$) as well as the effective thermal resistance of the borehole ($R_b^*$). A typical layout of a duplex system, the most common form of BHE installations (\cite{sia_sondes_2010}), is shown in Fig.~\ref{fig:BHE_cross-sec}. The thermal resistance is determined by the materials and the geometry of the BHE, which are analysed in detail in \citep{huber_erdwarmesonden_2005} (Section 4). We use standard values from examples of the literature as summarized in Table~\ref{tab:tech_design_params}.
+\textbf{Technical parameters}. The technical parameters required to determine the technical geothermal potential are set as constant values in the literature (e.g. \cite{miglani_methodology_2018,rivera_increased_2017,zhang_critical_2017}). The $T_\mathit{mf,min}$ temperature is set in most reviewed studies to $-1.5^\circ C$ \citet{sia_sondes_2010}.
+For $T_\mathit{mf,max}$, no unique value exists across the literature. Instead, \citet{kavanaugh_geothermal_2014} suggests to choose a $T_\mathit{mf,max}$ of $11 - 18$ °C above $T_g$ \cite{spitler_vertical_2016}.
+Quantifying the temperature drop inside the borehole further requires knowledge of the borehole radius ($r_B$) as well as the effective thermal resistance of the borehole ($R_b^*$). A typical layout of a duplex system, the most common form of BHE installations (\cite{sia_sondes_2010}), is shown in Fig.~\ref{fig:BHE_cross-sec}. The thermal resistance is determined by the materials and the geometry of the BHE, which are analysed in detail in \citep{huber_erdwarmesonden_2005}. Table~\ref{tab:tech_design_params} summarises the range of parameters found in the literature and the SIA norm values (if applicable).
 
 \textbf{Design parameters}. Two groups of design parameters are relevant to study the multi-fold effects between the geometry of a BHE field and the temperature in the ground, which is typically assessed after a planning horizon $t_{dim}$. 
 The first group of parameters are related to the borehole geometry. These include the borehole length/depth ($H$), the horizontal distance between BHEs ($B$) and the distance between the top part of the BHE (where heat is extracted) and the ground surface ($D$). 
 
-A second group of design parameters is related to the heat extraction from the borehole. It includes the heat extraction power ($Q_{HP}$), the maximum heat extraction rate ($q_{max}$), the operating time ($t_{op}$) and the duration of maximum operation ($t_{peak}$). The heat extraction power is related to the power rating of the heat pump (HP), whose typical values are shown in Table~\ref{tab:tech_design_params}. In a large-scale study, however, $Q_{HP}$ is not a technical parameter, as the number of heat pumps in the system is undefined. The heat extraction rate is computed from $Q_{HP}$ and $H$ as given in Table~\ref{tab:tech_design_params}. Nominal curves for $q_{max}$ as a function of $\lambda$ and $\rho C$ are shown in Fig.~\ref{fig:t_q_norm}a. If these are used, $Q_{HP}$ needs to be computed by rearranging the equation for $q_{max}$. The operating time indicates the number of hours in which the heat pump is operating (with power $Q_{HP}$). It changes with altitude and location, and the nominal values are shown in Fig.~\ref{fig:t_q_norm}b. The duration of the peak extraction pulse ($t_{peak}$) measures the maximum time of non-stop operation of the HP, which impacts the maximum temperature drop in the BHE and is usually taken as 1, 5 or 10 days.
+A second group of design parameters is related to the heat extraction from the borehole. It includes the heat extraction power ($Q_{HP}$), the maximum heat extraction rate ($q_{max}$), the operating time ($t_{op}$) and the duration of maximum operation ($t_{peak}$). The heat extraction power is related to the power rating of the heat pump (HP), whose typical values are shown in Table~\ref{tab:tech_design_params}. 
+% In a large-scale study, however, $Q_{HP}$ is not a technical parameter, as the number of heat pumps in the system is undefined. 
+The heat extraction rate is computed from $Q_{HP}$ and $H$ as given in Table~\ref{tab:tech_design_params}. Nominal curves for $q_{max}$ as a function of $\lambda$ and $\rho C$ ($q_{nom}$) are provided in \cite{sia_sondes_2010}. These curves can be approximated as (cf. \cite{sia_sondes_2010}):
+\begin{equation}
+\label{eq:q_nom}
+    q_{nom} \approx \frac{T_g - T_{mf, min}}{11.5} \ \left( 10.6 \lambda + 11.2 + 2 \left( \frac{\lambda}{\alpha} - 2 \right) \right)
+\end{equation}
+% If these are used, $Q_{HP}$ needs to be computed by rearranging the equation for $q_{max}$. 
+The operating time indicates the number of hours in which the heat pump is operating (with power $Q_{HP}$). The norm values, used throughout this work, depend on altitude and location \cite{sia_sondes_2010}.
+%. It changes with altitude and location, and the nominal values are shown in Fig.~\ref{fig:t_q_norm}b. 
+The duration of the peak extraction pulse ($t_{peak}$) measures the maximum time of non-stop operation of the HP, which impacts the maximum temperature drop in the BHE and is usually taken as 1, 5 or 10 days \cite{pahud_geothermal_2002}.
 
 \begin{table}[t]
 \footnotesize
 \caption{Technical and design parameters. Norm values are given in \citep{sia_sondes_2010}, while other parameters are obatined from related studies \citep{pahud_geothermal_2002, wagner_erdwarmesonden._2019, claesson_conductive_1988}.}
 \centering
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lllll}
 \hline
 \textbf{Symbol} & \textbf{Unit} & \textbf{Description}                   & \textbf{Formula}                                        & \textbf{Norm value / range (CH)} \\ \hline
-$T_{f, min}$    & $^\circ C$    & Minimum mean fluid temperature         & $T_{f} = \frac{T_{in} + T_{out}}{2}$                    & \textit{Norm}: $- 1.5$           \\
-$r_b$           & $m$           & Borehole radius                        &                                                         & $0.055-0.07$                      \\
-$R_b^*$         & $mK/W$        & Effective borehole resistance          &                                                         & $0.08-0.1$                       \\ \hline
-$H$             & $m$           & Borehole depth                         &                                                         & \textit{Norm}: $100$ (typically $100-200$)          \\
-$D$             & $m$           & Distance between $z=0$ and BHE outlet  &                                                         & $2-5$                              \\
-$B$             & $m$           & Spacing between BHEs                   &                                                         & $>5$ (no effect for $B > H$)     \\ \hline
-$Q_{HP}$        & $W$           & Heat extraction power during operation &                                                         & $4500-8400$                      \\
-$q_{max}$       & $W/m$         & Maximum heat extraction rate           & $q_{max} = \frac{Q_{HP}}{H}$                            & \textit{Norm}: $20-55$ (Fig.~\ref{fig:t_q_norm}a)           \\
-$t_{op}$        & $h$           & Annual operation time                  &                                                         & \textit{Norm}: $1850$ (Fig.~\ref{fig:t_q_norm}b)  \\
-$t_{peak}$      & $h$           & Duration of maximum extraction pulse   &                                                         & $1 - 10$ days                    \\ 
+$T_{f, min}$    & °C   & Minimum mean fluid temperature         & $T_{f} = \frac{T_{in} + T_{out}}{2}$                    & \textit{Norm}: $- 1.5$           \\
+$r_b$           & m           & Borehole radius                        &                                                         & $0.055-0.07$                      \\
+$R_b^*$         & mK/W        & Effective borehole resistance          &                                                         & $0.08-0.1$                       \\ \hline
+$H$             & m           & Borehole depth                         &                                                         & \textit{Norm}: $100$ (mostly $50-200$)          \\
+$D$             & m           & Distance between $z=0$ and BHE outlet  &                                                         & $2-5$                              \\
+$B$             & m           & Spacing between BHEs                   &                                                         & $>5$ (no effect for B $>$ H)     \\ \hline
+$Q_{HP}$        & W           & Heat extraction power during operation &                                                         & $4500-8400$                      \\
+$q_{max}$       & W/m         & Maximum heat extraction rate           & $q_{max} = \frac{Q_{HP}}{H}$                            & \textit{Norm} ($q_{nom}$): $20-55$           \\
+$t_{op}$        & h           & Annual operation time                  &                                                         & \textit{Norm}: $1850$  \\
+$t_{peak}$      & h           & Duration of maximum extraction pulse   &                                                         & $1 - 10$ days                    \\ 
 \hline
-$t_{dim}$       & $a$           & Planning horizon for dimensioning the BHE   &                                                         & $50$                    \\ 
+$t_{dim}$       & years           & Planning horizon for dimensioning the BHE   &                                                         & $50$                    \\ 
 \hline
 \end{tabular}
+}
 \label{tab:tech_design_params}
 \end{table}
 
+\begin{comment}
 \begin{figure}[b]
 \centering
 \begin{subfigure}{.48\textwidth}
@@ -539,17 +599,19 @@ $t_{dim}$       & $a$           & Planning horizon for dimensioning the BHE   & 
 \caption{a) nominal heat extraction rate ($q_{max}$) for a duplex BHE (32mm) at $H=100m$, $T_g=10$, $t_op = 1850h$ as a function of $\lambda$ and $\rho C$, b) nominal operating time ($t_{op}$) as a function of altitude north and south of the alps \citep{sia_sondes_2010} (Fig. 7 \& 10).}
 \label{fig:t_q_norm}
 \end{figure}
+\end{comment}
 
 \subsection{Temperature profile of a BHE installation}
 \label{model_intro}
 
-To quantify the temperature field of a BHE, we distinguish between the processes inside and outside the BHE. The temperature drop inside the BHE, i.e. between the heat carrier fluid at mean temperature $T_f$ and the borehole wall at temperature $T_b$, is a function of the heat extraction rate and the effective thermal resistance of the boorehole, such that \citep{claesson_conductive_1988}:
+To quantify the temperature field of a BHE, we distinguish between the processes inside and outside the BHE. The temperature drop inside the BHE, i.e. between the heat carrier fluid at mean temperature $T_f$ and the borehole wall at temperature $T_b$, is a function of the heat extraction rate and the effective thermal resistance of the borehole, such that \citep{claesson_conductive_1988}:
 
 \begin{equation}
 \label{eq:T_b}
     T_b(t) - T_f(t) = q_{max}*R_b^*
 \end{equation}
 
+\begin{comment}
 The inlet temperature of the fluid may be obtained from the following equation \citep{pahud_geothermal_2002}, p. 43:
 
 \begin{equation}
@@ -557,6 +619,7 @@ The inlet temperature of the fluid may be obtained from the following equation \
 \end{equation}
 
 where $Q_{HP}$ is the heat extraction power of the heat pump, $\dot{m}$ is the mass flow rate of the fluid (in $kg/s$), $cp_{f}$ is the thermal capacity of the fluid (in $J/kgK$) and $T_{f,in}$ and $T_{f,out}$ are the inlet and outlet temperatures.
+\end{comment}
 
 The temperature at the borehole wall $T_b$ differs from the undisturbed ground temperature $T_g$ by a temperature drop $\Delta T_b$. It varies with depth ($z$), so the average value along the borehole may be obtained by numerical integration ($z = \overline{z}$) or, in a simplified way, by taking $z = H/2$. The borehole wall temperature $T_b$, with $r = r_b$, is hence computed as:
 \begin{equation}
@@ -570,61 +633,126 @@ The temperature at the borehole wall $T_b$ differs from the undisturbed ground t
     \label{fig:q_seasonal}
 \end{figure}
 
-The $\Delta T_b(z, t)$ is characterized by a long-term (\textit{LT}), seasonal (\textit{seas}) and short-term (\textit{peak}) component. To perform system sizing based on the minimum fluid temperature condition, all three effects have to be taken into account to give a "worst-case" scenario. A method to model these effects, shown in Fig.~\ref{fig:q_seasonal}, is suggested in \citep{claesson_conductive_1988} and summarized in \citep{pahud_geothermal_2002}, p.43. Long-term effects are represented by a constant heat extraction rate $\overline{q}$, which is typically assessed for a planning horizon ($t_{dim}$) of 50 years. Seasonal effects are represented as a sinusoidal heat extraction with peak rate $q_{seas}$ and period 1 year, so that the annual integral is zero. The peak extraction, which occurs at maximum seasonal extraction, has a duration $t_{peak}$ (typically 1-10 days). The energy extracted from this pulse is neglected. To obtain $\Delta T_b$, each heat extraction rate is multiplied with a respective thermal resistance ($R_{LT},R_{seas},R_{peak}$):
+The analytical model proposed by \citet{eskilson_thermal_1987} is based on the principles of temporal and spatial superposition, which assumes that $\Delta T_b$ is the sum of the temperature drops due to heat extraction pulses of different duration and from any neighbouring borehole, whereby boreholes at distances greater than $H/2$ can be neglected \cite{pahud_geothermal_2002}.
 
+The principle of temporal superposition implies that $\Delta T_b(z, t)$ can be modelled as a long-term (\textit{LT}), a seasonal (\textit{seas}) and a short-term (\textit{peak}) component \citep{claesson_conductive_1988}, as shown in Fig.~\ref{fig:q_seasonal}.
+%
+% A method to model these effects, shown in Fig.~\ref{fig:q_seasonal}, is suggested in  and summarized in \cite{pahud_geothermal_2002}. 
+%
+Long-term effects are represented by a constant heat extraction rate $\overline{q}$, which is typically assessed for a planning horizon ($t_{dim}$) of 20 or 50 years \cite{pahud_geothermal_2002,miglani_methodology_2018}. 
+Seasonal effects are represented as a sinusoidal heat extraction with peak rate $q_\mathit{seas}$ and period $t_\mathit{seas}$ of 1 year.
+% , so that the annual integral is zero.
+The peak extraction, which occurs at maximum seasonal extraction, has a duration $t_\mathit{peak}$ (typically 1-10 days). The energy extracted from this pulse is neglected \cite{claesson_conductive_1988}. 
+To obtain $\Delta T_b$, each heat extraction rate is multiplied with a respective thermal resistance ($R_{LT},R_\mathit{seas},R_\mathit{peak}$) \cite{claesson_conductive_1988}:
 \begin{equation}
 \label{eq:dT_b}
-    \textstyle \Delta T_b(z, t) = \overline{q} * R_{LT}(z, t) + q_{seas} * R_{seas, max} + q_{peak} * R_{peak}(t)
+    \textstyle \Delta T_b(z, t) = \overline{q} * R_{LT}(z, t) + q_{seas} * R_{seas}(z,t) + q_{peak} * R_{peak}(z, t)
 \end{equation}
 where
 \begin{equation*}
-    \overline{q} = \frac{t_{op}}{365*24} * q_{max}, \quad q_{seas} = 0.5 * q_{max}, \quad q_{peak} = q_{max} - \overline{q} - q_{seas}
+    \overline{q} = \frac{t_{op}}{365*24} * q_{max}, \quad q_\mathit{seas} = w_\mathit{seas} * q_{max}, \quad q_\mathit{peak} = q_{max} - \overline{q} - q_\mathit{seas}
 \end{equation*}
+and $w_\mathit{seas}$ is the seasonal system load, given as a dimensionless constant.
 
-A combination of Eqs.~\ref{eq:T_b}-\ref{eq:dT_b} gives the following technical condition to be fulfilled:
+Equation~\ref{eq:dT_b} can be used to simulate the temperature variation at the borehole wall for any time $t$. 
+For GSHP system sizing and to assess the potential long-term heat extraction from the ground, the worst-case $\Delta T_b$ and consequently the lowest $T_{mf}$ (or highest, for heat injection) must be calculated and substituted in Eqs.~\ref{eq:T_mf_min} (heat extraction) or \ref{eq:T_mf_max} (heat injection).
+To obtain the $T_{mf}$, the temperature drop along the entire borehole is of interest, denoted as $H$ (the borehole depth).
+Using this notation, a combination of Eqs.~\ref{eq:T_b}-\ref{eq:dT_b} gives the following equation for the lowest/highest $T_{mf}$:
+\begin{equation}
+   T_{mf}(t) =  \textstyle T_g\left(\frac{H}{2}\right) - \overline{q} * R_{LT}(H, t_{dim}) - q_{seas} * R_{seas}(t_\mathit{seas}) - q_{peak} * R_{peak}(t_\mathit{peak}) - q_{max}*R_b^*
+\end{equation}
+For reasons explained in Section~\ref{app:models}, only the $R_{LT}$ is a function of the borehole depth $H$.
+This equation is valid for the cases of heat extraction (e.g. space heating) and heat injection (e.g. space cooling). The difference between the two modes of operation is that the heat extraction rates ($q$) are positive for heat extraction and negative for heat injection and that their magnitude may vary depending on the length of the heating/cooling seasons and the respective demand.
+
+The principle of spatial superposition implies that the temperature drops due to the heat extraction from neighbouring BHEs is added to the temperature drop at the borehole wall. 
+%
+As the seasonal and peak effects are of a short duration and have a penetration radius of less than the minimum borehole distance $B_{min} = 5$m \cite{pahud_geothermal_2002}, the seasonal and peak components of neighboring boreholes hence do not interfere with each other.
+%
+% and can be approximated as functions of the technical and physical parameters only (i.e. $r_b, \lambda, \alpha$). Their penetration radius is a few meters and lies below the minimum borehole distance $B_{min} = 5m$, so seasonal and peak effects of neighboring boreholes do not interfere with each other. Consequently, $R_{seas}$ and $R_{peak}$ are "quasi-constants" in the large-scale geothermal potential estimation. The analytic formulas for both components are given in Section~\ref{seas_peak}. 
+%
+The long-term temperature drop ($\Delta T_{LT}$), however, may be impacted by surrounding boreholes. Fig.~\ref{fig:T_field} shows the long-term $\Delta T$ for different times, a) at the borehole wall as a function of $z$ and b) integrated along $z$ (denoted as $\overline{z}$ in Fig.~\ref{fig:T_field}b) as a function of distance to the borehole. Most of the temperature drop occurs during the first 10 years of operation, while the temperature drop after the planning horizon of 50 years is small.
+
+\begin{comment}
+Consequently, the long-term thermal resistance of the ground at the wall of borehole $i$ consists of the thermal resistance caused by this borehole, and the thermal resistances caused by any surrounding boreholes, such that:
 
 \begin{equation}
-    \textstyle T_g(\frac{H}{2}) - \overline{q} * R_{LT}(\overline{z}, t_{dim}) - q_{seas} * R_{seas, max} - q_{peak} * R_{peak}(t_{peak}) - q_{max}*R_b^* \geq T_{f, min}
+\label{eq:R_field}
+    R_{LT,i}(\overline{z}, t_{dim}) = R_{LT}(\overline{z}, t_{dim}, r_b) + \sum_{i \neq j} R_{LT}(\overline{z}, t_{dim}, r_j)
 \end{equation}
+where $R_{LT}(\overline{z}, t_{dim}, r_b)$ denotes the long-term thermal resistance of borehole $i$ at its borehole wall ($r_b$) and $R_{LT}(\overline{z}, t_{dim}, r_j)$ denotes the thermal resistance at a distance $r_j$ from any surrounding borehole.
+\end{comment}
+% While in most studies of GSHP potential the borehole depth and dimensioning horizon are considered as constants \cite{}, this formulation
 
-The seasonal and peak effects are of a short duration, and can be approximated as functions of the technical and physical parameters only (i.e. $r_b, \lambda, \alpha$). Their penetration radius is a few meters and lies below the minimum borehole distance $B_{min} = 5m$, so seasonal and peak effects of neighboring boreholes do not interfere with each other. Consequently, $R_{seas}$ and $R_{peak}$ are "quasi-constants" in the large-scale geothermal potential estimation. The analytic formulas for both components are given in Section~\ref{seas_peak}. 
-
-The long-term temperature drop, however, may have an impact on surrounding boreholes. Fig.~\ref{fig:T_field} shows the long-term $\Delta T$ for different times, a) at the borehole wall as a function of $z$ and b) integrated along $z$ (denoted as $\overline{z}$) as a function of distance to the borehole. Most of the temperature drop occurs during the first 10 years of operation, while the temperature drop after the planning horizon of 50 years is small. 
-Figure~\ref{fig:T_field}a shows that the approximation of $z=H/2$ quantifies the worst-case temperature drop along the borehole. The rules of thumb given in \citep{pahud_geothermal_2002}, p. 50, state that the temperature drop is small at a horizontal distance of $r>H/2$ from the center of the BHE, and negligible for $r>H$. This is confirmed by Fig.~\ref{fig:T_field}b. 
+\begin{comment}
+% Figure~\ref{fig:T_field}a shows that the approximation of $z=H/2$ quantifies the worst-case temperature drop along the borehole. The rules of thumb given in \citep{pahud_geothermal_2002}, p. 50, state that the temperature drop is small at a horizontal distance of $r>H/2$ from the center of the BHE, and negligible for $r>H$. This is confirmed by Fig.~\ref{fig:T_field}b. 
 We refer to the long-term temperature drop as $\Delta T_{LT}$ and include $r$ as variable, as also distances $r>r_b$ are of interest:
 
 \begin{equation}
     \Delta T_{LT}(r, z, t) = \overline{q} * R_{LT}(r, z, t)
 \end{equation}
+\end{comment}
 
 \begin{figure}
     \centering
     \includegraphics[width=.9\linewidth]{Figs/temp_field_FLS.pdf}
-    \caption{a) Long-term variation of the ground temperature at the borehole wall ($\Delta T_{LT}(r_b, z, t)$) as a function of depth ($z$), b) Long-term temperature variation integrated along $z$ ($\Delta T_{LT}(r, \overline{z}, t)$) as a function of distance to the BHE ($r$).}
+    \caption{a) Long-term variation of the ground temperature at the borehole wall ($\Delta T_{LT}(r_b, z, t)$) as a function of depth ($z$), b) Integration of $\Delta T_{LT}(r_b, z, t)$ along $z$ ($\Delta T_{LT}(r, \overline{z}, t)$) as a function of distance to the BHE ($r$).}
     \label{fig:T_field}
 \end{figure}
 
-\subsection{Analytic models and approximations}
+\subsection{Analytical models for thermal resistance}
+\label{geo_models}
+\label{app:models}
 
-According to \citet{claesson_conductive_1988}, the heat transfer of a BHE can be modelled with good accuracy as a purely conductive process in a homogeneous medium. This means that convective heat transfers are negligible. Furthermore, the thermal conductivity $\lambda$ of stratified ground with multiple layers may be approximated as a weighted average of the properties of the layers. 
-\citet{claesson_conductive_1988} also argue that the undisturbed ground temperature $T_g(z)$ along the borehole can be approximated without loss of accuracy by the undisturbed ground temperature at half the borehole height, i.e. $T_g(\overline{z}) \approx T_g(H/2)$. 
+In the model of \citet{claesson_conductive_1988}, the heat transfer of a BHE is modelled with good accuracy as a purely conductive process in a homogeneous medium. 
+% This means that convective heat transfers are negligible. 
+This implies that the thermal conductivity $\lambda$ of stratified ground with multiple layers may be approximated as a weighted average of the properties of the layers. 
+\citet{claesson_conductive_1988} also argue that the undisturbed ground temperature $T_g(z)$ along the borehole can be approximated without loss of accuracy by the undisturbed ground temperature at half the borehole depth. 
 
-The thermal resistance ($R$) is represented in a general form through so-called \textit{g-functions}. They are are dimensionless step-response functions characterizing the thermodynamic behaviour of the ground:
+To ease the notation fot the computation of thermal resistances ($R$), \citet{eskilson_thermal_1987} has introduced the concept of \textit{g-functions}. They are are dimensionless step-response functions characterizing the thermodynamic behaviour of the ground, from which $R$ is obtained as \cite{eskilson_thermal_1987}:
 
 \begin{equation}
     R = \frac{1}{2 \pi \lambda} \, \mathrm{g}\left( \frac{t}{t_s}, \frac{r}{H} \right), \quad \frac{t}{t_s} > 0
 \end{equation}
 
-The g-function is a function of the ratio between the time $t$ and the BHE's time constant $t_s$, as well as the ratio between the horizontal distance to the BHE center $r$ ($r_b$ for a single borehole) and the borehole length $H$. The ratio $t/t_s$ may also be referred to as Eskilson's number (Es) \citep{pahud_geothermal_2002}. For simplicity, only the variables (i.e. $r, z, t$, not the parameters $t_s, H$) are indicated in the argument of the g-function (where relevant). The time constant $t_s$, typically between $35-140a$, is defined as:
+The g-function is a function of the ratio between the time $t$ and the BHE's time constant $t_s$, as well as the ratio between the horizontal distance to the BHE center $r$ ($r_b$ for a single borehole) and the borehole length $H$. The ratio $t/t_s$ may also be referred to as Eskilson's number (Es) \citep{pahud_geothermal_2002}. 
+% For simplicity, only the variables (i.e. $r, z, t$, not the parameters $t_s, H$) are indicated in the argument of the g-function (where relevant). 
+The time constant $t_s$, typically between $35-140$ years, is defined as:
 
 \begin{equation}
     t_s = \frac{H^2}{9 \alpha}
 \end{equation}
+The time constant marks the transition from the transient state, in which ground temperatures are decreasing logarithmically, to the steady state, which represents the new thermal equilibrium of the ground with a constant heat extraction (red line in Fig.~\ref{fig:T_field}).
+Since the dimensioning horizon of BHEs lies typically below $t_s$, the transient state solutions for the heat transfer equation are of primary interest for the modelling of BHEs. A complete overview of transient and steady-state models is provided by \citet{pahud_geothermal_2002}.
+% This steady state is fully reached when $\ln{(t/t_s)} = 2$, i.e. $t_{ss} = e^2 t_s \approx 7.5 t_s$ \citep{wagner_erdsondenpotenzial_2014}. 
 
-The steady state is reached when $\ln{(t/t_s)} = 2$, i.e. $t_{ss} = e^2 t_s \approx 7.5 t_s$ \citep{wagner_erdsondenpotenzial_2014}. 
+\subsubsection{Finite Line Source (FLS)}
+The BHE is modelled by \citet{claesson_conductive_1988} as a finite line source (FLS) of length $H$. The analytical model is
+% The FLS describes the most accurate analytic model used in the literature. It is 
+a solution to the heat conduction equation that satisfies the boundary conditions $T(r, z=0, t=0) = 0$. 
+The temperature changes along the BHE are modelled by the integral of the FLS solution along the vertical axis ($z$).
+A computationally efficient solution for this integral (in transient state) has been proposed by \citet{claesson_analytical_2011}:
+% The g-function of the transient solution is given by \citep{pahud_geothermal_2002}:
+%To compute the mean $R_{LT}$ along the borehole length at a radial distance $r$ from the BHE, we have implemented an efficient solution for the integration of the FLS model along the vertical axis proposed in \cite{claesson_analytical_2011}:
 
-\textbf{Finite Line Source (FLS)}. 
-The FLS describes the most accurate analytic model used in the literature. It is a solution to the heat conduction equation that satisfies the boundary conditions $T(r, z=0, t=0) = 0$. The g-function of the transient solution is given by \citep{pahud_geothermal_2002}:
+\begin{equation}
+\label{eq:FLS_int}
+     g_{FLS}(r, H) = \frac{1}{2} \int_{\frac{1}{\sqrt{4 \alpha t}}}^{\infty}  e^{- r^2 s^2} \ \frac{I_{ls}(Hs, Ds)}{H s^2} \ ds
+\end{equation}
+
+where
+\begin{equation*}
+    I_{ls}(h, d) = 2\ \mathrm{ierf}(h) + 2\ \mathrm{ierf}(h + 2d) - \mathrm{ierf}(2h + 2d) - \mathrm{ierf}(2d)
+\end{equation*}
+\begin{equation*}
+    \mathrm{ierf}(x) = \int_0^x \mathrm{erf}(u) du 
+                     = x \ \mathrm{erf}(x) - \frac{1}{\sqrt{\pi}} (1 - e^{-x^2})
+    \qquad
+    \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-\mu^2} d \mu 
+\end{equation*}
+
+and $t$ equals the planning horizon $t_{dim}$. $D$ is the distance between the BHE outlet and the ground surface, which is set to $D = 2m$ as suggested in \cite{pahud_geothermal_2002}. The transient and steady-state solutions of the FLS model at any depth $z$ are provided in Appendix~\ref{app:allModels}.
+
+\begin{comment}
 
 \begin{equation}
 \label{eq:FLS}
@@ -666,9 +794,27 @@ where
     \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-\mu^2} d \mu 
 \end{equation*}
 
-The FLS can be simplified under certain assumptions by simpler models, namely the infinite line source model (ILS) and an asymptotic approximation of the FLS model, here referred to as Eskilson's approximation (Esk). A comparison of all methods is provided in Section~\ref{comparison}.
-\\
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=.9\linewidth]{Figs/FLS_ILS_Esk_compare_ts.pdf}
+    \caption{a) Temporal dynamics of the temperature variation along the borehole (shape of the "g-function") for the Finite Line Source (FLS), Infinite Line Source (ILS) and asymptotic (Esk) models, b) relative error for the temperature variation, as percentage of the $\Delta T_{FLS}$. The time duration of peak (red) and seasonal (grey) effects are highlighted.}
+    \label{fig:T_dynamics}
+\end{figure}
+\end{comment}
 
+\subsubsection{Approximations and errors}
+
+The FLS can be simplified under certain assumptions by simpler models, namely the infinite line source model (ILS) and an asymptotic approximation of the FLS model, which are described in Appendix~\ref{app:allModels}.
+% A comparison of all methods is provided in Section~\ref{comparison}.
+These models, used in the literature for example in \cite{alcaraz_advection_2016,alcaraz_t-i-ger_2017,casasso_g.pot:_2016}, show a negligible deviation from the FLS model for time spans below 1 year (see Fig. \ref{fig:T_dynamics})b and are hence well-suited for modelling seasonal and peak effects (see Appendix~\ref{app:allModels} for details).
+%
+For larger time spans of several years, the deviation of the approximations from the FLS solution becomes non-negligible.
+% While the ILS solution does not achieve a steady state due to its infinite length, the error of the Esk approximation peaks around the time constant $t/t_s=1$, leading to a maximum deviation of around 8\% and an error of around 4\% in the steady state (dashed line in Fig. \ref{fig:T_dynamics}b).
+% As the dimensioning horizon typically lies in the order of magnitude of $t_s$ (34 years for a BHE of length 100 m), these deviations are accumulated to significant errors when spatial superposition is applied.
+This leads to a significant accumulation of errors when superposition is applied.
+Throughout this work, the FLS is hence used to model long-term thermal resistances, similar to other studies accounting for spatial superposition \cite{miglani_methodology_2018,rivera_increased_2017}.
+
+\begin{comment}
 \textbf{Infinite Line Source (ILS)}. The ILS approximation is defined as \citep{poppel_grenzabstande_2017}:
 
 \begin{equation}
@@ -739,13 +885,6 @@ As the Esk model is practically equivalent to the ILS solution for $t_{min} < t 
 \subsubsection{Model comparison}
 \label{comparison}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=.9\linewidth]{Figs/FLS_ILS_Esk_compare_ts.pdf}
-    \caption{a) Temporal dynamics of the temperature variation along the borehole (shape of the "g-function") for the Finite Line Source (FLS), Infinite Line Source (ILS) and asymptotic (Esk) models, b) relative error for the temperature variation, as percentage of the $\Delta T_{FLS}$. The time duration of peak (red) and seasonal (grey) effects are highlighted.}
-    \label{fig:T_dynamics}
-\end{figure}
-
 As mentioned above, the approximations of the FLS model are valid under certain assumptions, but may significantly speed-up the modelling time (even though the formulation in Eq.~\ref{eq:FLS_int} is already much faster than Eq.~\ref{eq:FLS}). To understand the ranges of validity and the error induced by the use of the approximations, we compare the different models for different time scales and distances to the borehole. All examples are shown for a borehole of 100m length, but the patterns are nearly identical for longer BHE's. In general, the temperature drop ($\Delta T$) along the borehole is smaller for larger $H$, hence leading to smaller absolute, but similar relative errors. 
 
 Figure~\ref{fig:T_dynamics} shows a comparison between the models for different time scales at the borehole wall ($r = r_b$). We can see that for short time scales (red/grey), all models have a negligible error (up to $1\%$). 
@@ -768,48 +907,53 @@ To assess the effect of adjacent boreholes, the temperature fields at large dist
 While the temperature drop increases logarithmically for small distances, it trails off for distances that approach the borehole length $H$. In this range, Eq.~\ref{eq:apx} is no longer valid, so the transient asymptote cannot be used. This can be seen by the unrealistic steady-state solution, which represents the Esk steady-state asymptote (see Eq.~\ref{eq:Esk_qss}). It reaches a value of $0$ at $H/2$ and has negative values after, which is infeasible.
 
 As Fig.~\ref{fig:T_dynamics} suggests, the error between the ILS and the FLS model increases with time, up to $0.1-0.3 ^\circ$C for the radii of interest. While this may  be negligible for a single neighbor, the error accumulates for borehole fields.  The exact FLS solution should hence be used for modelling large-scale geothermal potentials.
+\end{comment}
 
-\subsection{Short-term, seasonal and long-term effects}
+\subsubsection{Long-term, seasonal and peak effects}
 \label{seas_peak}
 
-As it was shown in Fig.~\ref{fig:q_seasonal}, the minimum temperature at the borehole wall consists of a long-term, a seasonal and a peak component, each obtained by multiplying the respective heat extraction rate ($\overline{q}, q_{seas}, q_{peak}$) with its thermal resistance ($R_{LT},R_{seas},R_{peak}$, see Eq.~\ref{eq:dT_b}). 
+Based on the analytical models described above, mathematical formulations for the thermal resistance of the peak, seasonal and long-term components shown in Fig.~\ref{fig:q_seasonal} ($R_{LT},R_{seas},R_{peak}$) can be derived. 
+% As it was shown in Fig.~\ref{fig:q_seasonal}, the minimum temperature at the borehole wall consists of a long-term, a seasonal and a peak component, each obtained by multiplying the respective heat extraction rate ($\overline{q}, q_{seas}, q_{peak}$) with its thermal resistance ($R_{LT},R_{seas},R_{peak}$, see Eq.~\ref{eq:dT_b}). 
 
-\textbf{Long-term effects} may be assessed at $t = t_{dim}$ (typically 50 years), at quasi steady-state ($t = t_s$) or at steady state ($t = t_{ss}$). It is common to use the quasi steady-state asymptote for a conservative approximation of a \textit{single borehole}, as it overestimates the maximum temperature drop (see Fig.~\ref{fig:T_dynamics}). Examples for this approach are \cite{claesson_conductive_1988} and \cite{pahud_geothermal_2002}. 
-
-For \textbf{multiple boreholes}, the g-functions of each borehole are superposed. As we saw in Section \ref{comparison}, only the exact FLS is appropriate for a realistic superposition of multiple BHEs, as an accumulation of the error should be avoided.
-The formula for the long-term resistance of borehole $i$ in a field of $N$ boreholes then becomes (adapted from \cite{claesson_analytical_2011}):
+\textbf{Long-term effects} are assessed at $t = t_{dim}$ using the FLS solution for an accurate model of the spatial superposition \cite{miglani_methodology_2018,rivera_increased_2017}.
+% (typically 50 years), at quasi steady-state ($t = t_s$) or at steady state ($t = t_{ss}$). It is common to use the quasi steady-state asymptote for a conservative approximation of a \textit{single borehole}, as it overestimates the maximum temperature drop (see Fig.~\ref{fig:T_dynamics}). Examples for this approach are \cite{claesson_conductive_1988} and \cite{pahud_geothermal_2002}. 
+%
+Applying the principle of spatial superposition, 
+% For \textbf{multiple boreholes}, the g-functions of each borehole are superposed. As we saw in Section \ref{comparison}, only the exact FLS is appropriate for a realistic superposition of multiple BHEs, as an accumulation of the error should be avoided.
+the long-term resistance of borehole $i$ surrounded by $N$ boreholes may be expressed as (cf. \cite{claesson_analytical_2011}):
 
 \begin{equation}
-    R_{LT, i}(t_{dim}) = \frac{1}{2 \pi \lambda} \mathrm{g}_{Esk, qss}(r_b) + \frac{1}{2 \pi \lambda} \sum_{j=1}^N \mathrm{g}_{FLS}(r_{i,j}, \overline{z}, t_{dim}) ,
-    \quad i,j = 1, 2, ..., N
+\label{eq:R_LT_superposed}
+    R_{LT, i}(H) = \frac{1}{2 \pi \lambda} \mathrm{g}_{FLS}(r_b, H) + \frac{1}{2 \pi \lambda} \sum_{j=1}^N \mathrm{g}_{FLS}(r_{i,j}, H) 
 \end{equation}
+where $i \neq j$, $\mathrm{g}(r, H)$ is obtained from Eq.~\ref{eq:FLS_int} and $r_{i,j}$ denotes the distance between borehole $i$ and the surrounding borehole $j$. If a single borehole is considered, only the first term of the addition is relevant. To ease the notation, the argument $t = t_{dim}$ has been omitted from Eq.~\ref{eq:R_LT_superposed}.
 
-where $i \neq j$ and $\mathrm{g}(r, \overline{z}, t)$ is the FLS solution integrated along the borehole length ($\overline{z}$). If a single borehole is considered, only the first term of the addition is relevant.
-
-\textbf{Seasonal effects} are modelled as a periodic heat extraction. Effects from neighboring boreholes can be ignored if the minimum spacing ($B_{min}$) fulfills the following condition:
+\textbf{Seasonal effects} are modelled in this work as a periodic heat extraction. Effects from neighboring boreholes can be ignored if the minimum spacing ($B_{min}$) fulfills the following condition:
 
 \begin{equation}
     B_{min} > 0.7 \sqrt{\alpha t_{seas}}
 \end{equation}
 
-As the minimum spacing is set to $5m$ \cite{sia_sondes_2010}, this criterion is fulfilled for the period of the seasonal variation ($t_{seas} = 1a$). The thermal diffusivities in Switzerland (see Table~\ref{tab:phys_params}) result in $B_{min} \approx 3.5-4.5m$. The maximum periodic thermal resistance is given by \citep{claesson_conductive_1988, pahud_geothermal_2002}:
+As the minimum spacing is defined as 5 m in the SIA norm \cite{sia_sondes_2010}, this criterion is fulfilled for the period of the seasonal variation ($t_{seas} = 1$ year). The thermal diffusivities in Switzerland (see Table~\ref{tab:phys_params}) result in $B_{min} \approx 3.5-4.5$ m. The maximum periodic thermal resistance is given by \citep{claesson_conductive_1988, pahud_geothermal_2002}:
 
 \begin{equation}
-    R_{seas, max} = \frac{1}{2 \pi \lambda} \sqrt{\left(\ln(2/r_{pb}^\prime \right) - \gamma)^2 + \pi^2/16}
+    R_{seas}(t_\mathit{seas}) = \frac{1}{2 \pi \lambda} \sqrt{\left(\ln(2/r_{pb}^\prime \right) - \gamma)^2 + \pi^2/16}
 \end{equation}
 
 where
 \begin{equation*}
-    r_{pb}^\prime = r_b \sqrt{2}/\delta < 0.1, \quad \delta = \sqrt{ \alpha t_{seas} / \pi}
+    r_{pb}^\prime = r_b \sqrt{2}/\delta < 0.1, \quad \delta = \sqrt{ \alpha t_\mathit{seas} / \pi}
 \end{equation*}
-    
-The penetration depth of the temperature drop is denoted as $\delta$, which is around $3-4m$ for Switzerland. Seasonal effects hence do not impact adjacent boreholes. 
+The $R_{seas}$ is based on the ILS model, and hence it is independent of the borehole depth $H$.
+The penetration depth of the temperature drop is denoted as $\delta$, which is around $3-4$ m for Switzerland. Seasonal effects hence do not impact adjacent boreholes. 
 
-\textbf{Short-term effects} are represented by a heat extraction pulse at $q_{max}$ for a duration $t_{peak}$, typically 1-10 days (see Table~\ref{tab:tech_design_params}). Due to the short duration of the pulse, the asymptotic transient approximation is valid with negligible error. Thermal effects have an even smaller penetration depth than seasonal effects, so no surrounding boreholes need to be considered. The thermal resistance can hence be obtained as:
+\textbf{Short-term effects} are represented by a heat extraction pulse at $q_{max}$ for a duration $t_\mathit{peak}$, typically 1-10 days (see Table~\ref{tab:tech_design_params}). Due to the short duration of the pulse, the ILS approximation is valid with negligible error (see Appendix \ref{app:allModels}). Thermal effects have an even smaller penetration depth than seasonal effects, so no surrounding boreholes need to be considered. The thermal resistance can hence be obtained as:
 
 \begin{equation}
-    \mathrm{R}_{peak}(t_{peak}) = \frac{1}{2 \pi \lambda} \ \mathrm{g}_{Esk, trans}(r_b, t_{peak})
+    \mathrm{R}_\mathit{peak}(t_\mathit{peak}) = \frac{1}{2 \pi \lambda} \ \mathrm{g}_{ILS}(r_b, t_\mathit{peak})
 \end{equation}
+where $\mathrm{g}_{ILS}$ is obtained from Appendix \ref{app:allModels}.
+While peak effects are relevant when modelling the operation of GSHP systems \cite{miglani_methodology_2018}, they are frequently neglected in studies of the long-term technical geothermal potential, as a back-up heating system is available in most cases to cover peak extractions which may violate the temperature constraint (Eq.~\ref{eq:T_mf_min}). We follow this approach and neglect peak heat extraction throughout this work. 
 
 
 %\section{Hybrid system optimization}
