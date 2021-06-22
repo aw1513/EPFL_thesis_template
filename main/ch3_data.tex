@@ -109,7 +109,7 @@ z                    & curvature (DoG)                 & 3.75km (big)    \\ \hli
 \label{tab:DTM_ftrs}
 \end{table}
 
-\textbf{Digital Surface Model.} The DSM is a complete model of the landscape, including all visible landscape elements. As the DTM it is available  in $(2\times2)m^2$ resolution from LiDaR data that was collected in the period from 2000-2008, but contrary to the DSM is has not been updated. More recent DSMs have however been created for individual cantons in Switzerland at a resolution of $0.5\times0.5$ m$^2$. 
+\textbf{Digital Surface Model.} The DSM is a complete model of the landscape, including all visible landscape elements. As the DTM it is available  in $2\times2$ m$^2$ resolution from LiDaR data that was collected in the period from 2000-2008, but contrary to the DSM is has not been updated. More recent DSMs have however been created for individual cantons in Switzerland at a resolution of $0.5\times0.5$ m$^2$. 
 %
 We use the higher-resolution and more updated DSM for the canton of Geneva to improve the estimation of RPV potential.
 This has two-fold reasons. Firstly, the spatial resolution of the updated DSM is 16 times higher, and secondly, the newer period of construction accounts for some buildings which have been built after the completion of the first DSM.
@@ -176,7 +176,7 @@ For the potential studies in Part~\ref{potential}, we have used solar radiation 
 \nomenclature[A]{GHI}{Global horizontal radiation}
 \nomenclature[A]{DIR}{Direct beam radiation}
 
-We average the 12 years of satellite data in order to obtain an average year in hourly resolution, i.e. $12 \times 365$ time steps for 11,243 satellite pixels (see Fig.~\ref{figb:GHI_patterns}). This reduces the variability of the radiation data, and furthermore allows the estimation of long-term RPV potential without bias due to extreme meteorological events of a specific year. Furthermore, all hours with constantly zero GHI measurements are removed (i.e. night hours). The remaining 10-17 day hours result in $\sim~3-6$ million hourly values for GHI and DIR per month, depending on the month. 
+We average the 12 years of satellite data in order to obtain an average year in hourly resolution, i.e. $12 \times 365$ time steps for 11,243 satellite pixels (see Fig.~\ref{figb:GHI_patterns}). This reduces the variability of the radiation data, and allows the estimation of long-term RPV potential without bias due to extreme meteorological events of a specific year. Furthermore, all hours with constantly zero GHI measurements are removed (i.e. night hours). The remaining 10-17 day hours result in $\sim~3-6$ million hourly values for GHI and DIR per month, depending on the month. 
 
 \textbf{Surface albedo.} A dataset for surface reflectance, also referred to as surface albedo, is available at the same spatio-temporal resolution as the global and direct horizontal radiation. In particular in Switzerland, where a large part of the country is covered by mountains, the surface albedo plays an important role in the quantification of the reflected solar radiation component \cite{kahl_bright_2019}. As the surface albedo shows low variations throughout the day, the data is aggregated to daily values, before being averaged across the 12 years as described above. 
 
@@ -214,14 +214,20 @@ for the same timespan ($1991-2011$) and spatial resolution ($1 \times 1$ km$^2$)
 \section{Subsurface data [\textit{PRELIMINARY}]}
 \label{data_geo}
 
-The geothermal cadastres, provided by ASIT-VD \cite{asit_vd_cadastre_2019-1} and SITG \cite{sitg_cadastre_2019}, contain information on (i) restriction zones for geothermal installations within the case study area, (ii) thermal ground properties, and (iii) over 4,400 existing installations with $\sim 10,800$ BHEs.
+Subsurface data more scarcely available than building or meteorological data. 
+The available subsurface data include national maps of the geological characteristics of the Swiss terrain, digitalised by swisstopo, as well as geothermal cadastres including maps of the thermal ground properties for selected cantons.
+Furthermore, information on restrictions for geothermal installations can be obtained from cantonal geothermal cadastres and national information regarding protected areas and groundwater vulnerability.
 
 \subsection{Geological characteristics}
-\textbf{Geological Maps (GK500).}
+\textbf{Geological Maps (GK500).} The GK500 \cite{swisstopo_geomaps_nodate}, published by the Swiss national geological service, is a vector dataset of around 13,500 polygons covering the entire Swiss terrain.
+The attributes of the polygons contain six primary maps of Switzerland at a scale of 1:500,000, including geological, tectonic and hydrogeological information. 
+For the quantification of shallow geothermal potential (Chapter~\ref{geothermal}), the geological characteristics are the most relevant 
 
 \textbf{Depth of unconsolidated deposits.}
 
 \subsection{Thermal ground properties}
+
+The geothermal cadastres, provided by ASIT-VD \cite{asit_vd_cadastre_2019-1} and SITG \cite{sitg_cadastre_2019}, contain information on (i) restriction zones for geothermal installations within the case study area, (ii) thermal ground properties, and (iii) over 4,400 existing installations with $\sim 10,800$ BHEs.
 
 \textbf{Thermal conductivity.}
 

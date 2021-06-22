@@ -44,10 +44,12 @@ To compute the technical rooftop PV potential,  a hierarchical approach, shown i
 After obtaining the maximum feasible electricity output, one may consider additional environmental, economic or social considerations to refine the estimated size of the system. A fourth step may thus be an \textit{economic potential} focused on sizing the systems under given constraints. Economic considerations such as technology cost are not taken into account in most large-scale studies. Instead, these are typically assessed in separate studies that use the technical PV potential as input, in smaller-scale case studies as well as in hybrid potential assessments. An analysis of \textit{market potential} is beyond the scope of this work. 
 
 \textbf{Physical potential.} The incoming solar radiation (also referred to as irradiance, in W/m$^2$), consists of three compotents: (i) a direct or beam component ($G_B$), which describes the direct incoming solar radiation on a horizontal plane, (ii) a diffuse component ($G_D$), which is diffracted for example through the atmosphere and through cloud coverage, and (iii) a surface reflected component $G_R$, which is driven by the ground surface reflectance, also known as albedo ($\rho$), but which can be omitted for horizontal planes \cite{assouline_estimation_2017}. Omitting $G_R$, the global horizontal solar radiation $G_h$ is given by \cite{assouline_estimation_2017}:
+
 \begin{equation}
 \label{eq:Gh_method}
 G_{h} = G_{B} + G_{D}
 \end{equation}
+
 While most large-scale studies of RPV potential use satellite data or station measurements to obtain $G_h, G_B, G_D$ (e.g. \cite{bodis_high-resolution_2019,buffat_scalable_2018,ramirez_camargo_spatio-temporal_2015,calcabrini_simplified_2019}), empirical models exist to derive these from related variables such as the sunshine duration and the extra-terrestrial solar radiation \cite{assouline_estimation_2017}. 
 In other cases, (geo)-statistical methods have been developed to estimate solar radiation. 
 These include averaging the nearest neighbours \cite{klauser_solarpotentialanalyse_2016}, geostatistical methods such as kriging \cite{alsamamra_comparative_2009,rehman_spatial_2000} as well as machine learning approaches such as Support Vector Machines \cite{assouline_quantifying_2017}, Random Forests \cite{assouline_large-scale_2018} and neural networks \cite{hocaoglu_hourly_2008,notton_neural_2013,sahin_application_2013}. As averaging tends to oversimplify the modelling, and kriging is computationally intensive and requires modelling of anisotropic spatial correlations and stationarity of the process, the data-driven machine learning algorithms have recently gained much attention due to their performance and speed \cite{kanevski_machine_2009}. 
@@ -55,6 +57,7 @@ Most models do not estimate the uncertainty related to modelling horizontal irra
 A further review of different modelling techniques for horizontal solar radiation is provided in \cite{zhang_review_2018}.
 
 \textbf{Geographic potential.} The solar power received by RPV panels is driven by two factors: (i) the incoming solar radiation on the tilted panels, and (ii) the available area for installing PV, sometimes also quantified as the number of panels that can be installed on a rooftop. As the global horizontal radiation, the tilted radiation ($G_t$) is composed of a direct ($G_{Bt}$), a diffuse ($G_{Dt}$) and a reflected ($G_{Rt}$) component, such that \cite{assouline_estimation_2017}:
+
 \begin{equation}
 \label{eq:POA}
 G_{t} = G_{Bt} + G_{Dt} + G_{Rt}
@@ -68,15 +71,17 @@ As these are included across the literature in the form of different factors, pa
 The available area for installing PV or STC ($A_{PV}$) is potentially the factor that varies most between different studies of RPV potential, as it is strongly dependent on the scale of the study and on the available rooftop data. 
 Rooftop available area is either quantified as constant factors (e.g. \cite{iea_potential_2002,wegertseder_combining_2016,portmann_sonnendach.ch:_2016}) or derived from building data (\cite{ramirez_camargo_spatio-temporal_2015,assouline_quantifying_2017,hong_development_2017}) and aerial imagery \cite{mainzer_assessment_2017} using geospatial techniques or image processing. 
 As the required geospatial input data may not be available across entire study areas and the computational time for these methods may be prohibitively high, sampling techniques \cite{izquierdo_method_2008}, the use of building prototypes \cite{wegertseder_combining_2016} and extrapolation techniques using ML \cite{assouline_quantifying_2017,assouline_large-scale_2018} based on geospatial methods are frequently used in large-scale studies. 
-A review of statistical and geospatial techniques for quantifying the available roof area is provided in Section~\ref{GIS_methods}, differentiating between the quantification of the total roof area, the useful roof area and the roof suitability for PV installations.
+A review of statistical and geospatial techniques for quantifying the available roof area is provided in Section~\ref{GIS_methods}, while constant factors used in the literature are compared in \cite{assouline_estimation_2017,wiginton_quantifying_2010,singh_estimation_2015}.
 
 \textbf{Technical potential.} The conversion of global radiation to PV potentials is driven by three factors: the efficiency of the PV panel ($\eta_{PV}$), the inverter efficiency ($\eta_\mathit{inv}$) and other losses ($\eta_\mathit{losses}$), which are multiplied with the tilted radiation ($G_t$) and the available area for PV installation ($A_{PV}$):
+
 \begin{equation}
     P_{PV} = G_t \times A_{PV} \times \eta_{PV} \times \eta_\mathit{inv} \times \eta_\mathit{losses}
 \end{equation}
+
 While several studies use constant values for panel and inverter efficiencies \cite{assouline_quantifying_2017,wegertseder_combining_2016,romero_rodriguez_assessment_2017,ordonez_analysis_2010,hong_development_2017}, many high-resolution PV potential studies use analytical or empirical models to quantify the efficiencies as a function of radiation, temperature, wind speed and technical characteristics of PV systems. The level of detail of these models ranges from the analytical modelling of invidual cells and their arrangement in a PV panel \cite{buffat_scalable_2018} to entirely coefficient-based empirical models \cite{mainzer_assessment_2017} (see Section~\ref{phys_models}). Other losses, however, are accounted for as constant loss factors in most studies. These may account for panel soiling, degradation, network and wiring losses, partial shading of panels and other factors.
 
-An overview of these parameters used to estimate the physical, geographic and technical PV potential and a summary of popular methods to compute these parameters is provided in Table~\ref{tab:solar_methods_compare}.
+An overview of the parameters used to estimate the physical, geographic and technical PV potential and a summary of methods to compute these is provided in Table~\ref{tab:solar_methods_compare}.
 
 \begin{table}[htbp]
 \centering
@@ -102,7 +107,7 @@ An overview of these parameters used to estimate the physical, geographic and te
  &  &  &  & Roof fraction (constant) & \cite{iea_potential_2002,wegertseder_combining_2016,portmann_sonnendach.ch:_2016,wiginton_quantifying_2010}  \\
  &  &  &  & Derived from geospatial data & \cite{assouline_large-scale_2018,ordonez_analysis_2010, mainzer_assessment_2017} \\
  &  &  &  & Extrapolation to the large-scale & \cite{izquierdo_method_2008, wegertseder_combining_2016,assouline_quantifying_2017} \\ \hline
-\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Technical}\\ \textit{potential}\end{tabular}} & \multirow{2}{*}{$\eta_{PV}, \eta_{\mathit{inv}}$} & \multirow{2}{*}{-} & \multirow{2}{*}{\begin{tabular}[c]{@{}l@{}}PV panel, inverter \\ efficiency\end{tabular}} & Empirical model & \cite{jakubiec_method_2013,ramirez_camargo_spatio-temporal_2015,lukac_buildings_2014,buffat_scalable_2018,mainzer_assessment_2017,calcabrini_simplified_2019} \\
+\multirow{4}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Technical}\\ \textit{potential}\end{tabular}} & \multirow{2}{*}{$\eta_{PV}, \eta_{\mathit{inv}}$} & \multirow{2}{*}{-} & \multirow{2}{*}{\begin{tabular}[c]{@{}l@{}}PV panel, inverter \\ efficiency\end{tabular}} & Empirical model & \cite{jakubiec_method_2013,ramirez_camargo_spatio-temporal_2015,lukac_buildings_2014,buffat_scalable_2018,mainzer_assessment_2017,calcabrini_simplified_2019} \\
  &  &  &  & Constant value &  \cite{wegertseder_combining_2016,romero_rodriguez_assessment_2017,ordonez_analysis_2010,assouline_quantifying_2017,hong_development_2017,bodis_high-resolution_2019} \\
  & $\eta_{\mathit{losses}}$ & - & \begin{tabular}[c]{@{}l@{}}System losses (Soiling, wiring,\\ degradation etc.)\end{tabular} & Constant value & \cite{klauser_solarpotentialanalyse_2016,buffat_scalable_2018,mainzer_assessment_2017,lorenz_regional_2011,bodis_high-resolution_2019} \\ \hline
 \end{tabular}
@@ -127,7 +132,7 @@ In particular, empirical models are used in the literature (i) to quantify the p
 \subsubsection{Plane-of-array radiation}
 \label{app:irrad}
 
-\begin{figure}[tb]
+\begin{figure}[bt]
 \centering
 \begin{subfigure}[t]{.43\textwidth}
   \centering
@@ -152,7 +157,6 @@ The direct component is obtained from a geometrical projection of the horizontal
 \label{eq:direct}
     G_{Bt} = G_{B} * \max \left( 0, \frac{\cos(\theta)}{\cos(\theta_Z)} \right)
 \end{equation}
-
 where
 \begin{equation}
 \label{eq:dir_angle}
@@ -182,6 +186,7 @@ G_{Rt} = G_h * \rho \left( \frac{1-\cos \beta}{2} \right)
 \end{equation}
 
 To ease the notation, Equations~\ref{eq:direct}-\ref{eq:reflected} can be referred to as:
+
 \begin{equation}
 \label{eq:tilted_irrad_simplified}
 G_{Bt} = F_B G_B, \quad G_{Dt} = F_D G_D, \quad G_{Rt} = F_R G_h
@@ -198,10 +203,12 @@ Most studies use a more generalised approach, which models $\eta_{PV}$ as a func
 
 A general formulation of the DC power output of a PV panel ($P_{dc}$) is formulated in the \textit{PVWatts} model developed by the National Renewable Energy Laboratory (NREL) \cite{dobos_pvwatts_2014}, which is used in similar formulations for example in \cite{jakubiec_method_2013,ramirez_camargo_spatio-temporal_2015,singh_estimation_2015,calcabrini_simplified_2019}. 
 In this work, we follow these studies, modelling the DC power output of a PV panel as:
+
 \begin{equation}
 \label{eq:Pdc}
     P_{dc} = \frac{G_{t}}{1000} P_{dc0} (1 + \gamma_\mathit{pdc}(T_\mathit{cell}-T_\mathit{ref}))
 \end{equation}
+
 where $G_t$ is the tilted radiation, $P_{dc0}$ is the DC rating of the panel,  $\gamma_\mathit{pdc}$ is its temperature coefficient, $T_\mathit{cell}$ is the cell temperature and $T_\mathit{ref}$ is the reference temperature.
 %
 We use average panel specifications of mid-range 60-cell mono-crystalline PV modules, the most frequently used technology in Switzerland \cite{buffat_scalable_2018}, from three market-leading manufacturers (JA Solar, Jinko Solar, Trinasolar). The values are reported in Table~\ref{tab:efficiency}.
@@ -212,29 +219,8 @@ From the DC power output and the area of a PV panel ($A_\mathit{panel}$), the mo
 \label{eq:eff}
     \eta_{PV} = \frac{P_{dc}}{G_{t} * A_\mathit{panel} }
 \end{equation}
-With the exception of \cite{calcabrini_simplified_2019}, the cell temperature is computed in the literature through a linear combination of the ambient temperature $T_\mathit{amb}$ and $G_t$, whereby $G_t$ is multiplied with a constant coefficient based on nominal operating conditions and corrected for the roof absorptivity and radiative heat losses \cite{jakubiec_method_2013}.
-%
-In this work, we use the \textit{PVSyst} model~\cite{faiman_assessing_2008} to derive $T_{cell}$ from $G_t$ and $T_\mathit{amb}$:
 
-\begin{equation}
-    T_\mathit{cell} = T_\mathit{amb} + G_t \frac{\alpha (1 - \eta_m)}{U}
-\end{equation}
-where $\alpha$ denoted the absorption coefficient, $\eta_m$ denotes the module efficiency and $U$ is the heat transfer component, for which we use default values for rooftop-mounted PV systems as suggested by Sandia National Laboratories \cite{holmgren_pvlib_2018} (Table~\ref{tab:efficiency}).
-
-In contrast to Eq.~\ref{eq:Pdc}, which is based on physical principles, the inverter effiency ($\eta_\mathit{inv}$) is modelled using a fully empirical formula with three free parameters. Out of the various sets of coefficients in the literature \cite{mainzer_assessment_2017,lukac_buildings_2014}, we use the empirical loss formula from \textit{PVWatts}, also used in \cite{buffat_scalable_2018}, for consistency with Eq.~\ref{eq:Pdc}. It is defined as \cite{dobos_pvwatts_2014}:
-
-\begin{equation}
-\label{eq:inv}
-    \eta_{inv} = \frac{\eta_{nom}}{\eta_{ref}} \left( -0.0162 * \zeta - \frac{0.0059}{\zeta} + 0.9858 \right)
-\end{equation}
-
-where $\zeta = P_{dc}/P_{dc0}$, $\eta_{nom}$ is the nominal inverter efficiency and $\eta_{ref}$ is the reference efficiency (see Table \ref{tab:efficiency} for values used in this work). 
-%
-
-Multiplying  $\eta_{inv}$ with other system losses $\eta_\mathit{losses}$, including soiling, degradation, mismatch, wiring and connection losses, yields the performance factor (\textit{PF}) \cite{klauser_solarpotentialanalyse_2016}. 
-These additional losses are estimated throughout this work as 14\% \cite{dobos_pvwatts_2014}. For computing the POA irradiance and the module and inverter efficiency, we use the \texttt{pvlib} python package developed by Sandia National Laboratories \cite{holmgren_pvlib_2018}.
-
-\begin{table}[htbp]
+\begin{table}[tb]
 \centering
 \footnotesize
 \caption{Parameters used in the PV module and inverter efficiency models \cite{dobos_pvwatts_2014, faiman_assessing_2008}.}
@@ -255,6 +241,29 @@ These additional losses are estimated throughout this work as 14\% \cite{dobos_p
     \end{tabular}
 \end{table}
 
+With the exception of \cite{calcabrini_simplified_2019}, $T_\mathit{cell}$ is computed in the literature as a linear combination of the ambient temperature $T_\mathit{amb}$ and $G_t$, whereby $G_t$ is multiplied with a constant coefficient based on nominal operating conditions and corrected for the roof absorptivity and radiative heat losses \cite{jakubiec_method_2013}.
+%
+In this work, we use the \textit{PVSyst} model~\cite{faiman_assessing_2008} to derive $T_\mathit{cell}$ from $G_t$ and $T_\mathit{amb}$:
+
+\begin{equation}
+    T_\mathit{cell} = T_\mathit{amb} + G_t \frac{\alpha (1 - \eta_m)}{U}
+\end{equation}
+
+where $\alpha$ denoted the absorption coefficient, $\eta_m$ denotes the module efficiency and $U$ is the heat transfer component, for which we use default values for rooftop-mounted PV systems as suggested by Sandia National Laboratories \cite{holmgren_pvlib_2018} (Table~\ref{tab:efficiency}).
+
+In contrast to Eq.~\ref{eq:Pdc}, which is based on physical principles, the inverter effiency ($\eta_\mathit{inv}$) is modelled using a fully empirical formula with three free parameters. Out of the various sets of coefficients in the literature \cite{mainzer_assessment_2017,lukac_buildings_2014}, we use the empirical loss formula from \textit{PVWatts}, also used in \cite{buffat_scalable_2018}, for consistency with Eq.~\ref{eq:Pdc}. It is defined as \cite{dobos_pvwatts_2014}:
+
+\begin{equation}
+\label{eq:inv}
+    \eta_{inv} = \frac{\eta_{nom}}{\eta_{ref}} \left( -0.0162 * \zeta - \frac{0.0059}{\zeta} + 0.9858 \right)
+\end{equation}
+
+where $\zeta = P_{dc}/P_{dc0}$, $\eta_{nom}$ is the nominal inverter efficiency and $\eta_{ref}$ is the reference efficiency (see Table \ref{tab:efficiency} for values used in this work). 
+%
+Multiplying  $\eta_{inv}$ with other system losses $\eta_\mathit{losses}$, including soiling, degradation, mismatch, wiring and connection losses, yields the performance factor (\textit{PF}) \cite{klauser_solarpotentialanalyse_2016}. 
+These additional losses are estimated throughout this work as 14\% \cite{dobos_pvwatts_2014}. 
+The implementation of the empirical models is based on the \texttt{pvlib} python package developed by Sandia National Laboratories \cite{holmgren_pvlib_2018}.
+
 \subsection{Geospatial techniques}
 \label{GIS_methods}
 
@@ -265,7 +274,7 @@ Alternative approaches, including constant-value methods and extrapolation techn
 
 \subsubsection{Shading effects and sky view factor}
 
-\begin{figure}[tb]
+\begin{figure}[tb!]
 	\centering
 	\begin{subfigure}[t]{.49\textwidth}
 		\centering
@@ -285,7 +294,14 @@ Alternative approaches, including constant-value methods and extrapolation techn
 	\label{fig:horizon_method}
 \end{figure}
 
-\begin{figure}[htb]
+The computation of shading effects and the SVF follow a common 3D modelling approach, known as shadow casting \cite{levinson_solar_2009,desthieux_solar_2018}, ray tracing \cite{jakubiec_method_2013} or viewshed computation \cite{nguyen_incorporating_2012}. 
+As shown conceptually in Fig.~\ref{figa:horizon_method}, a 3D model of the environment is used to obtain the horizon height for each aspect angle. 
+%
+This horizon height ($\theta_\mathit{min}$ in Fig.~\ref{figa:horizon_method}) describes the visible proportion of the sky for a specific aspect angle ($\gamma$ in Fig.~\ref{figa:horizon_method}), and may also be interpreted as the minimum sun elevation angle required to illuminate a given point. 
+%
+The horizon height for all aspect angles can be visualised as a polar plot, from which the SVF is derived as the visible sky fraction (Fig.~\ref{figb:horizon_method}). The polar plot further indicates whether the given point is shaded during a particular hour of the year based on the sun position (see star in Fig.~\ref{figb:horizon_method}).
+
+\begin{figure}[tb!]
 	\centering
 	\begin{subfigure}{.49\textwidth}
 		\centering
@@ -305,23 +321,16 @@ Alternative approaches, including constant-value methods and extrapolation techn
 	\label{fig:raster_svf_ssh}
 \end{figure}
 
-The computation of shading effects and the SVF follow a common 3D modelling approach, known as shadow casting \cite{levinson_solar_2009,desthieux_solar_2018}, ray tracing \cite{jakubiec_method_2013} or viewshed computation \cite{nguyen_incorporating_2012}. 
-As shown conceptually in Fig.~\ref{figa:horizon_method}, a 3D model of the environment is used to obtain the horizon height for each aspect angle. 
-%
-This horizon height ($\theta_\mathit{min}$ in Fig.~\ref{figa:horizon_method}) describes the visible proportion of the sky for a specific aspect angle ($\gamma$ in Fig.~\ref{figa:horizon_method}), and may also be interpreted as the minimum sun elevation angle required to illuminate a given point. 
-%
-The horizon height for all aspect angles can be visualised as a polar plot, from which the SVF is derived as the visible sky fraction (Fig.~\ref{figb:horizon_method}). The polar plot further indicates whether the given point is shaded during a particular hour of the year based on the sun position (see star in Fig.~\ref{figb:horizon_method}).
-
 While fisheye images \cite{calcabrini_simplified_2019} or LiDaR point clouds \cite{bill_3d_2016,jakubiec_method_2013} may be used for horizon computations, DEMs are by far the most widely used input data, as they enable the computation of horizon heights for an entire region \cite{suri_new_2004}.
 Using a DEM to compute the horizon heights yields a set of raster maps, one for each azimuth angle.
 From these, maps of cast shadows (Fig.~\ref{figa:raster_svf_ssh}) can be computed for any sun position, by selecting the horizon map corresponding to the sun azimuth angle and applying a binary filter to the raster values, setting all values below the sun altitude to 1 (sun exposure) and all values above the sun altitude to 0 (cast shadow).
 %
-The sky view factor is obtained from the same set of horizon maps, which are combined to obtain the SVF for each pixel (Fig.~\ref{figb:raster_svf_ssh}). The SVF is independent of the sun position and hence constant with time. 
+The SVF is obtained from a combination of the same set of horizon maps, yielding an SVF for each pixel (Fig.~\ref{figb:raster_svf_ssh}). The SVF is independent of the sun position and hence constant with time. 
 
 While some studies compute PV potential at the level of individual pixels \cite{buffat_scalable_2018,ramirez_camargo_spatio-temporal_2015}, the results are often aggregated per building or roof surface \cite{assouline_quantifying_2017,assouline_large-scale_2018,klauser_solarpotentialanalyse_2016}. To aggregate shading effects or the sky view factor per roof, existing methods use 2D building or roof geometries, which are geospatially intersected with the raster maps to average all pixels within a given roof/building. This geospatial overlay further reduces the data storage requirements for the maps of shading and SVF, as all non-relevant areas for rooftop RPV potential are excluded.
 
 In this work, we use the shadow casting and SVF computation method as detailed above. We use the open-source GRASS-GIS computational engine, which supports the computation of horizon heights \cite{suri_new_2004} and the sky view factor \cite{zaksek_sky-view_2011} and which is used in several of the reviewed studies \cite{ramirez_camargo_spatio-temporal_2015,nguyen_incorporating_2012,buffat_scalable_2018}. 
-Further details regarding the implementation of the shading and SVF computation for scalability to the national scale for Switzerland are provided Appendix~\ref{app:shade}.
+Further details regarding the implementation of the computation of shading effects and the SVF for scalability to the Swiss national scale are provided Appendix~\ref{app:shade}.
 
 \begin{comment}
 \subsection{Solar thermal heat generation}
@@ -330,28 +339,46 @@ The computation of the technical potential of a solar thermal collector is more 
 \end{comment}
 
 \subsubsection{Available area for solar panel installation}
+%% ADD FIGURE??
 
+Based on the an early study of RPV potential in Europe \cite{iea_potential_2002}, we identify three factors of the rooftop available area that are accounted for to different extents in the literature, namely (i) the total roof area, (ii) the roof utilisation and (iii) the roof exposure or suitability. 
+\\
 
-Based on the an early study of RPV potential in Europe \cite{iea_potential_2002}, we identify three factors of the rooftop available area that are accounted for in different ways in the literature, namely (i) the total roof area, (ii) the roof utilisation and (iii) the roof exposure or suitability. 
+\textbf{Total roof area.} For the estimation of RPV yield, three characteristics of the roof areas are relevant: the roof geometries, the tilt angle and the aspect angle. Geospatial datasets containing these characteristics are already available in some countries such as Switzerland (see Chapter~\ref{data_geometry}).
+If no rooftop data is available, rooftop tilt and aspect angles can be derived from a DEM \cite{ramirez_camargo_spatio-temporal_2015} or LiDaR point cloud \cite{buffat_feature-aware_2016,nguyen_incorporating_2012}.
+To classify different roof surfaces, these may be combined with building geometries from Open Street Map (OSM) or local survey data \cite{ramirez_camargo_spatio-temporal_2015}.
+\citet{mohajeri_city-scale_2018} propose an ML approach to classify roof shapes based on DEM-derived features aggregated within building geometries.
+In absence of building geometries, aerial images may be segmented using GIS-based featture extraction \cite{wiginton_quantifying_2010} or Convolutional Neural Networks (CNN) \cite{zhao_object-based_2017} to detect building footprints.
 
-The total roof area
+Even without DEM, LiDaR or other 3D building data, the roof aspect angle can be approximated from the building geometry as the angle normal to the roof ridge line or building wall \cite{mainzer_assessment_2017}. 
+Aerial images themselves however do not provide any information on the roof tilt angle.
+% Without any DEM, LiDaR or other 3D building data, no information on tilt and aspect angles of rooftops can be derived. 
+For the purpose of large-scale RPV studies, \citet{mainzer_assessment_2017} thus suggest to use a statistical approach, which randomly assigns tilt angles using a normal distribution fitted for a set of buildings with available roof tilt data for Germany.
 
-The roof exposure/suitability
+\textbf{Roof utilisation} refers here to any factors reducing the available area for solar panel installation due to alternative uses. Using the definition by the \citet{iea_potential_2002} ("architectural suitability"), this includes (i) any obstructing objects on roofs, such as fixed superstructures (e.g. dormers, chimneys, elevators), roof-mounted structures (e.g. HVAC equipment) and windows, (ii) surfaces used for other purposes, such as roof terraces or gardens, (iii) protected roofs, and (iv) shaded areas. As quantifying these factors requires the availability of high-resolution 3D building data or aerial imagery, many studies employ constant value methods \cite{assouline_estimation_2017}, which assume a constant ratio of available area. These constant values may vary for different building types and/or roof sizes \cite{wegertseder_combining_2016,portmann_sonnendach.ch:_2016,wiginton_quantifying_2010}. 
 
-The roof utilisation
+Obstructing objects on roofs are most easily identified and removed from the total roof area using manual labelling of aerial images, as performed for example in \cite{ordonez_analysis_2010,strzalka_large_2012}. This approach is only feasible for a small sample size \cite{ordonez_analysis_2010}.
+At larger scale, high-resolution 3D building models, such as CityGML datasets with an LOD~4 standard, have been used to exclude superstructures from rooftops \cite{assouline_quantifying_2017}.
+These 3D building models however do not include rooftop-mounted structures or windows.
+Such objects can only be automatically detected using image processing approaches, as proposed by \citet{mainzer_assessment_2017} who use an edge-detection algorithm to identify obstructing objects.
+\citet{castello_deep_2019} have used a CNN algorithm to detect existing PV panels on building rooftops, which may be transferable to the detection of available area for RPV installation.
+
+Going beyond the detection of obstructing objects, several studies assess the area that may be covered by PV panels, by virtually installing PV panels (rectangular polygons) on the geometries of the available area \cite{ordonez_analysis_2010,mainzer_assessment_2017,assouline_large-scale_2018}. 
+This virtual panel placement accounts for the impact of rooftop geometries and the location of existing superstructures on the potential number of PV panels and allows to simulate different arrangements of PV panels, for example on flat roofs \cite{ordonez_analysis_2010}.
+
+In contrast to obstructing objects, alternative uses of the roof surfaces and potential protection of buildings cannot be derived from 3D models. Aerial imagery may provide some information to this aim, as terraces for example may contain some non-fixed objects such as tables and chairs which could be classified as unsuitable for PV installation by an automatic image processing method. However, no current methodology follows this approach. 
+Protected roofs may be identified by local inventories of protected buildings. 
+Alternatively, \citet{florio_assessing_2018} propose a method to quantify rooftop visibility in urban settings.
+Shaded areas, which may be obtained from the shadow casting approach described above, are excluded as part of the roof utilisation for example in \cite{singh_estimation_2015,hong_development_2017}.
+
+\textbf{Roof exposure/suitability.} In addition to roof utilisation, large-scale studies of RPV potential exclude areas which are expected to provide a low electricity yield. This roof suitability may be based on a low solar irradiation (e.g. $< 1000$ kWh/m$^2$ \cite{buffat_scalable_2018,portmann_sonnendach.ch:_2016,desthieux_solar_2018}), on the roof aspect (e.g. $\leq 90$° from south \cite{assouline_quantifying_2017,assouline_large-scale_2018,nguyen_incorporating_2012}) or on the roof tilt (e.g. $\leq 60$> \cite{jakubiec_method_2013}).
+Additionally, large-scale RPV potential studies frequently exclude small areas, as these are unlikely to be economically feasible. Minimum roof area thresholds in the literature range from 8 m$^2$ \cite{assouline_large-scale_2018} to 33 m$^2$\cite{hong_development_2017}.
 
 \begin{comment}
 % For individual roofs, panels can be custom-fitted based on aerial photographs ~\cite{ordonez_analysis_2010} to realistically estimate the maximum available area, taking into account the rooftop geometry as well as any obstructing objects inhibiting the placement of solar panels (roof superstructures).
 % Custom-fitting however is not scalable to entire cities or regions, requiring either image processing \cite{mainzer_assessment_2017} or high-resolution 3D building models \cite{engel_effiziente_nodate} for a detailed estimation of the available area.
 % As the required input data is not available for many study areas and the computational time for these methods may be prohibitively high, approximative approaches are widely used in the literature.
 These range from using standard tabulated factors based on expert opinions [26], statistical methods [7] and extrapolation techniques based on Machine Learning [3]. Assouline et al. [14] provide a detailed analysis of these methods. 
-
-Focus primarily on radiation: Buffat, Desthieux; compute for individual systems: Calcabrini; 
-Wegertseder: 25\% of useful roof area for res., 30\% for housing blocks, 50\% for high-rise towers
-
-strzalka: manually excluding roofs with windows etc., otherwise using all areas
-
-exclude small areas and strongly shaded areas: Hong (per time step)
 
 Thus, many studies employ constant value methods \cite{assouline_estimation_2017}, which assume a constant ratio of available area. 
 These ratios may be formulated with reference to territorial areas or population count \cite{izquierdo_method_2008,iea_potential_2002,wiginton_quantifying_2010,bodis_high-resolution_2019}, based on building prototypes \cite{wegertseder_combining_2016} or formulated as a constant fraction of individual roofs~\cite{portmann_sonnendach.ch:_2016}. 
@@ -367,19 +394,19 @@ Virtual PV panels were placed in both horizontal and vertical alignments, as no 
 \section{Shallow geothermal energy}
 \label{geo_method}
 
-ADD REFERENCES
-
 As discussed in Section ~\ref{REN_CH}, ground-source heat pumps (GSHPs) using vertical closed-loop borehole heat exchangers (BHEs) are by far the most widely used technology to extract shallow geothermal energy in Switzerland \cite{blum_statistik_2016}.
 %
 Focusing on closed-loop BHEs, this section reviews state-of-the-art analytical models to assess the technical geothermal potential of shallow GSHPs. The technical potential is hereby defined as the heat energy that may be annually extracted from a field of BHEs by a GSHP system ($Q_{GSHP}$), which is computed as (cf. \cite{pahud_geothermal_2002}):
+
 \begin{equation}
 \label{eq:Q_field_method}
-    Q_{GSHP}=q_{max} \times t_{op} \times H \times N_{BHE}
+    Q_\mathit{GSHP}=q_\mathit{max} \times t_{op} \times H \times N_\mathit{BHE}
 \end{equation}
-where $q_{max}$ is the heat extraction rate from the boreholes (in W/m), $t_{op}$ is the operating time of the system (in h), $H$is the borehole depth (in m) and $ N_{BHE}$ is the number of installed BHEs.
+
+where $q_\mathit{max}$ is the heat extraction rate from the boreholes (in W/m), $t_{op}$ is the operating time of the system (in h), $H$ is the borehole depth (in m) and $ N_\mathit{BHE}$ is the number of installed BHEs.
 
 To estimate the technical potential, the following factors must be taken into account: 
-(i) The depletion of the ground when boreholes are placed too close to each other or too much heat is extracted; (ii) the sizing, geometry and material of the BHE tubes; (iii) the efficiency of the heat pumps that transfer the extracted heat to domestic heating and hot water applications. 
+(i) The depletion of the ground when boreholes are placed too close to each other or too much heat is extracted; (ii) the sizing, geometry and material of the BHE tubes; (iii) the efficiency of the heat pumps that transfer the extracted heat to domestic heating and hot water applications \cite{bayer_geothermal_2019}. 
 % The interaction of these components is a dynamical process that changes over time, which is described by the thermal response of the BHEs.
 
 \begin{figure}[bt]
@@ -389,35 +416,41 @@ To estimate the technical potential, the following factors must be taken into ac
     \label{fig:BHE}
 \end{figure}
 
-The depletion of the ground is driven by changes in the subsurface temperature, which occur when heat is extracted (or injected) at a faster rate than it is regenerated from the natural heat flux. This heat flux is caused by the heat in the earth's core (geothermal heat flux) and by the heat in the ambient air, as shown in Fig.~\ref{fig:BHE}.
-As heat is extracted from the ground, so-called \textit{thermal plumes} are formed around the BHE (dashed lines in Fig.~\ref{fig:BHE}). Their magnitude and extent depends on the borehole design, particularly the depth and heat extraction rate, as well as on the thermal properties of the ground.
+The depletion of the ground is driven by changes in the subsurface temperature, which occur when heat is extracted (or injected) at a faster rate than it is regenerated from the natural heat flux. This heat flux is caused by the heat in the earth's core (geothermal heat flux) and by the heat in the ambient air, as shown in Fig.~\ref{fig:BHE} \cite{wagner_erdsondenpotenzial_2014}.
+As heat is extracted from the ground, so-called \textit{thermal plumes} are formed around the BHE (dashed lines in Fig.~\ref{fig:BHE}) \cite{alcaraz_t-i-ger_2017}. Their magnitude and extent depends on the borehole design, particularly the depth and heat extraction rate, as well as on the thermal properties of the ground.
 %
-When boreholes are spaced too close to each other, thermal plumes may overlap, which causes \textit{thermal interference} between these boreholes and leads to an increased cooling of the subsurface. In this work, quantifying the thermal interference is of high importance, as thermal interference significantly reduces the potential borehole installation density.
+When boreholes are spaced too close to each other, thermal plumes may overlap, which causes \textit{thermal interference} between these boreholes and leads to an increased cooling of the subsurface. In this work, quantifying the thermal interference is of high importance, as thermal interference significantly reduces the potential borehole installation density \cite{bayer_geothermal_2019,miglani_methodology_2018}.
 
-Thermal interference between boreholes is assessed in the literature using an analytical model, developed by \citet{eskilson_thermal_1987}, which simulates the thermodynamic behaviour of BHEs based on the thermal ground properties as well as the sizing, geometry and material of the BHEs.
+Thermal interference between boreholes is assessed in the literature based on an analytical model, developed by \citet{eskilson_thermal_1987}, which simulates the thermodynamic behaviour of BHEs based on the thermal ground properties as well as the sizing, geometry and material of the BHEs.
+%  (e.g. \cite{miglani_methodology_2018,rivera_increased_2017,bayer_strategic_2014})
 %
-To formulate a technical potential for closed-loop GSHPs, related studies combine the this analytical model with norms for the current BHE design practice, using primarily the geothermal norms of the Association of German Engineers (VDI) \cite{vdi_vdi_2019} and the Swiss Society of Engineers and Architects (SIA) \cite{sia_sondes_2010}.
+To formulate a technical potential for closed-loop GSHPs, related studies (e.g. \cite{miglani_methodology_2018,rivera_increased_2017,schiel_gis-based_2016,viesi_gis-supported_2018,casasso_g.pot:_2016,perego_techno-economic_2019}) combine the this analytical model with norms for the current BHE design practice, using primarily the geothermal norms of the Association of German Engineers (VDI) \cite{vdi_vdi_2019} and the Swiss Society of Engineers and Architects (SIA) \cite{sia_sondes_2010}.
 The parameters required for the analytical model and their values given by the SIA norm (relevant for Switzerland) will be introduced in Section~\ref{geo_params}.
 
-Both the VDI and SIA norms require the BHEs to be designed and operated such that the mean temperature of the borehole fluid ($T_{mf}$) never drops below its freezing temperature ($T_\mathit{mf,min}=-1.5$ °C \cite{sia_sondes_2010}), such that:
+Both the VDI and SIA norms require the BHEs to be designed and operated such that the mean temperature of the borehole fluid ($T_{mf}$) never drops below its freezing temperature ($T_\mathit{mf,min}=-1.5$ °C \cite{sia_sondes_2010}), such that \cite{sia_sondes_2010,vdi_vdi_2019}:
 
 \begin{equation}
 \label{eq:T_mf_min}
 T_{mf} \geq T_\mathit{mf,min} = -1.5 \text{°C}
 \end{equation}
 
-The variables in Eq.~\ref{eq:Q_field_method} ($q_{max}$, $t_{op}$, $H$, $N_{BHE}$) must hence be chosen such as to fulfil this technical requirement.
+The variables in Eq.~\ref{eq:Q_field_method} ($q_\mathit{max}$, $t_{op}$, $H$, $N_\mathit{BHE}$) must hence be chosen such as to fulfil this technical requirement.
 %
-The relationship between these variables and the $T_{mf}$ is expressed by the borehole temperature profile, which describes the temperature changes inside and around a BHE.
+The relationship between these variables and the $T_{mf}$ is expressed by the borehole \textit{temperature profile}, which describes the temperature changes inside and around a BHE.
 A general model of this temperature profile, proposed by \citet{claesson_conductive_1988}, is introduced in Section~\ref{model_intro}, while Section~\ref{geo_models} details the analytical formulas used to estimate the thermodynamic processes in the ground.
 
 While heat extraction is the dominant mode of operation of GSHPs in Europe \cite{lund_direct_2020}, GSHPs can also be used for heat injection, for example for space cooling applications \cite{kavanaugh_geothermal_2014}, whereby the same physical principles (Sections ~\ref{model_intro} and \ref{geo_models}) apply.
-As heat injection is not addressed in the SIA or VDI norms, studies addressing the potential of GSHPs for heat injection \cite{aditya_environmental_2020,miglani_methodology_2018,michopoulos_potential_2011} use the standards of the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) \cite{kavanaugh_geothermal_2014} for borehole sizing. For cooling-dominated systems, the temperature requirement from Eq.~\ref{eq:T_mf_min} is inverted, limiting the maximum fluid temperature $T_\mathit{mf,max}$:
+As heat injection is not addressed in the SIA or VDI norms, studies addressing the potential of GSHPs for heat injection use the standards of the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) \cite{kavanaugh_geothermal_2014} for borehole sizing \cite{aditya_environmental_2020,miglani_methodology_2018,michopoulos_potential_2011} . For cooling-dominated systems, the temperature requirement from Eq.~\ref{eq:T_mf_min} is inverted, limiting the maximum fluid temperature $T_\mathit{mf,max}$:
+
 \begin{equation}
 \label{eq:T_mf_max}
 T_{mf} \leq T_\mathit{mf,max}
 \end{equation}
-In addition to the BHEs, a GSHP system contains a heat pump (HP), which is used to transfer the heat extracted from the ground to the building heating or cooling systems (see Fig. \ref{fig:HP}), as these typically require different temperatures than those provided by the BHE. HPs have a high system efficiency, expressed through the coefficient of performance (COP), making GSHPs a very energy efficient technology for building thermal energy supply. Based on the COP, the heat supplied to the building heating ($Q_\mathit{heat}$) and cooling ($Q_\mathit{cool}$) systems is computed as \cite{kavanaugh_geothermal_2014}: 
+
+In addition to the BHEs, a GSHP system contains a heat pump (HP), which is used to transfer the heat extracted from the ground to the building heating or cooling systems (see Fig. \ref{fig:HP}).
+%, as these typically require different temperatures than those provided by the BHE. 
+HPs have a high system efficiency, expressed through the coefficient of performance (COP), making GSHPs a very energy efficient technology for building thermal energy supply. Based on the COP, the heat supplied to the building heating ($Q_\mathit{heat}$) and cooling ($Q_\mathit{cool}$) systems is computed as \cite{kavanaugh_geothermal_2014}: 
+
 \begin{equation}
 \label{eq:COP_heat}
 Q_\mathit{heat}=Q_\mathit{extr}\ \frac{COP_\mathit{heat}}{\left(COP_\mathit{heat}-1\right)}
@@ -427,42 +460,24 @@ Q_\mathit{heat}=Q_\mathit{extr}\ \frac{COP_\mathit{heat}}{\left(COP_\mathit{heat
 \label{eq:COP_cool}
 Q_\mathit{cool}=Q_\mathit{inj}\ \frac{COP_\mathit{cool}}{\left(COP_\mathit{cool}+1\right)}
 \end{equation}
-where $Q_\mathit{extr}$ and $Q_\mathit{inj}$ are the extracted and injected heat from/to the BHEs and $COP_\mathit{heat}$/$COP_\mathit{cool}$ are the COPs for heating and cooling, respectively. In neighbourhood or redional-scale studies of the technical GSHP potential, the COP is typically chosen as a constant value \cite{miglani_methodology_2018,schiel_gis-based_2016,perego_techno-economic_2019}, while for studies at building scale, the COP often is modelled as a function of temperature \cite{fraga_heat_2018,liu_feasibility_2017,stene_residential_2005}.
+
+where $Q_\mathit{extr}$ and $Q_\mathit{inj}$ are the extracted and injected heat from/to the BHEs and $COP_\mathit{heat}$/$COP_\mathit{cool}$ are the COPs for heating and cooling, respectively. In neighbourhood or regional-scale studies of technical GSHP potential, constant values are often used for the COP \cite{miglani_methodology_2018,schiel_gis-based_2016,perego_techno-economic_2019}, while studies at building scale typically model the COP as a function of temperature \cite{fraga_heat_2018,liu_feasibility_2017,stene_residential_2005}.
 
 \begin{figure}[bt]
     \centering
     \includegraphics[width=0.7\linewidth]{images/Figs/GSHP.png}
-    \caption{Working principle of a GSHP in heating cycle. Cold air is moved from the house to the heat pump, where it is heated from the compressed heat extracted from the ground. The ground loop liquid is cooled and transported back to the ground, where it is again heated. \cite{gns_science_n.z._geothermal_2016}}
+    \caption{Working principle of a GSHP in heating cycle. Cold air is moved from the house to the heat pump, where it is heated from the compressed heat extracted from the ground. The ground loop liquid is cooled and transported back to the ground, where it is again heated \cite{gns_science_n.z._geothermal_2016}.}
     \label{fig:HP}
 \end{figure}
-
-\begin{comment}
-This section provides an overview of the concept behind the estimation of the technical potential for borehole heat exchangers (BHE). It introduces the parameters used in the estimation (Section \ref{geo_params}) and summarizes the analytical methods for simulating the thermodynamic processes in the ground, which form the basis for the potential estimation (Section X, XX).
-
-With appropriately dimensioned and spaced boreholes, a large-scale potential can be defined in $kWh/m^2$. This potential may be computed at annual temporal scales (using an annual mean heat extraction rate), at monthly scales (using the heat degree days as weighting function) or at hourly scales (using hourly load profiles).
-The aim here is to define a maximum amount of energy that can be extracted from the ground without negatively affecting the long-term ground temperature. Energy demand is on purpose not taken into account. 
-This is due to the fact that multiple operation modes exist, e.g. individual BHEs or entire fields that are connected to heat distribution networks. The separation between supply and demand also allows to simulate scenarios of "hybrid" systems, where the demand is covered by different sources.
-
-This report summarizes the methods used to quantify the impact of a BHE installation on the short-term and long-term temperature in the ground, and consequently on the temperature of the heat extraction fluid inside the borehole. The case of a single borehole is shown in Fig.~\ref{fig:BHE}. The heat extracted by the borehole of length $H$ (in the center) leads to a temperature drop in the ground. This effect reduces with the distance $r$ to the center of the borehole, as indicated by the dashed lines that represent isothermal conditions. The temperature drop does not happen instantly, but the temperature reduces gradually over the years, until a \textit{steady state} is reached. In the steady state, the extracted heat equals exactly the energy flux from the environment (the air and sun on the surface, and the geothermal heat flux in the ground). The heat flow in this stationary state is shown by the continuous lines in Fig.~\ref{fig:BHE}. As a rule of thumb, the radius around the borehole which is impacted by the temperature drop in steady state is between $H/2$ and $H$. At distances further away from the borehole, the temperature drop can always be neglected \cite{pahud_geothermal_2002}, p. 49.
-
-For typical BHE's of 100-250m, it takes a hundred years or more to reach this stationary state (see formula below). However, typical BHE installations are designed to be decommissioned after 50 years \citep{sia_sondes_2010}. In general, it is hence sufficient to fulfill the temperature requirement (see \ref{definition}) for the first 50 years of operation. This means that in practice it is still possible to install boreholes at distances of less than $H/2$, but numerical models are necessary to accurately quantify a distance which sustains a sufficient ground temperature in the planning horizon of 50 years.
-
-The general intuition for the relationship between the spacing of boreholes, the length of the boreholes, the ground temperature and the heat extraction power is the following:
-The closer boreholes are placed to each other, the stronger are they impacting each other, which results in a lower ground temperature. 
-This lower ground temperature may cause the temperature of the heat carrier fluid to drop below the minimum allowed value; to prevent that, the heat extraction power must be reduced. 
-In order to sustain a given heat extraction power and keep a close spacing between boreholes, the depth of the boreholes can be increased. This increases the ground volume from which heat is extracted, but may not be possible due to the ground materials or regulations. 
-On the other side, a shorter borehole length means that heat is extracted at a higher rate, which also increases the temperature drop. This can be compensated by either reducing the heat extraction power (which lowers the efficiency of the system) or by increasing the borehole spacing.
-
-\end{comment}
 
 \subsection{Parameters}
 \label{geo_params}
 The parameters involved in the modelling of the thermodynamic behaviour of borehole heat exchangers can be divided into three groups: 
 
 \begin{enumerate}
-\item \textbf{Physical parameters} are determined by the geological and hydrological conditions of the ground, and are the subject of various large-scale studies \cite{signorelli_regional_2004,majorowicz_estimation_2009,tian_improved_2020}. Seasonal temperature variations in the ground are neglected, as boreholes typically have a length $> 50m$, which is far beyond the penetration depth of seasonal variations in the ground \cite{stauffer_thermal_2013}.
+\item \textbf{Physical parameters} are given by the geological and hydrological conditions of the ground, and are the subject of various large-scale studies \cite{signorelli_regional_2004,majorowicz_estimation_2009,tian_improved_2020}. Seasonal temperature variations in the ground are neglected, as boreholes typically have a depth $> 50$ m, which is beyond the penetration depth of seasonal variations in the ground \cite{stauffer_thermal_2013}.
 
-\item \textbf{Technical parameters} are derived from the materials and the technology of the BHEs. In this work, we use norm values found in the literature as constants and do not address the impact of variations in the technical parameters on the BHE potential.
+\item \textbf{Technical parameters} are derived from the materials and the technology of the BHEs. In this work, we use constant values based on the related literature and do not address the impact of their variation on the BHE potential.
 
 \item \textbf{Design parameters} are related to the sizing of the BHEs and the borehole fields, in order to estimate a technical potential of GSHPs. These parameters and the impact of their variation on the GSHP potential are the main subject of this section. 
 \end{enumerate}
@@ -478,13 +493,13 @@ We refer to $z$ (in m) for the depth in the ground, $r$ (in m) for the radial di
 \begin{tabular}{lllll}
 \hline
 \textbf{Symbol}             & \textbf{Unit} & \textbf{Description}           & \textbf{Formula}                                      & \textbf{Norm value / range (CH)} \\ \hline
-$\lambda$                   & $W/mK$        & Thermal conductivity           &                                                       & $1-4$ (Plateau: $2-3$)           \\
-$\alpha$                    & $m^2/s$       & Thermal diffusivity            & $\alpha = \frac{\lambda}{\rho C}$                     & $0.9-1.4 \times 10^{-6}$         \\
-$\rho C$                    & $MJ/m^3K$      & Volumetric heat capacity       &                                                       & $1.2-3.5$ (Plateau: $2-2.5$)     \\ \hline
-$T_g(z)$                    & $^\circ C$    & Undisturbed ground temperature &                                                       & \textit{Norm}: 10                         \\
-$\frac{\Delta T}{\Delta z}$ & $K/m$         & Temperature gradient           & $T_g(z) = T_0 + z * \frac{\Delta T}{\Delta z} $       & Plateau: 0.03, Alps: 0.025       \\
-$T_0$                       & $^\circ C$    & Surface temperature            &                                                       & \textit{Norm}: 8.5                        \\ \hline
-$\dot{q}_{g}$               & $mW/m^2$      & Geothermal heat flow           & $\dot{q}_{g} = \lambda * \frac{\Delta T}{\Delta z}$   & $40-170$                         \\ \hline
+$\lambda$                   & W/mK        & Thermal conductivity           &                                                       & $1-4$ (Plateau: $2-3$)           \\
+$\alpha$                    & m$^2$/s       & Thermal diffusivity            & $\alpha = \frac{\lambda}{\rho C}$                     & $0.9-1.4 \times 10^{-6}$         \\
+$\rho C$                    & MJ/m$^3$K      & Volumetric heat capacity       &                                                       & $1.2-3.5$ (Plateau: $2-2.5$)     \\ \hline
+$T_g(z)$                    & °C    & Undisturbed ground temperature &                                                       & \textit{Norm}: 10                         \\
+$\frac{\Delta T}{\Delta z}$ & K/m         & Temperature gradient           & $T_g(z) = T_0 + z * \frac{\Delta T}{\Delta z} $       & Plateau: 0.03, Alps: 0.025       \\
+$T_0$                       & °C    & Surface temperature            &                                                       & \textit{Norm}: 8.5                        \\ \hline
+$\dot{q}_{g}$               & mW/m$^2$      & Geothermal heat flow           & $\dot{q}_{g} = \lambda * \frac{\Delta T}{\Delta z}$   & $40-170$                         \\ \hline
 \end{tabular}
 \end{table}
 
@@ -493,14 +508,17 @@ $\dot{q}_{g}$               & $mW/m^2$      & Geothermal heat flow           & $
 \begin{equation}
     \alpha = \frac{\lambda}{\rho C}
 \end{equation}
+
 In the literature, the values for $\rho C$ and $\lambda$ are either derived from measurement data and interpolated using geostatistical kriging \cite{tian_improved_2020,munoz_estimating_2015} or Machine Learning~\cite{assouline_machine_2019}, obtained from 3D underground models \cite{garcia-gil_gis-supported_2015,groupe_de_travail_pgg_evaluation_2011} or, most frequently, mapped from tabulated values in the literature based on the present rock types~\cite{perego_techno-economic_2019,galgaro_empirical_2015,casasso_g.pot:_2016,gemelli_gis-based_2011}. An overview of typical thermal conductivity and heat capacity values for rock types found in Switzerland are provided in the SIA norm \cite{sia_sondes_2010} and by \cite{pahud_geothermal_2002}.
+\\
 
 If hydro-geological data is available, the thermal conductivity can be adjusted to account for conductive heat transfer due to groundwater movement \cite{viesi_gis-supported_2018,assouline_machine_2019}, using the ground saturation level and the darcy velocity as input \cite{viesi_gis-supported_2018}. 
 Advective heat transfer is neglected in the model proposed by \citet{eskilson_thermal_1987}.
 Analytical models accounting for advective heat transfer have been used for example in \cite{garcia-gil_gis-supported_2015,alcaraz_advection_2016,alcaraz_t-i-ger_2017,attard_novel_2020}.
-As the hyrdo-geological input data required for these advective-conductive models is not available at the regional scale for Switzerland, this thesis focuses on the conductive heat transfer model \cite{claesson_conductive_1988}. A similar approximation is applied in most related regional-scale studies, including\cite{perego_techno-economic_2019,galgaro_empirical_2015,casasso_g.pot:_2016,rivera_increased_2017,schiel_gis-based_2016}.
+As the hyrdo-geological input data required for these advective-conductive models is not available at the regional scale for Switzerland, this thesis focuses on the conductive heat transfer model \cite{claesson_conductive_1988}. A similar approximation is applied in most related regional-scale studies, including \cite{perego_techno-economic_2019,galgaro_empirical_2015,casasso_g.pot:_2016,rivera_increased_2017,schiel_gis-based_2016}.
 
 Another important physical parameter is the \textit{undisturbed ground temperature} $T_g(z)$. In particular, the temperature at half of the borehole depth ($z = H/2$) is of interest. If no data is available for estimating $T_g$ directly, it can be extrapolated from the \textit{surface temperature} $T_0$ and the \textit{temperature gradient} $\Delta T/\Delta z$: 
+
 \begin{equation}
 \label{eq:Tg}
     T_g(z) = T_0 + z * \frac{\Delta T}{\Delta z}
@@ -512,19 +530,16 @@ Another important physical parameter is the \textit{undisturbed ground temperatu
     \caption[Example for the variation in ground temperature for two measurements of ground temperature in Zürich.]{Example for the variation in ground temperature for two measurements of ground temperature in Zürich, showing the influence of altitude (black line) and additional surface heating through the presence of forests (red line). Source: \citet{huber_bodentemperaturen_2014}.}
     \label{fig:T_ground}
 \end{figure}
-The $T_0$ can be obtained either interpolated based on measurements of the near-surface ground temperature \cite{assouline_machine_2019} or derived from measurements of the ambient temperature ($T_\mathit{amb}$). An analysis of different methods to determine $T_0$ is performed in \citep{signorelli_geoscientific_2004}. In the SIA norm, surface temperatures are  approximated from the mean annual $T_\mathit{amb}$ by adding an altitude-dependent term \cite{sia_sondes_2010}. As the actual $T_0$ may deviate from the approximated value (see Fig.~\ref{fig:T_ground} for an example), the SIA norm instructs the addition of a tolerance ($\Delta T$) of $- 1$ K heating for  $+1$ K for cooling applications.
 
-\begin{comment}
-Two examples for an unconsidered variation are shown in Fig.~\ref{fig:T_ground}. The presence of forests (red line) results in the ground temperature being approximately $1K$ lower than that expected from $\overline{T_{amb}}$. \citet{huber_bodentemperaturen_2014} states that, on the other hand, areas with high snow coverage may be up to $4K$ warmer than expected. The second example (black line) shows a case where the actual ground temperature is $1K$ higher than expected due to an altitude difference between the BHE and the weather station. In the Swiss plateau, this difference is approximately $0.47 K$ per $100m$ altitude increase with respect to the weather station \citep{huber_bodentemperaturen_2014}.
-As the ground temperature in fact reflects the ambient temperature of the past, historic measurements should be used to determine the annual mean ambient temperature \citep{huber_bodentemperaturen_2014}. 
-\end{comment}
+The $T_0$ can be either interpolated based on measurements of the near-surface ground temperature \cite{assouline_machine_2019} or derived from measurements of the ambient temperature ($T_\mathit{amb}$). An analysis of different methods to determine $T_0$ is performed in \citep{signorelli_geoscientific_2004}. In the SIA norm, surface temperatures are  approximated from the mean annual $T_\mathit{amb}$ by adding an altitude-dependent term \cite{sia_sondes_2010}. As the actual $T_0$ may deviate from the approximated value (see Fig.~\ref{fig:T_ground} for an example), the SIA norm instructs the addition of a tolerance ($\Delta T$) of $- 1$ K heating for  $+1$ K for cooling.
 
 While not being directly used in the analytical model of GSHPs, the (undisturbed) \textit{geothermal heat flow} $\dot{q}_{g}$ plays an important role in the quantification of geothermal resources, as it characterises the natural heat flow in the ground. It is given by \cite{huber_bodentemperaturen_2014}:
 
 \begin{equation}
     \dot{q}_{g} = \lambda * \frac{\Delta T}{\Delta z}
 \end{equation}
-The geothermal heat flow is approximately constant across the outer crust of the earth, but may vary in mountain terrain \citep{huber_bodentemperaturen_2014}. The relationship may further be used to compute $\lambda$ or $ \frac{\Delta T}{\Delta z}$ if other data is unavailable. A map of geothermal heat flows in Switzerland is shown in Fig.~\ref{fig:q_geo}. It was created by Medici and Rybach in 1995 and updated by Sachs and Eberhard in 2010\footnote{Available at:\\ \url{https://opendata.swiss/de/dataset/geothermische-karte-der-schweiz-1-500000}}.
+
+The geothermal heat flow is approximately constant across the outer crust of the earth, but may vary in mountain terrain \citep{huber_bodentemperaturen_2014}. The relationship may further be used to compute $\lambda$ or $ \frac{\Delta T}{\Delta z}$ if other data is unavailable. A map of geothermal heat flows in Switzerland is shown in Fig.~\ref{fig:q_geo}. It was created by Medici and Rybach in 1995 and updated by Sachs and Eberhard in 2010\footnote{Available at: \url{https://opendata.swiss/de/dataset/geothermische-karte-der-schweiz-1-500000}}.
 
 \begin{figure}
     \centering
@@ -535,29 +550,32 @@ The geothermal heat flow is approximately constant across the outer crust of the
 
 \begin{figure}[b]
     \centering
-    \includegraphics[width=0.4\linewidth]{Figs/BHE_tech.png}
-    \caption[Cross-section of a duplex BHE layout.]{Cross-section of a duplex BHE layout \citep{wagner_erdsondenpotenzial_2014}.}
+    \includegraphics[width=0.6\linewidth]{Figs/BHE_tech.png}
+    \caption[Cross-section of a duplex BHE layout.]{Cross-section of a duplex BHE layout \citep{pahud_geothermal_2002}.}
     \label{fig:BHE_cross-sec}
 \end{figure}
 
 \textbf{Technical parameters}. The technical parameters required to determine the technical geothermal potential are set as constant values in the literature (e.g. \cite{miglani_methodology_2018,rivera_increased_2017,zhang_critical_2017}). The $T_\mathit{mf,min}$ temperature is set in most reviewed studies to $-1.5^\circ C$ \citet{sia_sondes_2010}.
-For $T_\mathit{mf,max}$, no unique value exists across the literature. Instead, \citet{kavanaugh_geothermal_2014} suggests to choose a $T_\mathit{mf,max}$ of $11 - 18$ °C above $T_g$ \cite{spitler_vertical_2016}.
-Quantifying the temperature drop inside the borehole further requires knowledge of the borehole radius ($r_B$) as well as the effective thermal resistance of the borehole ($R_b^*$). A typical layout of a duplex system, the most common form of BHE installations (\cite{sia_sondes_2010}), is shown in Fig.~\ref{fig:BHE_cross-sec}. The thermal resistance is determined by the materials and the geometry of the BHE, which are analysed in detail in \citep{huber_erdwarmesonden_2005}. Table~\ref{tab:tech_design_params} summarises the range of parameters found in the literature and the SIA norm values (if applicable).
+For $T_\mathit{mf,max}$, no unique value exists across the literature. Instead, \citet{kavanaugh_geothermal_2014} suggest to choose a $T_\mathit{mf,max}$ of $11 - 18$ °C above $T_g$.
+% \cite{spitler_vertical_2016}.
+Quantifying the temperature drop inside the borehole further requires knowledge of the borehole radius ($r_b$) as well as the effective thermal resistance of the borehole ($R_b^*$). A typical layout of a duplex system, the most common form of BHE installations (\cite{sia_sondes_2010}), is shown in Fig.~\ref{fig:BHE_cross-sec}. The thermal resistance is determined by the materials and the geometry of the BHE, which are analysed in detail in \citep{huber_erdwarmesonden_2005}. Table~\ref{tab:tech_design_params} summarises the range of parameters found in the literature and the SIA norm values (if applicable).
 
-\textbf{Design parameters}. Two groups of design parameters are relevant to study the multi-fold effects between the geometry of a BHE field and the temperature in the ground, which is typically assessed after a planning horizon $t_{dim}$. 
-The first group of parameters are related to the borehole geometry. These include the borehole length/depth ($H$), the horizontal distance between BHEs ($B$) and the distance between the top part of the BHE (where heat is extracted) and the ground surface ($D$). 
+\textbf{Design parameters}. Two groups of design parameters are relevant to study the multi-fold effects between the geometry of a BHE field and the temperature in the ground, which is typically assessed after a planning horizon $t_\mathit{dim}$. 
+The first group of parameters are related to the borehole geometry. These include the borehole depth ($H$), the horizontal distance between BHEs ($B$) and the distance between the top part of the BHE (where heat is extracted) and the ground surface ($D$). 
 
-A second group of design parameters is related to the heat extraction from the borehole. It includes the heat extraction power ($Q_{HP}$), the maximum heat extraction rate ($q_{max}$), the operating time ($t_{op}$) and the duration of maximum operation ($t_{peak}$). The heat extraction power is related to the power rating of the heat pump (HP), whose typical values are shown in Table~\ref{tab:tech_design_params}. 
+A second group of design parameters is related to the heat extraction from the borehole. It includes the heat extraction power ($Q_{HP}$), the maximum heat extraction rate ($q_\mathit{max}$), the operating time ($t_{op}$) and the duration of maximum operation ($t_{peak}$). The heat extraction power is related to the power rating of the heat pump (HP), whose typical values are shown in Table~\ref{tab:tech_design_params}. 
 % In a large-scale study, however, $Q_{HP}$ is not a technical parameter, as the number of heat pumps in the system is undefined. 
-The heat extraction rate is computed from $Q_{HP}$ and $H$ as given in Table~\ref{tab:tech_design_params}. Nominal curves for $q_{max}$ as a function of $\lambda$ and $\rho C$ ($q_{nom}$) are provided in \cite{sia_sondes_2010}. These curves can be approximated as (cf. \cite{sia_sondes_2010}):
+The heat extraction rate is computed from $Q_{HP}$ and $H$ as given in Table~\ref{tab:tech_design_params}. Nominal curves for $q_\mathit{max}$ as a function of $\lambda$ and $\rho C$, referred to as nominal heat extraction rate $q_{nom}$, are provided in \cite{sia_sondes_2010}. These curves can be approximated as (cf. \cite{sia_sondes_2010}):
+
 \begin{equation}
 \label{eq:q_nom}
-    q_{nom} \approx \frac{T_g - T_{mf, min}}{11.5} \ \left( 10.6 \lambda + 11.2 + 2 \left( \frac{\lambda}{\alpha} - 2 \right) \right)
+    q_{nom} \approx \frac{T_g - T_\mathit{mf, min}}{11.5} \ \left( 10.6 \lambda + 11.2 + 2 \left( \frac{\lambda}{\alpha} - 2 \right) \right)
 \end{equation}
-% If these are used, $Q_{HP}$ needs to be computed by rearranging the equation for $q_{max}$. 
+
+% If these are used, $Q_{HP}$ needs to be computed by rearranging the equation for $q_\mathit{max}$. 
 The operating time indicates the number of hours in which the heat pump is operating (with power $Q_{HP}$). The norm values, used throughout this work, depend on altitude and location \cite{sia_sondes_2010}.
 %. It changes with altitude and location, and the nominal values are shown in Fig.~\ref{fig:t_q_norm}b. 
-The duration of the peak extraction pulse ($t_{peak}$) measures the maximum time of non-stop operation of the HP, which impacts the maximum temperature drop in the BHE and is usually taken as 1, 5 or 10 days \cite{pahud_geothermal_2002}.
+The duration of the peak extraction pulse ($t_\mathit{peak}$) measures the maximum time of non-stop operation of the HP, which impacts the maximum temperature drop in the BHE and is usually taken as 1, 5 or 10 days \cite{pahud_geothermal_2002}.
 
 \begin{table}[t]
 \footnotesize
@@ -574,32 +592,17 @@ $H$             & m           & Borehole depth                         &        
 $D$             & m           & Distance between $z=0$ and BHE outlet  &                                                         & $2-5$                              \\
 $B$             & m           & Spacing between BHEs                   &                                                         & $>5$ (no effect for B $>$ H)     \\ \hline
 $Q_{HP}$        & W           & Heat extraction power during operation &                                                         & $4500-8400$                      \\
-$q_{max}$       & W/m         & Maximum heat extraction rate           & $q_{max} = \frac{Q_{HP}}{H}$                            & \textit{Norm} ($q_{nom}$): $20-55$           \\
+$q_\mathit{max}$       & W/m         & Maximum heat extraction rate           & $q_\mathit{max} = \frac{Q_{HP}}{H}$                            & \textit{Norm} ($q_{nom}$): $20-55$           \\
 $t_{op}$        & h           & Annual operation time                  &                                                         & \textit{Norm}: $1850$  \\
+$t_{seas}$      & years           & Periodicity of seasonal heat extraction  &                                                         & 1                 \\ 
 $t_{peak}$      & h           & Duration of maximum extraction pulse   &                                                         & $1 - 10$ days                    \\ 
 \hline
-$t_{dim}$       & years           & Planning horizon for dimensioning the BHE   &                                                         & $50$                    \\ 
+$t_\mathit{dim}$       & years           & Planning horizon for dimensioning the BHE   &                                                         & $50$                    \\ 
 \hline
 \end{tabular}
 }
 \label{tab:tech_design_params}
 \end{table}
-
-\begin{comment}
-\begin{figure}[b]
-\centering
-\begin{subfigure}{.48\textwidth}
-  \centering
-  \includegraphics[width=.96\linewidth]{Figs/q_max_norm.png}  
-\end{subfigure}
-\begin{subfigure}{.48\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{Figs/t_op_norm.png}  
-\end{subfigure}
-\caption{a) nominal heat extraction rate ($q_{max}$) for a duplex BHE (32mm) at $H=100m$, $T_g=10$, $t_op = 1850h$ as a function of $\lambda$ and $\rho C$, b) nominal operating time ($t_{op}$) as a function of altitude north and south of the alps \citep{sia_sondes_2010} (Fig. 7 \& 10).}
-\label{fig:t_q_norm}
-\end{figure}
-\end{comment}
 
 \subsection{Temperature profile of a BHE installation}
 \label{model_intro}
@@ -608,20 +611,12 @@ To quantify the temperature field of a BHE, we distinguish between the processes
 
 \begin{equation}
 \label{eq:T_b}
-    T_b(t) - T_f(t) = q_{max}*R_b^*
+    T_b(t) - T_f(t) = q_\mathit{max}*R_b^*
 \end{equation}
 
-\begin{comment}
-The inlet temperature of the fluid may be obtained from the following equation \citep{pahud_geothermal_2002}, p. 43:
-
-\begin{equation}
-    q_{max} * H = \dot{m} * cp_f * (T_{f, out} - T_{f, in})
-\end{equation}
-
-where $Q_{HP}$ is the heat extraction power of the heat pump, $\dot{m}$ is the mass flow rate of the fluid (in $kg/s$), $cp_{f}$ is the thermal capacity of the fluid (in $J/kgK$) and $T_{f,in}$ and $T_{f,out}$ are the inlet and outlet temperatures.
-\end{comment}
 
 The temperature at the borehole wall $T_b$ differs from the undisturbed ground temperature $T_g$ by a temperature drop $\Delta T_b$. It varies with depth ($z$), so the average value along the borehole may be obtained by numerical integration ($z = \overline{z}$) or, in a simplified way, by taking $z = H/2$. The borehole wall temperature $T_b$, with $r = r_b$, is hence computed as:
+
 \begin{equation}
     T_b(z, t) = T_g(z) - \Delta T_b(z, t)
 \end{equation}
@@ -639,19 +634,21 @@ The principle of temporal superposition implies that $\Delta T_b(z, t)$ can be m
 %
 % A method to model these effects, shown in Fig.~\ref{fig:q_seasonal}, is suggested in  and summarized in \cite{pahud_geothermal_2002}. 
 %
-Long-term effects are represented by a constant heat extraction rate $\overline{q}$, which is typically assessed for a planning horizon ($t_{dim}$) of 20 or 50 years \cite{pahud_geothermal_2002,miglani_methodology_2018}. 
+Long-term effects are represented by a constant heat extraction rate $\overline{q}$, which is typically assessed for a planning horizon ($t_\mathit{dim}$) of 20 or 50 years \cite{pahud_geothermal_2002,miglani_methodology_2018}. 
 Seasonal effects are represented as a sinusoidal heat extraction with peak rate $q_\mathit{seas}$ and period $t_\mathit{seas}$ of 1 year.
 % , so that the annual integral is zero.
 The peak extraction, which occurs at maximum seasonal extraction, has a duration $t_\mathit{peak}$ (typically 1-10 days). The energy extracted from this pulse is neglected \cite{claesson_conductive_1988}. 
 To obtain $\Delta T_b$, each heat extraction rate is multiplied with a respective thermal resistance ($R_{LT},R_\mathit{seas},R_\mathit{peak}$) \cite{claesson_conductive_1988}:
+
 \begin{equation}
 \label{eq:dT_b}
     \textstyle \Delta T_b(z, t) = \overline{q} * R_{LT}(z, t) + q_{seas} * R_{seas}(z,t) + q_{peak} * R_{peak}(z, t)
 \end{equation}
 where
 \begin{equation*}
-    \overline{q} = \frac{t_{op}}{365*24} * q_{max}, \quad q_\mathit{seas} = w_\mathit{seas} * q_{max}, \quad q_\mathit{peak} = q_{max} - \overline{q} - q_\mathit{seas}
+    \overline{q} = \frac{t_{op}}{365*24} * q_\mathit{max}, \quad q_\mathit{seas} = w_\mathit{seas} * q_\mathit{max}, \quad q_\mathit{peak} = q_\mathit{max} - \overline{q} - q_\mathit{seas}
 \end{equation*}
+
 and $w_\mathit{seas}$ is the seasonal system load, given as a dimensionless constant.
 
 Equation~\ref{eq:dT_b} can be used to simulate the temperature variation at the borehole wall for any time $t$. 
@@ -659,8 +656,10 @@ For GSHP system sizing and to assess the potential long-term heat extraction fro
 To obtain the $T_{mf}$, the temperature drop along the entire borehole is of interest, denoted as $H$ (the borehole depth).
 Using this notation, a combination of Eqs.~\ref{eq:T_b}-\ref{eq:dT_b} gives the following equation for the lowest/highest $T_{mf}$:
 \begin{equation}
-   T_{mf}(t) =  \textstyle T_g\left(\frac{H}{2}\right) - \overline{q} * R_{LT}(H, t_{dim}) - q_{seas} * R_{seas}(t_\mathit{seas}) - q_{peak} * R_{peak}(t_\mathit{peak}) - q_{max}*R_b^*
+\label{eq:T_mf}
+   T_{mf}(t) =  \textstyle T_g\left(\frac{H}{2}\right) - \overline{q} * R_{LT}(H, t_\mathit{dim}) - q_{seas} * R_{seas}(t_\mathit{seas}) - q_{peak} * R_{peak}(t_\mathit{peak}) - q_\mathit{max}*R_b^*
 \end{equation}
+
 For reasons explained in Section~\ref{app:models}, only the $R_{LT}$ is a function of the borehole depth $H$.
 This equation is valid for the cases of heat extraction (e.g. space heating) and heat injection (e.g. space cooling). The difference between the two modes of operation is that the heat extraction rates ($q$) are positive for heat extraction and negative for heat injection and that their magnitude may vary depending on the length of the heating/cooling seasons and the respective demand.
 
@@ -668,42 +667,34 @@ The principle of spatial superposition implies that the temperature drops due to
 %
 As the seasonal and peak effects are of a short duration and have a penetration radius of less than the minimum borehole distance $B_{min} = 5$m \cite{pahud_geothermal_2002}, the seasonal and peak components of neighboring boreholes hence do not interfere with each other.
 %
-% and can be approximated as functions of the technical and physical parameters only (i.e. $r_b, \lambda, \alpha$). Their penetration radius is a few meters and lies below the minimum borehole distance $B_{min} = 5m$, so seasonal and peak effects of neighboring boreholes do not interfere with each other. Consequently, $R_{seas}$ and $R_{peak}$ are "quasi-constants" in the large-scale geothermal potential estimation. The analytic formulas for both components are given in Section~\ref{seas_peak}. 
-%
-The long-term temperature drop ($\Delta T_{LT}$), however, may be impacted by surrounding boreholes. Fig.~\ref{fig:T_field} shows the long-term $\Delta T$ for different times, a) at the borehole wall as a function of $z$ and b) integrated along $z$ (denoted as $\overline{z}$ in Fig.~\ref{fig:T_field}b) as a function of distance to the borehole. Most of the temperature drop occurs during the first 10 years of operation, while the temperature drop after the planning horizon of 50 years is small.
-
-\begin{comment}
-Consequently, the long-term thermal resistance of the ground at the wall of borehole $i$ consists of the thermal resistance caused by this borehole, and the thermal resistances caused by any surrounding boreholes, such that:
-
-\begin{equation}
-\label{eq:R_field}
-    R_{LT,i}(\overline{z}, t_{dim}) = R_{LT}(\overline{z}, t_{dim}, r_b) + \sum_{i \neq j} R_{LT}(\overline{z}, t_{dim}, r_j)
-\end{equation}
-where $R_{LT}(\overline{z}, t_{dim}, r_b)$ denotes the long-term thermal resistance of borehole $i$ at its borehole wall ($r_b$) and $R_{LT}(\overline{z}, t_{dim}, r_j)$ denotes the thermal resistance at a distance $r_j$ from any surrounding borehole.
-\end{comment}
-% While in most studies of GSHP potential the borehole depth and dimensioning horizon are considered as constants \cite{}, this formulation
-
-\begin{comment}
-% Figure~\ref{fig:T_field}a shows that the approximation of $z=H/2$ quantifies the worst-case temperature drop along the borehole. The rules of thumb given in \citep{pahud_geothermal_2002}, p. 50, state that the temperature drop is small at a horizontal distance of $r>H/2$ from the center of the BHE, and negligible for $r>H$. This is confirmed by Fig.~\ref{fig:T_field}b. 
-We refer to the long-term temperature drop as $\Delta T_{LT}$ and include $r$ as variable, as also distances $r>r_b$ are of interest:
-
-\begin{equation}
-    \Delta T_{LT}(r, z, t) = \overline{q} * R_{LT}(r, z, t)
-\end{equation}
-\end{comment}
+The long-term temperature drop ($\Delta T_{LT}$), however, may be impacted by surrounding boreholes. Fig.~\ref{fig:T_field} shows the long-term $\Delta T$ for different times, (a) at the borehole wall as a function of $z$ and (b) integrated along $z$ (denoted as $\overline{z}$ in Fig.~\ref{fig:T_field}b) as a function of distance to the borehole. Most of the temperature drop occurs during the first 10 years of operation, while the temperature drop after the planning horizon of 50 years is small.
 
 \begin{figure}
     \centering
-    \includegraphics[width=.9\linewidth]{Figs/temp_field_FLS.pdf}
+    \includegraphics[width=.9\linewidth,trim={0 .6cm 0 .7cm},clip]{Figs/temp_field_FLS.pdf}
+    \begin{subfigure}[t]{.42\textwidth}
+        \centering
+    \subcaption{}
+      \label{figa:T_field}
+    \end{subfigure}
+    \begin{subfigure}[t]{.45\textwidth}
+      \centering
+        \subcaption{}
+      \label{figb:T_field}
+    \end{subfigure}
     \caption{a) Long-term variation of the ground temperature at the borehole wall ($\Delta T_{LT}(r_b, z, t)$) as a function of depth ($z$), b) Integration of $\Delta T_{LT}(r_b, z, t)$ along $z$ ($\Delta T_{LT}(r, \overline{z}, t)$) as a function of distance to the BHE ($r$).}
     \label{fig:T_field}
 \end{figure}
+
+In the literature, different variations of Eq.~\ref{eq:T_mf} exist, which are typically formulated to yield the optimal borehole length for a specific heat load~\cite{kavanaugh_geothermal_2014,sia_sondes_2010}. 
+%The additional temperature drop due to surrounding boreholes may be referred to in these alternating formulations as "temperature penalty" \cite{kavanaugh_geothermal_2014}. 
+A comprehensive overview of existing design methods for vertical closed-loop BHEs is provided by \citet{spitler_vertical_2016}.
 
 \subsection{Analytical models for thermal resistance}
 \label{geo_models}
 \label{app:models}
 
-In the model of \citet{claesson_conductive_1988}, the heat transfer of a BHE is modelled with good accuracy as a purely conductive process in a homogeneous medium. 
+In the model of \citet{claesson_conductive_1988}, the heat transfer of a BHE is modelled with good accuracy as a purely conductive process in a homogeneous medium.
 % This means that convective heat transfers are negligible. 
 This implies that the thermal conductivity $\lambda$ of stratified ground with multiple layers may be approximated as a weighted average of the properties of the layers. 
 \citet{claesson_conductive_1988} also argue that the undisturbed ground temperature $T_g(z)$ along the borehole can be approximated without loss of accuracy by the undisturbed ground temperature at half the borehole depth. 
@@ -714,13 +705,14 @@ To ease the notation fot the computation of thermal resistances ($R$), \citet{es
     R = \frac{1}{2 \pi \lambda} \, \mathrm{g}\left( \frac{t}{t_s}, \frac{r}{H} \right), \quad \frac{t}{t_s} > 0
 \end{equation}
 
-The g-function is a function of the ratio between the time $t$ and the BHE's time constant $t_s$, as well as the ratio between the horizontal distance to the BHE center $r$ ($r_b$ for a single borehole) and the borehole length $H$. The ratio $t/t_s$ may also be referred to as Eskilson's number (Es) \citep{pahud_geothermal_2002}. 
+The g-function is a function of the ratio between the time $t$ and the BHE's time constant $t_s$, as well as the ratio between the horizontal distance to the BHE center $r$ ($r_b$ for a single borehole) and the borehole depth $H$. The ratio $t/t_s$ may also be referred to as Eskilson's number (Es) \citep{pahud_geothermal_2002}. 
 % For simplicity, only the variables (i.e. $r, z, t$, not the parameters $t_s, H$) are indicated in the argument of the g-function (where relevant). 
 The time constant $t_s$, typically between $35-140$ years, is defined as:
 
 \begin{equation}
     t_s = \frac{H^2}{9 \alpha}
 \end{equation}
+
 The time constant marks the transition from the transient state, in which ground temperatures are decreasing logarithmically, to the steady state, which represents the new thermal equilibrium of the ground with a constant heat extraction (red line in Fig.~\ref{fig:T_field}).
 Since the dimensioning horizon of BHEs lies typically below $t_s$, the transient state solutions for the heat transfer equation are of primary interest for the modelling of BHEs. A complete overview of transient and steady-state models is provided by \citet{pahud_geothermal_2002}.
 % This steady state is fully reached when $\ln{(t/t_s)} = 2$, i.e. $t_{ss} = e^2 t_s \approx 7.5 t_s$ \citep{wagner_erdsondenpotenzial_2014}. 
@@ -738,50 +730,6 @@ A computationally efficient solution for this integral (in transient state) has 
 \label{eq:FLS_int}
      g_{FLS}(r, H) = \frac{1}{2} \int_{\frac{1}{\sqrt{4 \alpha t}}}^{\infty}  e^{- r^2 s^2} \ \frac{I_{ls}(Hs, Ds)}{H s^2} \ ds
 \end{equation}
-
-where
-\begin{equation*}
-    I_{ls}(h, d) = 2\ \mathrm{ierf}(h) + 2\ \mathrm{ierf}(h + 2d) - \mathrm{ierf}(2h + 2d) - \mathrm{ierf}(2d)
-\end{equation*}
-\begin{equation*}
-    \mathrm{ierf}(x) = \int_0^x \mathrm{erf}(u) du 
-                     = x \ \mathrm{erf}(x) - \frac{1}{\sqrt{\pi}} (1 - e^{-x^2})
-    \qquad
-    \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-\mu^2} d \mu 
-\end{equation*}
-
-and $t$ equals the planning horizon $t_{dim}$. $D$ is the distance between the BHE outlet and the ground surface, which is set to $D = 2m$ as suggested in \cite{pahud_geothermal_2002}. The transient and steady-state solutions of the FLS model at any depth $z$ are provided in Appendix~\ref{app:allModels}.
-
-\begin{comment}
-
-\begin{equation}
-\label{eq:FLS}
-    \mathrm{g}_{FLS}(r, z, t) = \frac{1}{2} \int_{D}^{D+H} \left( \frac{1}{r_+} \mathrm{erfc}\left(\frac{r_+}{\sqrt{4 \alpha t}}\right) - \frac{1}{r_-}\mathrm{erfc}\left(\frac{r_-}{\sqrt{4 \alpha t}}\right) \right) ds
-\end{equation}
-
-where
-\begin{equation*}
-    r_+ = \sqrt{r^2 + (z - s)^2}, \quad r_- = \sqrt{r^2 + (z + s)^2}
-\end{equation*}
-
-\begin{equation*}
-   \mathrm{erfc}(x) = \frac{2}{\sqrt{\pi}} \int_{x}^{\infty} e^{-\mu^2} d\mu
-\end{equation*}
-
-The steady-state solution (valid for $t > t_{ss}$) is defined as:
-
-\begin{equation}
-\label{eq:FLS_ss}
-    \mathrm{g}_{FLS,ss}(r, z) = \frac{1}{2} \int_{D}^{D+H} \left( \frac{1}{r_+} - \frac{1}{r_-} \right) ds
-\end{equation}
-
-For many borehole applications, the mean temperature along the borehole length is of interest. This can be obtained by integrating $\mathrm{g}_{FLS}(r, z, t) $ along the $z$-axis. \citet{claesson_analytical_2011} provide the following analytical solution for this integration, which is very computationally efficient: 
-
-\begin{equation}
-\label{eq:FLS_int}
-    \mathrm{g}_{FLS}(r, \overline{z}, t) = \frac{1}{2} \int_{\frac{1}{\sqrt{4 \alpha t}}}^{\infty}  e^{- r^2 s^2} \ \frac{I_{ls}(Hs, Ds)}{H s^2} \ ds
-\end{equation}
-
 where
 \begin{equation*}
     I_{ls}(h, d) = 2\ \mathrm{ierf}(h) + 2\ \mathrm{ierf}(h + 2d) - \mathrm{ierf}(2h + 2d) - \mathrm{ierf}(2d)
@@ -794,120 +742,17 @@ where
     \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-\mu^2} d \mu 
 \end{equation*}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=.9\linewidth]{Figs/FLS_ILS_Esk_compare_ts.pdf}
-    \caption{a) Temporal dynamics of the temperature variation along the borehole (shape of the "g-function") for the Finite Line Source (FLS), Infinite Line Source (ILS) and asymptotic (Esk) models, b) relative error for the temperature variation, as percentage of the $\Delta T_{FLS}$. The time duration of peak (red) and seasonal (grey) effects are highlighted.}
-    \label{fig:T_dynamics}
-\end{figure}
-\end{comment}
+and $t$ equals the planning horizon $t_\mathit{dim}$. $D$ is the distance between the BHE outlet and the ground surface, which is set to $D = 2m$ as suggested in \cite{pahud_geothermal_2002}. The transient and steady-state solutions of the FLS model at any depth $z$ are provided in Appendix~\ref{app:allModels}.
 
 \subsubsection{Approximations and errors}
 
 The FLS can be simplified under certain assumptions by simpler models, namely the infinite line source model (ILS) and an asymptotic approximation of the FLS model, which are described in Appendix~\ref{app:allModels}.
 % A comparison of all methods is provided in Section~\ref{comparison}.
-These models, used in the literature for example in \cite{alcaraz_advection_2016,alcaraz_t-i-ger_2017,casasso_g.pot:_2016}, show a negligible deviation from the FLS model for time spans below 1 year (see Fig. \ref{fig:T_dynamics})b and are hence well-suited for modelling seasonal and peak effects (see Appendix~\ref{app:allModels} for details).
+These models, used in the literature for example in \cite{alcaraz_advection_2016,alcaraz_t-i-ger_2017,casasso_g.pot:_2016,bayer_strategic_2014}, show a negligible deviation from the FLS model for short time spans ($< 1$ year) and are hence well-suited for modelling seasonal and peak effects (see Appendix~\ref{app:allModels} for details).
 %
 For larger time spans of several years, the deviation of the approximations from the FLS solution becomes non-negligible.
-% While the ILS solution does not achieve a steady state due to its infinite length, the error of the Esk approximation peaks around the time constant $t/t_s=1$, leading to a maximum deviation of around 8\% and an error of around 4\% in the steady state (dashed line in Fig. \ref{fig:T_dynamics}b).
-% As the dimensioning horizon typically lies in the order of magnitude of $t_s$ (34 years for a BHE of length 100 m), these deviations are accumulated to significant errors when spatial superposition is applied.
 This leads to a significant accumulation of errors when superposition is applied.
 Throughout this work, the FLS is hence used to model long-term thermal resistances, similar to other studies accounting for spatial superposition \cite{miglani_methodology_2018,rivera_increased_2017}.
-
-\begin{comment}
-\textbf{Infinite Line Source (ILS)}. The ILS approximation is defined as \citep{poppel_grenzabstande_2017}:
-
-\begin{equation}
-\label{eq:ILS}
-    \mathrm{g}_{ILS}(r, t) = \frac{1}{2} \int_\frac{r^2}{4 \alpha t}^\infty \frac{e^{-u}}{u}du 
-                  = \frac{1}{2} E_1\left(\frac{r^2}{4 \alpha t}\right)
-\end{equation}
-
-The error between the ILS and FLS is negligible for $t < 0.1 t_s$ \citep{claesson_conductive_1988}, making it particularly suitable for short and medium-term analyses. For $t<t_s$, it is accurate with a bounded error (see \ref{comparison}), but as it does not reach a steady state (due to the assumed infinite length), it is not suitable for modelling ground temperature at $t>t_s$.
-\\
-
-\textbf{Eskilson's approximation (Esk)}.
-\citet{eskilson_thermal_1987} proposes to model the temperature drop along the borehole as a function of the two asymptotes of the FLS model. The lower asymptote is valid for $t < t_s$ and represents the transient behaviour ($\mathrm{g}_{Esk, trans}$). For $t > t_s$, the upper asymptote represents the (quasi) steady-state ($\mathrm{g}_{Esk, qss}$). The g-function of the asymptotic approximation is hence defined as:
-
-\begin{equation}
-    g_{Esk}(r, t) = \left\{
-        \begin{matrix}
-            \mathrm{g}_{Esk, trans} & t_{min} < t < t_s   \\ 
-            \mathrm{g}_{Esk, qss}    & t > t_s           
-        \end{matrix} 
-\right.
-\end{equation}
-
-The \textit{transient asymptote} is an approximation of the ILS \citep{wagner_erdwarmesonden._2019}. Two equivalent formulations of $\mathrm{g}_{Esk, trans}$ exist. The first is derived from the mathematical approximation of the exponential integral $E_1$ in Eq.~\ref{eq:ILS}, while the second represents the physical process. The expressions are \citep{pahud_geothermal_2002}: 
-
-\begin{equation}
-\label{eq:Esk_trans}
-    \mathrm{g}_{Esk, trans}(r, t) = \frac{1}{2} \left(\ln\left(\frac{4 \alpha t}{r^2}\right) - \gamma\right)
-                                  = \ln\left(\frac{H}{2 r}\right) + \frac{1}{2} \ln\left(\frac{t}{t_s}\right), \quad
-    t_{min} < t < t_s
-\end{equation}
-
-While the second expression is more intuitive, the first provides more information on the validity of the approach. It is derived from the following approximation of the exponential integral:
-
-\begin{equation}
-\label{eq:apx}
-    E_1\left(x\right) \approx \ln\left(\frac{1}{x}\right) - \gamma, \quad x \ll 1
-\end{equation}
-
-where $\gamma$ is Euler's constant (0.57221...). To obtain Eq.~\ref{eq:Esk_trans}, we substitute Eq.~\ref{eq:apx} in Eq.~\ref{eq:ILS}.
-Equation~\ref{eq:apx} approximates the ILS for all $x < 0.05$ with negligible error. For $x = r^2/(4 \alpha t)$ and $r = r_b$ (the borehole wall), this gives a minimum time for the transient asymptote of:
-
-\begin{equation}
-    t_{min} = \frac{5 r_b^2}{\alpha}, \quad r_b \ll H
-\end{equation}
-
-The values of $t_{min}$ typically lie below $6h$, so the condition is fulfilled for all timescales of interest.
-
-If the temperature at larger distances from the borehole is of interest ($r \gg r_b$), for example for modelling borehole fields, the condition for the validity of Eq.~\ref{eq:Esk_trans} becomes:
-
-\begin{equation}
-\label{eq:r_cond}
-    r < \sqrt{(0.2 \alpha t )}
-\end{equation}
-
-The interaction between boreholes is only of interest in the long term. On this temporal scale, we obtain $r_{dim} < 18m$ for the planning horizon of 50 years, $r_{qss} < 0.15H$ for $t_s$ and $r_{ss} < 0.4H$ for $t_{ss}$.
-
-The \textit{steady-state asymptote} approximates the steady-state solution of the FLS (Eq.~\ref{eq:FLS_ss}). We refer to it as \textit{quasi steady-state}. According to \citet{eskilson_thermal_1987}, the quasi steady-state is given by:
-
-\begin{equation}
-\label{eq:Esk_qss}
-    \mathrm{g}_{Esk, qss}(r) = \ln\left(\frac{H}{2 r}\right), \quad t > t_s
-\end{equation}
-
-From Eqs.~\ref{eq:Esk_trans} and \ref{eq:Esk_qss} it is easy to see that the two asymptotes intersect at $t = t_s$.
-As the Esk model is practically equivalent to the ILS solution for $t_{min} < t < t_s$ (provided Eq.~\ref{eq:r_cond} is fulfilled), the transient asymptote has a negligible error with respect to the FLS for $t < 0.1 t_s$, and a bounded error for $t = t_s$. The transient asymptote also has a bounded error with respect to the FLS.
-
-\subsubsection{Model comparison}
-\label{comparison}
-
-As mentioned above, the approximations of the FLS model are valid under certain assumptions, but may significantly speed-up the modelling time (even though the formulation in Eq.~\ref{eq:FLS_int} is already much faster than Eq.~\ref{eq:FLS}). To understand the ranges of validity and the error induced by the use of the approximations, we compare the different models for different time scales and distances to the borehole. All examples are shown for a borehole of 100m length, but the patterns are nearly identical for longer BHE's. In general, the temperature drop ($\Delta T$) along the borehole is smaller for larger $H$, hence leading to smaller absolute, but similar relative errors. 
-
-Figure~\ref{fig:T_dynamics} shows a comparison between the models for different time scales at the borehole wall ($r = r_b$). We can see that for short time scales (red/grey), all models have a negligible error (up to $1\%$). 
-Hence, any approximation may be used to model both peak and seasonal effects. At larger time scales, the ILS model starts to diverge from the FLS solution. 
-This is expected, as the ILS never reaches a steady-state due to its infinite length. In this context, \citet{bandos_finite_2009} provide a formulation for a semi-infinite line source (SILS), which does reach a steady state. 
-
-The Esk model is quasi-equivalent to the ILS for $t_{min} < t < t_s$, and reaches its steady-state for $t > t_s$. The figure shows that the upper asymptote overestimates the steady-state temperature by $3.7\%$, with the largest error occurring around $t = t_s$ ($\approx 8\%$). These percentages are valid for all borehole lengths. 
-For typical boreholes of $H=100-200m$, the time scales with the maximum error (around $t_s$) correspond to the time scales of highest interest. 
-As the absolute difference is relatively small, this may not have a large impact for modelling individual boreholes, and the asymptotic steady-state $\mathrm{g}_{Esk, qss}$ can be safely used. For modelling large borehole fields, however, the error accumulates, which can lead to significant differences in the estimated potential. For large-scale studies, the exact FLS solution should hence be used.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=.9\linewidth]{Figs/FLS_ILS_compare_r.pdf}
-    \caption{a) Temperature field with distance to the BHE (length 100m) on logarithmic scale. The Infinite Line Source (with $\mathrm{g}_{Esk, qss}$ for $t = t_{ss}$) is shown for comparison (dashed lines). b) Absolute error (in $\circ$C) for the ILS model. The example shows a BHE of 100m length.}
-    \label{fig:r_field}
-\end{figure}
-
-To assess the effect of adjacent boreholes, the temperature fields at large distances from the borehole ($5m < r < H$) are of interest. As seasonal and peak effects have a penetration depth that is lower than the minimum borehole distance of $5m$, only long-term effects are relevant. Figure~\ref{fig:r_field} shows the temperature drop in the ground for three long-term time intervals: the typical planning horizon ($t_{dim}$) for BHEs of 50 years, the quasi-steady-state $t_s$, where the temperature drop has reached around $95\%$ of its final value, and the actual steady state ($t_{ss}$). For comparison, also a short horizon of 1 year is shown.
-
-While the temperature drop increases logarithmically for small distances, it trails off for distances that approach the borehole length $H$. In this range, Eq.~\ref{eq:apx} is no longer valid, so the transient asymptote cannot be used. This can be seen by the unrealistic steady-state solution, which represents the Esk steady-state asymptote (see Eq.~\ref{eq:Esk_qss}). It reaches a value of $0$ at $H/2$ and has negative values after, which is infeasible.
-
-As Fig.~\ref{fig:T_dynamics} suggests, the error between the ILS and the FLS model increases with time, up to $0.1-0.3 ^\circ$C for the radii of interest. While this may  be negligible for a single neighbor, the error accumulates for borehole fields.  The exact FLS solution should hence be used for modelling large-scale geothermal potentials.
-\end{comment}
 
 \subsubsection{Long-term, seasonal and peak effects}
 \label{seas_peak}
@@ -915,7 +760,7 @@ As Fig.~\ref{fig:T_dynamics} suggests, the error between the ILS and the FLS mod
 Based on the analytical models described above, mathematical formulations for the thermal resistance of the peak, seasonal and long-term components shown in Fig.~\ref{fig:q_seasonal} ($R_{LT},R_{seas},R_{peak}$) can be derived. 
 % As it was shown in Fig.~\ref{fig:q_seasonal}, the minimum temperature at the borehole wall consists of a long-term, a seasonal and a peak component, each obtained by multiplying the respective heat extraction rate ($\overline{q}, q_{seas}, q_{peak}$) with its thermal resistance ($R_{LT},R_{seas},R_{peak}$, see Eq.~\ref{eq:dT_b}). 
 
-\textbf{Long-term effects} are assessed at $t = t_{dim}$ using the FLS solution for an accurate model of the spatial superposition \cite{miglani_methodology_2018,rivera_increased_2017}.
+\textbf{Long-term effects} are assessed at $t = t_\mathit{dim}$ using the FLS solution for an accurate model of the spatial superposition \cite{miglani_methodology_2018,rivera_increased_2017}.
 % (typically 50 years), at quasi steady-state ($t = t_s$) or at steady state ($t = t_{ss}$). It is common to use the quasi steady-state asymptote for a conservative approximation of a \textit{single borehole}, as it overestimates the maximum temperature drop (see Fig.~\ref{fig:T_dynamics}). Examples for this approach are \cite{claesson_conductive_1988} and \cite{pahud_geothermal_2002}. 
 %
 Applying the principle of spatial superposition, 
@@ -926,7 +771,11 @@ the long-term resistance of borehole $i$ surrounded by $N$ boreholes may be expr
 \label{eq:R_LT_superposed}
     R_{LT, i}(H) = \frac{1}{2 \pi \lambda} \mathrm{g}_{FLS}(r_b, H) + \frac{1}{2 \pi \lambda} \sum_{j=1}^N \mathrm{g}_{FLS}(r_{i,j}, H) 
 \end{equation}
-where $i \neq j$, $\mathrm{g}(r, H)$ is obtained from Eq.~\ref{eq:FLS_int} and $r_{i,j}$ denotes the distance between borehole $i$ and the surrounding borehole $j$. If a single borehole is considered, only the first term of the addition is relevant. To ease the notation, the argument $t = t_{dim}$ has been omitted from Eq.~\ref{eq:R_LT_superposed}.
+
+where $i \neq j$, $\mathrm{g}(r, H)$ is obtained from Eq.~\ref{eq:FLS_int} and $r_{i,j}$ denotes the distance between borehole $i$ and the surrounding borehole $j$. If a single borehole is considered, only the first term of the addition is relevant, yielding the definition of $R_{LT}$ used in Chapter~\ref{geothermal}. To ease the notation, the argument $t = t_\mathit{dim}$ has been omitted from Eq.~\ref{eq:R_LT_superposed}.
+To efficiently compute $R_{LT}$ for a large number of BHE installations, the integrand in Eq.~\ref{eq:FLS_int} is pre-computed in this work for a range of combinations of $\alpha$ and $r$, exploiting the geometrical properties of BHEs arranged in regular grids (see Chapter~\ref{geothermal}).
+% Equation~\ref{eq:R_LT_superposed} denotes the long-term resistance of a BHE itself and all surrounding BHEs. 
+% In Chapter~\ref{geothermal}, these two terms are accounted for separately, whereby the first term ()
 
 \textbf{Seasonal effects} are modelled in this work as a periodic heat extraction. Effects from neighboring boreholes can be ignored if the minimum spacing ($B_{min}$) fulfills the following condition:
 
@@ -939,21 +788,22 @@ As the minimum spacing is defined as 5 m in the SIA norm \cite{sia_sondes_2010},
 \begin{equation}
     R_{seas}(t_\mathit{seas}) = \frac{1}{2 \pi \lambda} \sqrt{\left(\ln(2/r_{pb}^\prime \right) - \gamma)^2 + \pi^2/16}
 \end{equation}
-
 where
 \begin{equation*}
     r_{pb}^\prime = r_b \sqrt{2}/\delta < 0.1, \quad \delta = \sqrt{ \alpha t_\mathit{seas} / \pi}
 \end{equation*}
-The $R_{seas}$ is based on the ILS model, and hence it is independent of the borehole depth $H$.
-The penetration depth of the temperature drop is denoted as $\delta$, which is around $3-4$ m for Switzerland. Seasonal effects hence do not impact adjacent boreholes. 
 
-\textbf{Short-term effects} are represented by a heat extraction pulse at $q_{max}$ for a duration $t_\mathit{peak}$, typically 1-10 days (see Table~\ref{tab:tech_design_params}). Due to the short duration of the pulse, the ILS approximation is valid with negligible error (see Appendix \ref{app:allModels}). Thermal effects have an even smaller penetration depth than seasonal effects, so no surrounding boreholes need to be considered. The thermal resistance can hence be obtained as:
+The $R_{seas}$ is based on the ILS model, and hence it is independent of the borehole depth $H$.
+The (horizontal) penetration depth of the temperature drop is denoted as $\delta$, which is around $3-4$ m for Switzerland. Seasonal effects hence do not impact adjacent boreholes. 
+
+\textbf{Short-term effects} are represented by a heat extraction pulse at $q_\mathit{max}$ for a duration $t_\mathit{peak}$, typically 1-10 days (see Table~\ref{tab:tech_design_params}). Due to the short duration of the pulse, the ILS approximation is valid with negligible error (see Appendix \ref{app:allModels}). Thermal effects have an even smaller penetration depth than seasonal effects, so no surrounding boreholes need to be considered. The thermal resistance can hence be obtained as:
 
 \begin{equation}
-    \mathrm{R}_\mathit{peak}(t_\mathit{peak}) = \frac{1}{2 \pi \lambda} \ \mathrm{g}_{ILS}(r_b, t_\mathit{peak})
+    R_\mathit{peak}(t_\mathit{peak}) = \frac{1}{2 \pi \lambda} \ \mathrm{g}_{ILS}(r_b, t_\mathit{peak})
 \end{equation}
+
 where $\mathrm{g}_{ILS}$ is obtained from Appendix \ref{app:allModels}.
-While peak effects are relevant when modelling the operation of GSHP systems \cite{miglani_methodology_2018}, they are frequently neglected in studies of the long-term technical geothermal potential, as a back-up heating system is available in most cases to cover peak extractions which may violate the temperature constraint (Eq.~\ref{eq:T_mf_min}). We follow this approach and neglect peak heat extraction throughout this work. 
+While peak effects are relevant when modelling the operation of GSHP systems \cite{miglani_methodology_2018}, they are frequently neglected in studies of the long-term technical geothermal potential, as a back-up heating system is available in most cases to cover peak extractions that may violate the temperature constraint (Eq.~\ref{eq:T_mf_min}). We follow this approach and neglect peak heat extraction throughout this work. 
 
 
 %\section{Hybrid system optimization}
