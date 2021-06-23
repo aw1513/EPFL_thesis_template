@@ -1,4 +1,4 @@
-\chapter{Machine Learning and uncertainties}
+\chapter{Machine Learning and \mbox{uncertainties}}
 \label{methods_ML}
 
 \vspace{-15pt} % one line spacing corresponds approx to 15 pts
@@ -29,20 +29,40 @@ To this aim, ML is used in two contexts:
 and (ii) to group data based on similarities in its features and to identify outliers, known as \textit{clustering}. 
 \nomenclature[A]{ML}{Machine Learning}
 
-The use of data-driven methods further requires the estimation of uncertainties related to the ML predictions, which are essential if the outputs are used in decision-making processes \cite{knusel_argument-based_2020}. 
-Uncertainties may arise for example from input data sources or from modelling approaches themselves, and their quantification itself is a vast field of research \cite{willard_integrating_2020,knusel_argument-based_2020}.
-We use an approach for modelling uncertainty arising from data noise and from the ML model in the form of standard deviations, which we propagate through the analytical models presented in Chapter~\ref{methods_physical}. 
+The use of data-driven methods further requires the estimation of uncertainties related to the ML predictions, which are essential for decision-making processes \cite{knusel_argument-based_2020}. 
+Uncertainties may arise for example from noise in input data sources or from the modelling approaches themselves, and their quantification is a vast field of research \cite{willard_integrating_2020,knusel_argument-based_2020}.
+We model uncertainties arising from data noise and from ML models in the form of standard deviations, which we propagate through the analytical models presented in Chapter~\ref{methods_physical}. 
 The following sections will provide an overview of the supervised learning and clustering algorithms used in this thesis, as well as the applied methods for a systematic quantification of uncertainties through combined physics-based and data-driven modelling approaches.
 
 \section{Supervised learning algorithms}
 \label{ML_supervised}
-% Often regarded as black-box models, ML algorithms are trained based on a set of input data (called features), such as to predict an output (the target or label). 
-The architecture of each model is determined through a tuning procedure in the training phase, where the parameters defining the model structure (hyper-parameters) are optimized in order to minimize the difference between the prediction and the target. 
 
-\subsection{Feature analysis and selection techniques}
+Supervised learning algorithms are trained on a set of input features and corresponding output targets, such as to minimise the error between an algorithm's prediction and the "true" target.
+Several design choices can influence the performance of supervised learning algorithms: (i) the choice of the input features, (ii) the choice of an appropriate ML model for a given problem, and (iii) the
+choice of the parameters defining the model structure (hyper-parameters).
+The selection of suitable input feature varies largely between different ML applications and is often based on expert knowledge. 
+The full set of available features, obtained using expert knowledge or otherwise, may however contain features which are redundant or even detrimental to the ML model's performance.
+Feature exploration and selection techniques that may be used to enhance the quality of the feature set are summarised in Section~\ref{ML_features}.
+
+The choice of an appropriate ML model may depend on the structure of the problem. Regression algorithms are used to model continuous targets (Section~\ref{ML_models}), while classification algorithms (Section~\ref{ML_class}) are used for binary or multi-class targets. Furthermore, some algorithms such as Support Vector Machines (SVM) may be better suited for high-dimensional feature sets (i.e. many features), while other algorithms such as Extreme Learning Machines (ELM) are optimized for very large datasets. For image or natural language processing, convolutional neural networks (CNNs) have gained high popularity in recent years.
+% For many applications, however, multiple algorithms may be appropriate and their performance should be compared to choose the best model.
+
+For any ML model, the optimization of its hyper-parameters is performed during the so-called \textit{tuning} procedure in the training phase. For model training, the labelled data (all data samples for which both features and targets are known) are divided into three random subsets: 
+The \textit{training} set, which is used to fit the model, the \textit{validation} set, which is used to assess the performance during model tuning, and the \textit{test} set, which is excluded from the tuning procedure and used for the final model evaluation.
+The test set usually contains $20 - 33\%$ of the labelled data. The remaining data is then split again, keeping another $20 - 33\%$ for model validation.
+To reduce the randomness in the splitting of the data into training and validation sets, a $k$-fold cross-validation (CV) procedure is widely applied in the literature. 
+For this, the training data is randomly split into $k$ subsets (folds), from which $k$ ML models are trained. Each model uses ($k$ – 1) folds for training and the last fold for validation. 
+Unless mentioned otherwise, we use a 5-fold cross-validation ($k$ = 5) throughout this work.
+% 
+% Often regarded as black-box models, ML algorithms are trained based on a set of input data (called features), such as to predi ct an output (the target or label). 
+% The architecture of each model is determined through a tuning procedure in the training phase, where the parameters defining the model structure (hyper-parameters) are optimized in order to minimize the difference between the prediction and the target. 
+
+\subsection{Feature exploration and selection techniques}
 \label{ML_features}
 
-\textbf{Recursive feature selection.} Recursive feature selection can be applied to any ML algorithm. The metric used for the selection is the mean-squared error (MSE), which is obtained using a $k$-fold cross-validation (CV). For this, the training data is randomly split into $k$ subsets (folds), from which $k$ ML models are trained. Each model uses ($k$ – 1) folds for training and the last fold for validation, i.e. to compute the MSE between the target (annual $G_t$) and the predicted value. In this work, we use a 5-fold cross-validation ($k$ = 5). 
+ Feature exploration techniques 
+
+\textbf{Recursive feature selection.} Recursive feature selection can be applied to any ML algorithm. The metric used for the selection is the mean-squared error (MSE) between the target (annual $G_t$) and the predicted value, which is obtained using 5-fold CV (see above). 
 Starting from the complete feature set, we iteratively exclude one feature at a time and compute the MSE. The feature whose exclusion causes the lowest change in MSE ($\Delta_{MSE}$) is permanently removed from the set of features. This procedure is repeated until only one feature remains. The $\Delta_{MSE}$ is recorded for each iteration and a threshold for $\Delta_{MSE}$ is chosen, which represents the maximum tolerable increase in MSE. The selected features are those which form the smallest feature set that keeps $\Delta_{MSE}$ below its threshold. As the number of cross-validations increases with $N^2$, where $N$ is the number of features, this procedure may not be applicable for very high-dimensional problems.
 
 
@@ -58,7 +78,7 @@ Throughout this work, we use and compare the performance of six supervised regre
 \nomenclature[A]{ELM}{Extreme Learning Machine}
 \nomenclature[A]{ELM-E}{ELM Ensemble}
 The ML algorithms and their hyper-parameters are summarized below and shown in Fig. 3. 
-We use the ML implementations of the \textit{Scikit-learn} library for python \cite{pedregosa_scikit-learn:_2011} for all models except the ELM-E. As no functional open-source code for the ELM-E was available when this work was carried out, we have implemented the ELM-E ourselves using the ELM model of the \textit{HPELM} package for python \cite{akusok_high-performance_2015}, which supports computational acceleration on graphical processing units (GPUs).
+We use the ML implementations of the \texttt{scikit-learn} library for python \cite{pedregosa_scikit-learn:_2011} for all models except the ELM-E. As no functional open-source code for the ELM-E was available when this work was carried out, we have implemented the ELM-E ourselves using the ELM model of the \textit{HPELM} package for python \cite{akusok_high-performance_2015}, which supports computational acceleration on graphical processing units (GPUs).
 \nomenclature[A]{GPU}{Graphical Processing Units}
 
 
@@ -117,9 +137,13 @@ We use the ML implementations of the \textit{Scikit-learn} library for python \c
 \textbf{Random Forest} is an ensemble (i.e. an aggregation) of decision trees, which was proposed by \citet{breiman_random_2001}. Each of the decision trees in. the ensemble pass a training sample along a set of nodes based on a threshold (defined during training) until a leaf node is reached. The prediction of each tree is obtained by averaging the target values in the respective leaves. It is a popular algorithm due to its good predictive power and high robustness. Its main hyper-parameters are the number of features considered for the optimization of each threshold ($m_{ftrs}$), the minimum number of samples in each leaf ($m_{leaf}$) and the number of trees in the ensemble ($n_{est}$).
 % A COMMENT ON FEATURE IMPORTANCE
 
-\textbf{Artificial Neural Networks}
+\textbf{Artificial Neural Networks} consist of multiple layers of neurons, which are connected to the previous and the next layer through edges \cite{rumelhart_learning_1986}. From the input layer, which contains one neuron for each input, the data samples are passed through one or more hidden layers to the output layer with one neuron for each output. Each neuron computes a weighted linear combination of all nodes of the previous layer (for fully connected networks), which is then passed through a non-linear activation function. The weights within the network are optimised using a backpropagation procedure \cite{lecun_efficient_2012}. The hyperparameters of the ANN include the network architecture, namely the number of hidden layers and the number of neurons in each layer, the selected nonlinear activation function and a regularisation term.  
 
-\textbf{Extreme Learning Machine Ensemble } is a collection of single-layer neural networks (ELMs), which were developed by \citet{huang_extreme_2006}. Each ELM consists of one hidden layer, which is optimized in a more efficient way than traditional neural networks (see above). This results in a faster training time and a low number of hyper-parameters. The aggregation of $n$ ELMs in an ensemble further increases the robustness of the model and reduces the risk of overfitting. We tune the size of the hidden layer ($m_{ELM}$) and the number of ELMs in the ensemble ($n_{ELM}$).
+\textbf{Extreme Learning Machine Ensemble } is a collection of single-layer neural networks (ELMs), which were developed by \citet{huang_extreme_2006}. Each ELM consists of a single hidden layer, which is trained a more efficient way than traditional neural networks (see above) by a single-step optimization using a least-squares approach, which avoids the need for back-propagation. This results in a faster training time and a low number of hyper-parameters. The aggregation of $n$ ELMs in an ensemble further increases the robustness of the model and reduces the risk of overfitting \cite{huang_trends_2015}. 
+It further enables the estimation of uncertainties, as described in Section~\ref{unc_ML}.
+
+To train the ELM ensemble, we apply a bootstrap-aggregating (bagging) approach \cite{breiman_bagging_1996} where each ensemble member is trained on one bootstrapped resample of the training data. Each bootstrap replicate is obtained by resampling the $N$ training samples $N$ times uniformly and with replacement. At the output, the predictions of each ELM are averaged to give the final estimation.
+The main hyper-parameters to tune in the ELM-E are the size of the hidden layer ($m_{ELM}$) and the number of ELMs in the ensemble ($n_{ELM}$). Throughout this work, we use a sigmoid activation function, which is a common choice for regression problems \cite{huang_trends_2015}.
 
 % A SUBSECTION ON ENSEMBLES, OR SIMPLY TWO PARAGRAPHS
 
@@ -142,7 +166,9 @@ For ensemble training, we apply a bootstrap-aggregating (bagging) approach [13] 
 \end{comment}
 
 \subsection{Classification models}
-
+\label{ML_class}
+ 
+ Classification algorithms differ from the regression models in 
  
 \section{Clustering techniques}
 \textbf{K-means clustering.}
@@ -155,14 +181,15 @@ For ensemble training, we apply a bootstrap-aggregating (bagging) approach [13] 
 \label{unc_ML}
 
 % SOURCE: Initial submission PV paper
-The ensemble structure of both ML algorithms used in this work permits the estimation of uncertainties arising from the modelling process (model uncertainty, $\hat{\sigma_M}$). The remaining residuals after the subtraction of the model variance are further used to estimate the uncertainty related to the data noise (data uncertainty, $\hat{\sigma_D}$). 
-This approach enables a specific characterization of the uncertainty for each spatio-temporal point.
-It has been previously used to estimate, for example, wind speed or global solar radiation~\cite{walch_spatio-temporal_2019, wan_probabilistic_2014}.
+The ensemble structure of both ML ensemble algorithms used in this work (RF and ELM-E) permits the estimation of uncertainties arising from the modelling process (model uncertainty, $\hat{\sigma}_M$). The remaining residuals after the subtraction of the model variance are further used to estimate the uncertainty related to the data noise (data uncertainty, $\hat{\sigma}_D$) \cite{akusok_per-sample_2019,guignard_uncertainty_2020}. 
+% This approach enables a specific characterization of the uncertainty for each spatio-temporal point.
+It has been previously used to estimate for example wind speeds for wind power generation~\cite{wan_probabilistic_2014}.
 
 The ensemble method is based on a bagging (bootstrap-aggregating) approach, which introduces randomness into the model  \cite{breiman_bagging_1996}.
 Every ensemble member is trained on one bootstrapped resample of the training data, which is
 obtained by sampling the training set uniformly and with replacement.
-The model uncertainty is quantified as the standard deviation of the predictions of all model in the ensemble, which is computed as:
+On average, every such resample contains 63.2\% of the original data, with some duplicated samples \cite{breiman_bagging_1996}. 
+The model uncertainty is quantified as the standard deviation of the predictions of all model in the ensemble, which is computed as \cite{heskes_practical_1997}:
 
 \begin{equation}
 \label{eq:model_unc}
@@ -204,24 +231,36 @@ It should be noted that the error of the GIS methods for $C_{sh}$ and $C_{pv}$ a
 \subsection{Uncertainty propagation}
 \label{method_unc_prop}
 
+For the estimation of renewable resource potential, different sources of uncertainties must be combined and propagated through physicals models. 
+For this propagation of uncertainties, the correlation among the random variables plays a key role.
+%
 % SOURCE: Initial submission PV paper
-The correlation among the random variables plays a key role in the propagation of uncertainty. If statistical independence can be assumed, the mean and variance of the resulting variables can be computed from the mean and variance of each parameter only, which greatly simplifies the uncertainty propagation.
+% The correlation among the random variables plays a key role in the propagation of uncertainty. 
+If statistical independence can be assumed, the mean and variance of the resulting variables can be computed from the mean and variance of each parameter only, which greatly simplifies the uncertainty propagation.
+However, this assumption does not always hold, in which case correlations between random variables must be taken into account.
 % As the uncertainty is computed separately for each spatio-temporal data point, we assume statistical independence between meteorological and building related parameters, namely between $G_h, G_B, G_D$ and $S_{sh}, SVF, A_{PV}$. This is valid as the uncertainty of the horizontal radiation is dominated by the meteorological conditions, while those of $S_{sh}(t), SVF, A_{PV}$ are related to the GIS and ML methods. These are independent and uncorrelated processes.
+In the context of this thesis, we consider the propagation of uncertainties over a set of sums and products of random variables using error propagation theory \cite{jcgm_evaluation_2008, goodman_variance_1962}. This section summarises the error propagation formulas for summations and multiplications, applied in the following chapters, in their general form.
 
-In error propagation theory~\cite{jcgm_evaluation_2008, goodman_variance_1962}, the uncertainty on the final measurand is the result of the propagation over a set of sums and products of its variables. In error analysis, the variance of the sum of $N$ randomly distributed variables $X_i$ is given by:
+% In error propagation theory~\cite{jcgm_evaluation_2008, goodman_variance_1962}, the uncertainty on any final measurand is the result of the propagation over a set of sums and products of its variables. 
+In error analysis, the variance of the sum of $N$ randomly distributed variables $X_i$ is given by:
 
 \begin{equation}
 \label{eq:unc_sum}
 \mathrm{Var}\left(\sum_{i=1}^N X_i\right) = \sum_{i=1}^N\mathrm{Var}(X_i) + 2\sum_{i < j}\mathrm{Cov}(X_i, X_j)
 \end{equation}
+which simplifies to the sum of the variances of $X_i$ if the random variables are statistically independent.
+%
+The variance of the product of two random variables $X$ and $Y$ is defined as:
 
-Following the considerations and approximations detailed above, we can further regard all multiplications of the variables forming the measurand as statistically independent. 
-The variance of the product of two independent randomly distributed variables $X$ and $Y$ is given by:
+\begin{align}
+\label{eq:var_mult_corr}
+\mathrm{Var}(X Y)&=E\left(X^{2} Y^{2}\right)-E(X Y)^{2} \\
+&= \mathrm{Cov}\left(X^{2}, Y^{2}\right)+\left[\mathrm{Var}(X)+\mathrm{E}(X)^{2}\right] \left[\mathrm{Var}(Y)+\mathrm{E}(Y)^{2}\right]-[\mathrm{Cov}\left(X, Y\right)+\mathrm{E}(X)  \mathrm{E}(Y)]^{2} \nonumber
+\end{align}
 
+If statistical independence between the random variables $X$ and $Y$can be assumed, the terms $\mathrm{Cov}\left(X^{2}, Y^{2}\right)$and $\mathrm{Cov}\left(X, Y\right)$ can be omitted, such that Eq.~\ref{eq:var_mult_corr} becomes a function of the variances of $X$ and $Y$ and their expected value:
 \begin{equation}
 \label{eq:unc_prod}
 \mathrm{Var}(XY) = \mathrm{Var}(X)\mathrm{Var}(Y) + \mathrm{Var}(X) \mathrm{E}(Y)^2 + \mathrm{Var}(Y) \mathrm{E}(X)^2
 \end{equation}
 %% ADD FULL EQUATION WITH COVARIANCES
-
-%\section{Optimisation of hybrid energy systems}
