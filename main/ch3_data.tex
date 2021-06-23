@@ -62,7 +62,7 @@ The footprints are based on a 3D model of the Swiss building stock, which is cre
 In contrast to the building footprints, information on the boundaries of property units (parcels) are not collected at national level for Switzerland. 
 Parcel geometries, which are vector polygons derived from official mensuration data, are instead available from cantonal geoinformation services. 
 As parcel data provides valuable insights in the attribution of surrounding land to building footprints, we have collected parcel geometry data for 25 of the 26 Swiss cantons separately.
-In most cantons, this data is entirely available, while some areas are missing for a small number of cantons (see Appendix \ref{app:canton_parcels} for an overview of the data sources and availability). Only for the canton of Luzern it was not possible to obtain parcel data.
+In most cantons, this data is entirely available, while some areas are missing for a small number of cantons (see Appendix \ref{app:canton_parcels} for an overview of the data sources and availability). Only for the canton of Luzern no parcel data was obtained.
 % The parcel boundaries are vector representations of the official mensuration data for around 100,000 property units, obtained from the cantonal geoinformation services of Vaud (ASIT-VD) \cite{asit_vd_cadastre_2019} and Geneva (SITG) \cite{sitg_parcelles_2020}.
 %\nomenclature[A]{ASIT-VD}{Geoinformation service (Vaud)}
 %\nomenclature[A]{SITG}{Geoinformation service (Geneva)}
@@ -70,7 +70,7 @@ In most cantons, this data is entirely available, while some areas are missing f
 \textbf{Roof surfaces.}
 This dataset contains 9.6 million vector polygons which are derived from a national 3D building model (LOD~2) by swisstopo \cite{klauser_solarpotentialanalyse_2016}.
 The roof polygons represent the roofs of the 3.7 million building footprints in Switzerland and contain information  on the tilt, aspect and tilted area of each roof.
-This data has has been published as part of a previous study of RPV potential in the Switzerland, carried out by the Swiss Federal Office of Energy (SFOE), titled and referred to throughout this study as "Sonnendach.ch" \cite{klauser_solarpotentialanalyse_2016}.
+This data has has been published as part of a previous study of RPV potential in the Switzerland, carried out by the Swiss Federal Office of Energy (SFOE), titled and referred to throughout this thesis as "Sonnendach.ch" \cite{klauser_solarpotentialanalyse_2016}.
 %\nomenclature[A]{SFOE}{Swiss Federal Office of Energy}
 
 \textbf{Roof superstructures.}
@@ -95,9 +95,11 @@ Other TLM objects used in Chapter \ref{geothermal} are buffered by $1m$ to accou
 %
 It contains information on coordinates (x,y) and altitude (z). In addition, we consider several spatial features derived from the DTM at various spatial scales, including terrain slope and curvature (see Table \ref{tab:DTM_ftrs} for a complete list). These features have been computed by \citet{robert_spatial_2012} for an aggregation level of $250 \times 250$ m$^2$.
 
-\begin{table}[htb]
+\begin{table}[tb]
 \centering
 \footnotesize
+\caption{Spatial features of the DTM (x,y,z) and additional features derived from the DTM. All derived features are available for each scale~\cite{robert_spatial_2012}.}
+\label{tab:DTM_ftrs}
 \begin{tabular}{cll}
 \hline
 \textbf{Coordinates} & \textbf{Derived features} & \textbf{Scales} \\ \hline
@@ -105,8 +107,6 @@ x                    & slope                           & 250m (small)    \\
 y                    & directional slope (NS, EW)      & 1.75km (med)    \\
 z                    & curvature (DoG)                 & 3.75km (big)    \\ \hline
 \end{tabular}
-\caption{Spatial features of the DTM (x,y,z) and additional features derived from the DTM. All derived features are available for each scale~\cite{robert_spatial_2012}.}
-\label{tab:DTM_ftrs}
 \end{table}
 
 \textbf{Digital Surface Model.} The DSM is a complete model of the landscape, including all visible landscape elements. As the DTM it is available  in $2\times2$ m$^2$ resolution from LiDaR data that was collected in the period from 2000-2008, but contrary to the DSM is has not been updated. More recent DSMs have however been created for individual cantons in Switzerland at a resolution of $0.5\times0.5$ m$^2$. 
@@ -151,6 +151,19 @@ For the potential studies in Part~\ref{potential}, we have used solar radiation 
 \subsection{Solar radiation}
 \label{data_solarRad}
 
+% SOURCE: PV paper (original draft)
+\textbf{Global and direct horizontal radiatio (GHI/DIR).} To estimate RPV potential for Switzerland, we use satellite data for global horizontal radiation (GHI), also known as surface incoming shortwave radiation, and direct beam radiation (DIR) provided by MeteoSwiss\cite{stockli_daily_2013}. The radiation describes the total solar power at the earth's surface, given in W/m$^2$. The solar energy is referred to as irradiation, given in Wh/m$^2$. The data are available as hourly values for the period from 2004-2015 on a longitude-latitude grid of 1.25 degree minutes, equivalent to approximately $1.6 \times 2.3$ km$^2$ (see Fig.~\ref{figa:GHI_patterns}).  
+\nomenclature[A]{GHI}{Global horizontal radiation}
+\nomenclature[A]{DIR}{Direct beam radiation}
+
+We average the 12 years of satellite data in order to obtain an average year in hourly resolution, i.e. $12 \times 365$ time steps for 11,243 satellite pixels (see Fig.~\ref{figb:GHI_patterns}). This reduces the variability of the radiation data, and allows the estimation of long-term RPV potential without bias due to extreme meteorological events of a specific year. Furthermore, all hours with constantly zero GHI measurements are removed (i.e. night hours). The remaining 10-17 day hours result in $\sim~3-6$ million hourly values for GHI and DIR per month, depending on the month. 
+
+\textbf{Surface albedo.} A dataset for surface reflectance, also referred to as surface albedo, is available at the same spatio-temporal resolution as the global and direct horizontal radiation. In particular in Switzerland, where a large part of the country is covered by mountains, the surface albedo plays an important role in the quantification of the reflected solar radiation component \cite{kahl_bright_2019}. As the surface albedo shows low variations throughout the day, the data is aggregated to daily values, before being averaged across the 12 years as described above. 
+
+All solar radiation data has been derived by MeteoSwiss from Meteosat Second Generation (MSG) satellite observations using the Heliomont algorithm~\cite{stockli_heliomont_2017}. It was developed to improve the quality of the results, particularly in Switzerland's Alpine territories. 
+\citet{ineichen_long_2014} performed a comprehensive validation of various satellite-based products against measurement data, and found a negligible bias of the hourly satellite data across 18 measurement stations. 
+The standard deviation for hourly global and direct radiation is 19\% and 39\%, respectively.
+
 \begin{figure}[tb]
 \centering
 \begin{subfigure}{.49\textwidth}
@@ -167,22 +180,9 @@ For the potential studies in Part~\ref{potential}, we have used solar radiation 
   \caption{}
   \label{figb:GHI_patterns}
 \end{subfigure}
-\caption{(a) Yearly global solar irradiation from satellite data, (b) hourly distribution of global solar radiation at selected location, averaged for 2004-2015.}
+\caption{(a) Yearly solar irradiation ($G_h$) satellite data, (b) hourly $G_h$ at selected location (mean of 2004-2015).}
 \label{fig:GHI_patterns}
 \end{figure}
-
-% SOURCE: PV paper (original draft)
-\textbf{Global and direct horizontal radiatio (GHI/DIR).} To estimate RPV potential for Switzerland, we use satellite data for global horizontal radiation (GHI), also known as surface incoming shortwave radiation, and direct beam radiation (DIR) provided by MeteoSwiss\cite{stockli_daily_2013}. The radiation describes the total solar power at the earth's surface, given in W/m$^2$. The solar energy is referred to as irradiation, given in Wh/m$^2$. The data are available as hourly values for the period from 2004-2015 on a longitude-latitude grid of 1.25 degree minutes, equivalent to approximately $1.6 \times 2.3$ km$^2$ (see Fig.~\ref{figa:GHI_patterns}).  
-\nomenclature[A]{GHI}{Global horizontal radiation}
-\nomenclature[A]{DIR}{Direct beam radiation}
-
-We average the 12 years of satellite data in order to obtain an average year in hourly resolution, i.e. $12 \times 365$ time steps for 11,243 satellite pixels (see Fig.~\ref{figb:GHI_patterns}). This reduces the variability of the radiation data, and allows the estimation of long-term RPV potential without bias due to extreme meteorological events of a specific year. Furthermore, all hours with constantly zero GHI measurements are removed (i.e. night hours). The remaining 10-17 day hours result in $\sim~3-6$ million hourly values for GHI and DIR per month, depending on the month. 
-
-\textbf{Surface albedo.} A dataset for surface reflectance, also referred to as surface albedo, is available at the same spatio-temporal resolution as the global and direct horizontal radiation. In particular in Switzerland, where a large part of the country is covered by mountains, the surface albedo plays an important role in the quantification of the reflected solar radiation component \cite{kahl_bright_2019}. As the surface albedo shows low variations throughout the day, the data is aggregated to daily values, before being averaged across the 12 years as described above. 
-
-All solar radiation data has been derived by MeteoSwiss from Meteosat Second Generation (MSG) satellite observations using the Heliomont algorithm~\cite{stockli_heliomont_2017}. It was developed to improve the quality of the results, particularly in Switzerland's Alpine territories. 
-\citet{ineichen_long_2014} performed a comprehensive validation of various satellite-based products against measurement data, and found a negligible bias of the hourly satellite data across 18 measurement stations. 
-The standard deviation for hourly global and direct radiation is 19\% and 39\%, respectively.
 
 \subsection{Temperature}
 
@@ -194,7 +194,6 @@ We use maximum air temperature in the estimation of RPV potential (Chapter~\ref{
 \textbf{Heating degree days (HDD).}
 \label{app:HDD}
 The HDD is defined in the norm SIA 2028 as the sum of the heating degrees for each month $m$, averaged across 20 years, such that \cite{sia_klimadaten_2010}: 
-
 \begin{equation}
 \label{eq:hdd}
     HDD = \frac{1}{20} \sum_{y=1}^{20} \sum_{d=1}^{d_m} (20 - T_{m}(d, m, y)) \quad \forall T_{m} (d, m, y) \leq 12 ^\circ C. 
@@ -214,44 +213,116 @@ for the same timespan ($1991-2011$) and spatial resolution ($1 \times 1$ km$^2$)
 \section{Subsurface data [\textit{PRELIMINARY}]}
 \label{data_geo}
 
-Subsurface data more scarcely available than building or meteorological data. 
-The available subsurface data include national maps of the geological characteristics of the Swiss terrain, digitalised by swisstopo, as well as geothermal cadastres including maps of the thermal ground properties for selected cantons.
-Furthermore, information on restrictions for geothermal installations can be obtained from cantonal geothermal cadastres and national information regarding protected areas and groundwater vulnerability.
+Subsurface data are more scarcely available than building or meteorological data. 
+The available subsurface data include national maps of the geological characteristics of the Swiss terrain, digitalised by swisstopo, as well as cantonal geothermal cadastres containing maps of the thermal ground properties. 
+These geothermal cadastres with high-resolution data of the thermal ground properties can be obtained for the Cantons of Vaud (provided by ASIT-VD \cite{asit_vd_cadastre_2019-1}) and Geneva (provided by SITG \cite{sitg_cadastre_2019}). 
+In addition, the cadastres contain information on restriction zones for geothermal installations within the case study area and existing installations.
+At national scale, this information is complemented by national data regarding protected areas and groundwater vulnerability to assess restrictions for geothermal installations.
+% Furthermore, information on restrictions for geothermal installations can be obtained from cantonal geothermal cadastres and national information regarding protected areas and groundwater vulnerability. 
+An overview of the datasets described below is provided in Table~\ref{tab:geoData}.
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\caption{Overview of subsurface datasets. CH denotes availablility in the entire Switzerland, VD is the Canton of Vaud and GE is the Canton of Geneva.}
+\label{tab:geoData}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llllll}
+\hline
+\textbf{Type} & \textbf{Dataset} & \textbf{Coverage} & \textbf{Spatial res.} & \textbf{Source} & \textbf{Chapter} \\ \hline
+\multirow{3}{*}{\textit{\begin{tabular}[c]{@{}l@{}}Geological  \\ characteristics\end{tabular}}} & GK500 Lithology types & CH & Polygons & swisstopo \cite{swisstopo_geomaps_nodate} & \ref{geothermal} \\
+ & \begin{tabular}[c]{@{}l@{}}Thickness of \\ unconsolidated rocks\end{tabular} & CH (partly) & $25 \times 25$ m$^2$ & swisstopo & \ref{geothermal} \\ \hline
+\multirow{3}{*}{\textit{\begin{tabular}[c]{@{}l@{}}Thermal \\ ground\\ properties\end{tabular}}} & Thermal conductivity ($\lambda$) & VD,GE & $50 \times 50 \times 50$ m$^3$ & ASIT-VD \cite{asit_vd_cadastre_2019-1}, SITG \cite{sitg_cadastre_2019} & \ref{geothermal} \\
+ & Heat capacity ($\rho C$) & VD,GE & $50 \times 50 \times 50$ m$^3$ & SITG \cite{sitg_cadastre_2019} & \ref{geothermal} \\
+ & Surface   temperature ($T_0$) & CH & $200 \times 200$ m$^2$ & \citet{assouline_machine_2019} & \ref{geothermal} \\\hline
+\multirow{3}{*}{\textit{\begin{tabular}[c]{@{}l@{}}Installation   \\ restrictions\end{tabular}}} & Restriction zones & VD, GE & Polygons & ASID-VD \cite{asit_vd_cadastre_2019-1}, SITG \cite{sitg_cadastre_2019} & \ref{geothermal} \\
+ & Groundwater vulnerability & CH & Polygons & swisstopo \cite{swisstopo_geomaps_nodate} & \ref{geothermal} \\
+ & Protected zones & CH & Polygons & swisstopo \cite{swisstopo_swisstlm3d_2018} & \ref{geothermal} \\ \hline
+\end{tabular}
+}
+\end{table}
 
 \subsection{Geological characteristics}
-\textbf{Geological Maps (GK500).} The GK500 \cite{swisstopo_geomaps_nodate}, published by the Swiss national geological service, is a vector dataset of around 13,500 polygons covering the entire Swiss terrain.
-The attributes of the polygons contain six primary maps of Switzerland at a scale of 1:500,000, including geological, tectonic and hydrogeological information. 
-For the quantification of shallow geothermal potential (Chapter~\ref{geothermal}), the geological characteristics are the most relevant 
 
-\textbf{Depth of unconsolidated deposits.}
+\begin{figure}[tb]
+\centering
+\begin{subfigure}{.49\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.9\linewidth]{images/Figs/rockType_CH.png}  
+  \caption{}
+  \label{figa:geoCH}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=.9\linewidth]{images/Figs/thickness_unconsolidated_deposits_CH.png}  
+  \caption{}
+  \label{figb:geoCH}
+\end{subfigure}
+\caption{Geotechnical characteristics of Switzerland. (a) Classification of rock types, and (b) thickness of unconsolidated deposits (in m), available mostly in the Swiss molasse basin and large alluvial plains.}
+\label{fig:geoCH}
+\end{figure}
+
+\textbf{Geological Maps (GK500).} The GK500 \cite{swisstopo_geomaps_nodate}, published by the Swiss Geological Survey, is a vector dataset of around 13,500 polygons covering the entire Swiss terrain.
+The attributes of the polygons contain six primary maps of Switzerland at a scale of 1:500,000, including geological, tectonic and hydrogeological information. 
+For the quantification of shallow geothermal potential (Chapter~\ref{geothermal}), the geotechnical maps are the most relevant attributes in the dataset as they allow to map ground thermal properties to the near-surface rock types. 
+The GK500 differentiates between four rock types (unconsolidated, sedimentary, magmatic, metamorphous), surface waters and glaciers (see Fig. \ref{figa:geoCH}).
+The rock types are further divided into 68 lithology types, which may be aggregated to 26 lithology groups \cite{zappone_saphyr_2021}.
+
+\textbf{Depth of unconsolidated deposits.} 
+In addition to the near-surface lithology data provided in the GK500, the depth of the unconsolidated deposits is available from the national geological service (see Fig. \ref{figb:geoCH}). This dataset covers mostly the Swiss Molasse basin (spanning from the north-east to the south-west of the country) and alluvial plains in large mountain valleys, where the majority of the Swiss population lives. The depth of the unconsolidated deposits may be used to improve the estimate of the thermal ground properties for shallow BHEs by accounting for the near-surface unconsolidated deposits and the underlying (mostly sedimentary) rock.
 
 \subsection{Thermal ground properties}
 
-The geothermal cadastres, provided by ASIT-VD \cite{asit_vd_cadastre_2019-1} and SITG \cite{sitg_cadastre_2019}, contain information on (i) restriction zones for geothermal installations within the case study area, (ii) thermal ground properties, and (iii) over 4,400 existing installations with $\sim 10,800$ BHEs.
-
-\textbf{Thermal conductivity.}
-
-\textbf{Thermal diffusivity.}
-The ground data provided in the cadastres include the thermal conductivity ($\lambda$) and the heat capacity ($\rho C$, Geneva only), from which the diffusivity is obtained as $\alpha = \lambda / \rho C$ \cite{pahud_geothermal_2002}.
-The $\lambda$ and $\rho C$ are computed as the average of the ground properties of each rock layer weighted by % weighted
+\textbf{Thermal conductivity ($\mathbf{\lambda}$).} For the Cantons of Vaud and Geneva, high-resolution maps of the thermal conductivity are obtained from the geothermal cadastres \cite{asit_vd_cadastre_2019-1,sitg_cadastre_2019}. 
+The data is available for depths of $50-300m$ as pixels of $50m$ spatial resolution in all 3 dimensions.  
+The conductivities are computed as the average of the ground properties of each rock layer weighted by % weighted
 its thickness, which is given by 3D models of the subsurface \cite{groupe_de_travail_pgg_evaluation_2011-1}.
-The ground data exists for depths in the range of $50-300m$ as pixels of $50m$ spatial resolution in all 3 dimensions. 
-Constrained by this spatial resolution and $H_{max}$, we obtain four scenarios for the borehole depth $H$ (see Table ~\ref{tab:data}).
-To obtain $\lambda$ and $\rho C$ for all scenarios of $H$ in the entire study region, we compute any missing values as weighted averages using
-tabulated data \cite{groupe_de_travail_pgg_evaluation_2011-1, sia_sondes_2010}. 
-The resulting maps for $\lambda$ and $\alpha$ for a borehole depth of $H = 100m$ are shown in Fig. \ref{fig:lambda} and \ref{fig:alpha}.
+To obtain a homogeneous dataset for $\lambda$ across both cantons, the polygon data of the geothermal cadastre of Geneva has been converted into raster format of $50 \times 50 \times 50$ m$^3$ in coherence with the cadastre of Vaud.
 
-\textbf{Ground temperature.}
-The data for $T_0$ has been provided by \citet{assouline_machine_2019} for pixels of $200m$ resolution.
+\textbf{Thermal diffusivity ($\mathbf{\alpha}$).}
+The thermal diffusivity is obtained from maps of the heat capacity ($\rho C$) as $\alpha = \lambda / \rho C$ (see Eq.~\ref{eq:alpha}). 
+Heat capacity data is available only in the Canton of Geneva.
+To obtain $\alpha$ for both geothermal cadastres, missing values for $\rho C$ have been estimated as weighted averages using
+tabulated data \cite{groupe_de_travail_pgg_evaluation_2011-1, sia_sondes_2010}, and Eq.~\ref{eq:alpha} has been applied to the rasterised maps of $\rho C$ using the same spatial resolution as the thermal conductivity.
+
+%To obtain $\lambda$ and $\rho C$ for all scenarios of $H$ in the entire study region, we compute any missing values as weighted averages using
+%tabulated data \cite{groupe_de_travail_pgg_evaluation_2011-1, sia_sondes_2010}. 
+
+\textbf{Ground surface temperature.}
+The ground surface temperature ($T_0$) has been provided by \citet{assouline_machine_2019} for pixels of $200 \times 200$ m$^2$ resolution.
 The data is estimated from ground measurements using Machine Learning \cite{assouline_machine_2019}.
-To minimise the impact of the built environment on these measurements, we use the annual average ground temperature at a depth of $1m$.
+To minimise the impact of the built environment on these measurements, we use the annual average ground temperature at a depth of 1m.
 Its interpolated values at the resolution of $\lambda$ and $\alpha$ is shown in Fig.~\ref{fig:T0}.
-The temperature gradient in the Swiss plateau is approximately constant at $0.03K/m$ \cite{sia_sondes_2010}.
+To obtain the ground temperature at typical borehole depths, $T_0$ is combined with the temperature gradient in the Swiss plateau, which is approximately constant at 0.03 K/m \cite{sia_sondes_2010} (see Chapter~\ref{geo_params}).
 
-\subsection{Restrictions for geothermal installations}
+\begin{figure}[tb]
+\centering
+  % include second image
+  \includegraphics[width=.7\linewidth]{images/Figs/T_surface_CH.png}  
+\caption{Ground surface temperatue ($T_0$) at 1m depth for Switzerland \cite{assouline_machine_2019}.}
+\label{fig:T0_CH}
+\end{figure}
 
-The restriction zones are divided into three categories, shown in Fig.~\ref{fig:lims}, which indicate whether the installation of BHEs is permitted, limited, or prohibited.
-Prohibited zones are excluded from the study. 
-The permitted and limited zones are overlaid with information from existing installations to derive $H_{max}$, as no data on the allowed drilling depth is available.
-Based on these considerations,
-we choose $H_{max}$ as the $75^{th}$ percentile of the depth of the existing BHEs, yielding values of $200m$ and $150m$ for the "permitted" and "limited" zones, respectively. 
+\begin{comment}
+\textbf{Geothermal heat flow.}  A map of geothermal heat flows in Switzerland is shown in Fig.~\ref{fig:q_geo}. It was created by Medici and Rybach in 1995 and updated by Sachs and Eberhard in 2010\footnote{Available at: \url{https://opendata.swiss/de/dataset/geothermische-karte-der-schweiz-1-500000}}. As this map was generated by interpolating the measurements from few drilling points, concentrated primarily in the molasse basin, 
+--> THIS DATA WAS GENERATED FROM THE TEMPERATURE GRADIENT AND LAMBDA, NOT FROM ACTUAL MEASUREMENTS (SEE LINK!!) - it is currently being updated
+
+\begin{subfigure}{.49\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=.9\linewidth]{images/Figs/q_geo.png}  
+  \caption{}
+  \label{fig:q_geo}
+\end{subfigure}
+\end{comment}
+
+\subsection{Restrictions for geothermal installations [\textit{TO BE DEFINED FOR CH}]}
+
+\textbf{Restriction zones.}
+The restriction zones as indicated in the geothermal cadastres \cite{asit_vd_cadastre_2019-1,sitg_cadastre_2019} are divided into three categories, which indicate whether the installation of BHEs is permitted, limited, or prohibited.
+Prohibited zones are excluded from this work. 
+As no data on the allowed drilling depth is available, the depth of existing installations, obtained from parsing a dataset of existing BHEs, is used in Chapter~\ref{case_study} to approximate a maximum allowed drilling depth.
+% The permitted and limited zones are overlaid with information from existing installations to derive the maximum allowed borehole depth ($H_{max}$), 
+% Based on these considerations, we choose $H_{max}$ as the $75^{th}$ percentile of the depth of the existing BHEs, yielding values of $200m$ and $150m$ for the "permitted" and "limited" zones, respectively. 

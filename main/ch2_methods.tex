@@ -506,6 +506,7 @@ $\dot{q}_{g}$               & mW/m$^2$      & Geothermal heat flow           & $
 \textbf{Physical parameters}. The physical parameters are listed in Table~\ref{tab:phys_params}. The \textit{thermal conductivity} $\lambda$ and \textit{thermal diffusivity} $\alpha$ are used in the analytical models. However, the geological properties of different types of rocks are typically provided as $\lambda$ and the \textit{volumetric heat capacity} $\rho C$. From these parameters, the thermal diffusivity is computed as \cite{pahud_geothermal_2002}:
 
 \begin{equation}
+\label{eq:alpha}
     \alpha = \frac{\lambda}{\rho C}
 \end{equation}
 
@@ -539,14 +540,7 @@ While not being directly used in the analytical model of GSHPs, the (undisturbed
     \dot{q}_{g} = \lambda * \frac{\Delta T}{\Delta z}
 \end{equation}
 
-The geothermal heat flow is approximately constant across the outer crust of the earth, but may vary in mountain terrain \citep{huber_bodentemperaturen_2014}. The relationship may further be used to compute $\lambda$ or $ \frac{\Delta T}{\Delta z}$ if other data is unavailable. A map of geothermal heat flows in Switzerland is shown in Fig.~\ref{fig:q_geo}. It was created by Medici and Rybach in 1995 and updated by Sachs and Eberhard in 2010\footnote{Available at: \url{https://opendata.swiss/de/dataset/geothermische-karte-der-schweiz-1-500000}}.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.6\linewidth]{Figs/q_geo.png}
-    \caption[Map of geothermal heat flows in Switzerland]{Map of geothermal heat flows in Switzerland \citep{huber_bodentemperaturen_2014}.}
-    \label{fig:q_geo}
-\end{figure}
+The geothermal heat flow is approximately constant across the outer crust of the earth, but may vary in mountain terrain \citep{huber_bodentemperaturen_2014}. The relationship may further be used to compute $\lambda$ or $ \frac{\Delta T}{\Delta z}$ if other data is unavailable.
 
 \begin{figure}[b]
     \centering
