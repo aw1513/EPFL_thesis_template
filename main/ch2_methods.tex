@@ -22,15 +22,22 @@ Relevant physical, geographical and technical constraints for both energy resour
 
 \section{Rooftop solar energy}
 \label{method_solar}
-\label{method_solar_hierarchy}
+
 % and solar thermal 
 
 Rooftop solar energy is defined here as the electrical or thermal energy harvested from installations on building rooftops, using solar photovoltaic (PV) panels or solar thermal collectors (STC), respectively. 
-While we focus on the estimation of solar photovoltaic (PV) potential, which is currently the most frequently deployed solar technology on rooftops \cite{kaufmann_schweizerische_2017}, most parts of the methodology (except the techological model of the solar PV panels) are transferable to STC. 
+While we focus on the estimation of solar photovoltaic (PV) potential, which is currently the most frequently deployed solar technology on rooftops \cite{kaufmann_schweizerische_2017}, most parts of the methodology
+% (except the techological model of the solar PV panels) 
+are transferable to STC. 
 \nomenclature[A]{STC}{Solar thermal collector}
 \nomenclature[A]{RPV}{Rooftop photovoltaics}
-This section reviews state-of-the-art approaches to model the hourly energy yield of rooftop-mounted solar PV systems in the context of large-scale potential studies, and justifies the choice of the empirical models (Section~\ref{phys_models}), geospatial techniques (Section~\ref{GIS_methods}) and the modelling approach for PV panels on flat roofs (Section~\ref{app_flat}) used in the large-scale rooftop PV potential estimation presented in Chapter~\ref{solar}. We hereby do not claim to provide a complete review of existing modelling approaches, but rather give an overview of the relevant modelling steps and outline popular computational methods for each step.
+This section reviews state-of-the-art approaches to model the hourly energy yield of rooftop-mounted solar PV systems in the context of large-scale potential studies (Section~\ref{method_solar_hierarchy}), and justifies the choice of the empirical models (Section~\ref{phys_models}) and geospatial techniques (Section~\ref{GIS_methods})
+% and the modelling  PV panels on flat roofs (Section~\ref{app_flat}) 
+used in the large-scale rooftop PV potential estimation (Chapter~\ref{solar}). 
+We hereby do not claim to provide a complete review of existing modelling approaches, but rather give an overview of the relevant modelling steps and outline popular computational methods for each step.
 
+\subsection{Hierarchial approach for PV potential estimation}
+\label{method_solar_hierarchy}
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=\linewidth]{images/Figs/hierarchy.png}  

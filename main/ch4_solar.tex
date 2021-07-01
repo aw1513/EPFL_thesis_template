@@ -9,13 +9,18 @@ This chapter is based on the article \citep{walch_big_2020}:
 
 \qquad \bibentry{walch_big_2020}
 
-and the conference proceedings \cite{walch_spatio-temporal_2019, walch_critical_2019, walch_fast_2019-1}:
+Several limitations and aspects of further work highlighted in \cite{walch_big_2020} are addressed based on the conference proceedings \cite{walch_critical_2019, walch_quantification_2021, castello_quantification_2021, walch_fast_2019}: 
+% walch_spatio-temporal_2019,
 
-\quad \bibentry{walch_spatio-temporal_2019} - \textit{Section~\ref{irrad}} 
+% \quad \bibentry{walch_spatio-temporal_2019} - % \textit{Section~\ref{irrad}} 
 
-\quad \bibentry{walch_critical_2019} - \textit{Section~\ref{solar_comparison}} 
+\quad \bibentry{walch_critical_2019} - \textit{\textbf{Section~\ref{solar_comparison}}} 
 
-\quad \bibentry{walch_fast_2019-1} - \textit{Section~\ref{solar_application}} 
+\quad \bibentry{walch_quantification_2021} - \textit{\textbf{Section~\ref{scenario_EW}}} 
+
+\quad \bibentry{castello_quantification_2021} - \textit{\textbf{Section~\ref{scenario_area}}} 
+
+\quad \bibentry{walch_fast_2019} - \textit{\textbf{Section~\ref{solar_application}}} 
 \end{tcolorbox}
 
 % SOURCE: Introduction ICAE paper
@@ -23,6 +28,22 @@ and the conference proceedings \cite{walch_spatio-temporal_2019, walch_critical_
 We use an Extreme Learning Machine (ELM) ensemble algorithm that allows to predict solar irradiance at an hourly time granularity for a high spatial resolution ($250 \times 250$) m$^2$ grid over Switzerland and to estimate the uncertainty related to the model and the data. The main advantages of this algorithm are (i) its fast training time and (ii) its ability to learn and to model complex non-linear phenomena with the desired precision. Hence this algorithm is well suitable for the analysis and modelling of large datasets [6,9,10].
 \end{comment}
 
+As rooftop photovoltaic (RPV) electricity plays a key role in the decarbonisation of the Swiss energy sector (see Chapter \ref{intro_REN}), the development of a database of the RPV electricity generation potential at hourly temporal resolution for the Swiss building stock is one objective of this thesis.
+This chapter presents a big data mining approach, shown in Figure \ref{fig:graphical_abstract_RPV}, to estimate these RPV potentials at the national scale for Switzerland. 
+The presented work adapts state of the art methods for the assessment of RPV potential and quantifies and combines different sources of uncertainty, which are systematically propagated throughout the modelling process.
+% The presented work adapts state of the art methods for the assessment of RPV potential and 
+% further addresses the systematic propagation of uncertainties arising from the modelling process. 
+%To this aim, we adapt state of the art methods for the assessment of RPV potential in order to quantify and combine different sources of uncertainty. 
+We further use Machine Learning to incorporate data that is only partly available in Switzerland.
+
+In the following, we review related literature on the large-scale estimation of RPV potential and its uncertainty (Section~\ref{solar_literature}), describe the big data mining methodology as proposed in \cite{walch_big_2020} (Section \ref{solar_method}) and the results for Switzerland (Section \ref{solar_results}), and discuss the methodological and practical contributions and limitations of this study (Section \ref{discussion_pv}). 
+The method and results from Sections \ref{solar_method} and \ref{solar_results} are then compared to those of five other studies of RPV potential for Switzerland (Section~\ref{solar_comparison}).
+Addressing some of the limitations discussed in Chapter \ref{discussion_pv}, we compare two arrangements of PV panels on flat roofs, which are validated against measurements, and propose an image-based approach to quantify the available area for PV panel installation (Section \ref{solar_scenarios}). 
+The resulting new scenarios for the RPV potential in Switzerland are compared and discussed in the context of the Swiss energy strategy. 
+Finally, we outline a Machine Learning approach to use the data generated within this chapter for studies of RPV potential in areas with similar geographic and meteorological conditions (Section \ref{solar_application}), and summarize the main findings from this chapter (Section \ref{solar_conclusion}).
+For reasons of coherence, some repetition with respect to  previous chapters is possible.
+
+\begin{comment}
 % SOURCE: PV Paper
 The decarbonisation of the energy system plays an important role in fulfilling the ambitious emission targets set by the Paris Agreement \cite{peters_key_2017}. 
 In this context, the large-scale deployment of rooftop-mounted photovoltaics (RPV) has attracted increasing attention in recent years \cite{jager-waldau_pv_2018}.
@@ -35,19 +56,22 @@ Currently, there is no methodology that estimates the large-scale RPV potential 
 This paper contributes to fill this gap by adapting state of the art methods for the assessment of RPV potential in order to quantify and combine different sources of uncertainty. 
 We further use Machine Learning to incorporate information that is only available in parts of the study region of Switzerland.
 
+\end{comment}
+
 \begin{figure}[tb]
 \centering\includegraphics[width=1.0\linewidth]{Figs/graphical_abstract_RPV.pdf}
-\caption{Graphical abstract for the large-scale estimatio of hourly solar PV potential}
+\caption{Graphical abstract for the large-scale estimation of hourly solar PV potential}
 \label{fig:graphical_abstract_RPV}
 \end{figure}
 
 \section{Related literature}
+\label{solar_literature}
 % SOURCE: PV Paper
 Constrained by the availability of building and environmental data at a high spatial resolution, most existing studies on RPV potential are carried out at district or city scale only, including case studies in the US \cite{levinson_solar_2009}, Canada \cite{nguyen_incorporating_2012}, Portugal~\cite{santos_applications_2014} or Germany \cite{strzalka_large_2012}. 
 Few studies analyse an entire region or country, for example in the US \cite{phillips_data_2019, kodysh_methodology_2013}, Spain \cite{schallenberg-rodriguez_photovoltaic_2013}, or Saudia Arabia \cite{khan_rooftop_2017}. 
 %
 Many PV assessment studies use monthly or yearly solar radiation data in order to derive a large-scale PV potential \cite{ordonez_analysis_2010}. This data is used to quantify the available area to install PV \cite{mansouri_kouhestani_evaluating_2019} and to discuss the economic feasibility of PV scenarios \cite{romero_rodriguez_assessment_2017}.
-While these granularities provide a relatively accurate estimation of the annual RPV potential, an hourly or higher temporal resolution is needed to assess the intra-day variation of the generation. Such temporal resolutions are used at the scale of cities or municipalities \cite{hong_development_2017, singh_estimation_2015} and serve to validate the estimations against measurements \cite{jakubiec_method_2013}, to compare PV technologies \cite{lukac_buildings_2014}, or to simulate energy systems with high shares of PV~\cite{wegertseder_combining_2016}. However, an hourly resolution is used very rarely at regional or national scale, in which case the available area to install PV is not addressed \cite{buffat_scalable_2018}.
+While these granularities provide a relatively accurate estimation of the annual RPV potential, an hourly or higher temporal resolution is needed to assess the intra-day variation of the generation. Such temporal resolutions are used at the scale of cities or municipalities \cite{hong_development_2017, singh_estimation_2015} and serve to validate the estimations against measurements \cite{jakubiec_method_2013}, to compare PV technologies \cite{lukac_buildings_2014}, or to simulate energy systems with high shares of PV~\cite{wegertseder_combining_2016}. However, an hourly resolution is rarely used at regional or national scale, in which case the available area for PV is not addressed \cite{buffat_scalable_2018}.
 
 Reasons for the lack of national-scale studies at an hourly temporal resolution are the computational challenges associated with the processing of the required input datasets as well as
 the handling of missing data and data that is not available in the entire study region.
@@ -108,7 +132,7 @@ To estimate the RPV potential and its uncertainty, we propose a methodology that
 Uncertainties are quantified from the statistical distribution of the variables involved in the potential estimation in the form of standard deviations.
 They are assessed for various modelling steps and combined in order to obtain an uncertainty on the PV potential.
 
-The method, illustrated in Fig. \ref{fig:workflow_PV}, is based entirely on open-source software and adopts an hierarchical approach used in several related studies \cite{izquierdo_method_2008, ramirez_camargo_spatio-temporal_2015, assouline_quantifying_2017}. Its steps include 
+The method, illustrated in Fig. \ref{fig:workflow_PV}, is based entirely on open-source software and adopts the hierarchical approach summarized in Chapter~\ref{method_solar_hierarchy}. Its steps include 
 (i) the \textit{physical potential}, driven by the horizontal solar radiation, 
 (ii) the \textit{geographic potential}, accounting for the impact of the built environment, and
 (iii) the \textit{technical potential}, defined as the potential electricity generation.
@@ -146,7 +170,7 @@ We treat $C_{sh}$ and $C_{\mathit{pv}}$, the proportion of roof area available t
 %
 State of the art hourly physical models, described in Chapter~\ref{app:efficiency} (orange boxes in Fig.~\ref{fig:workflow_PV}), are used to obtain the tilted radiation components ($G_{Bt}, G_{Dt}, G_{Rt}$) 
 We use the anisotropic Perez model \cite{perez_modeling_1990} to estimate $G_{Dt}$ , which is the overall most accurate diffuse radiation model \cite{noorian_evaluation_2008, loutzenhiser_empirical_2007}. 
-The $G_{Rt}$ is computed using monthly mean albedo data (see Section~\ref{irrad}). This allows to account for snow cover in high-altitude locations, where a large albedo significantly increases the PV production on steep roofs~\cite{kahl_bright_2019}.
+The $G_{Rt}$ is computed using monthly mean albedo data (see Section~\ref{irrad}). This allows to account for snow cover in high-altitude locations, where a large albedo increases the PV production on steep roofs~\cite{kahl_bright_2019}.
 
 The technical potential ($E_{PV}$) is the electricity output of each roof surface. It is obtained from the geographic potential, the panel efficiency ($\eta_{PV}$) and the performance factor ($\mathit{PF}$), which accounts for inverter efficiency and other losses such as soiling or degradation, such that \cite{assouline_large-scale_2018}:
 
@@ -221,33 +245,41 @@ The ML models yield the global ($G_h$) and direct ($G_B$) horizontal radiation f
 The diffuse radiation ($G_D$) is obtained from the estimated $G_h$ and $G_B$ by applying Eq.~(\ref{eq:Gh}). 
 Using ML, we can model complex spatial patterns while being more efficient than other spatial interpolation methods such as kriging~\cite{rehman_spatial_2000}. 
 
-The targets for the ML models of $G_h$ and $G_B$ are the satellite-derived global and direct radiation, which are split into 12 monthly subsets (see Chapter~\ref{data_meteo}).
-The initially considered set of features are the mean hour of each month, the geographic coordinates (x, y) as well as several terrain features including altitude (z), terrain slope and curvature \cite{robert_spatial_2012} (see Chapter~\ref{data_DEM} for details). 
-A DTM is used to derive these terrain features for the satellite data and for the $200 \times 200$ m$^2$ output grid. 
+The targets for the ML models of $G_h$ and $G_B$ are the satellite-derived global and direct radiation, which are split into 12 monthly subsets (see Chapter~\ref{data_solarRad}).
+The initially considered set of features are the mean hour of each month, the geographic coordinates (x, y) as well as several terrain features including altitude (z), terrain slope and curvature \cite{robert_spatial_2012} (see Table~\ref{tab:DTM_ftrs}). 
+A DTM (Chapter \ref{data_DEM}) is used to derive these terrain features for the satellite data and for the $200 \times 200$ m$^2$ output grid. 
 To better model the spatio-temporal patterns of $G_h$ and $G_B$, we analyze the spatial features for each time step using the RF feature importance score~\cite{pedregosa_scikit-learn:_2011}.
 Figure \ref{fig:ftrs_phys} shows their pattern for the months of June and December.
-The feature importance exhibits a strong intra-day variation for x, y and z, which may be explained by the impact of the Swiss alpine terrain. All other features have an overall low importance throughout the day, and including these in the model does not improve its performance further.
+The feature importance exhibits a strong intra-day variation for x, y and z, which may be explained by the impact of the Swiss alpine terrain. All other features have a low importance throughout the day, and including these in the model does not improve its performance further.
 Four features are hence selected for the final model: hour, x, y, z.
 Figure \ref{fig:ftrs_phys} refers to $G_h$, but $G_B$ shows a similar trend.
 
-Separate ELM-E are trained for each month for $G_h$ and $G_B$. For model training, the $G_h$ and $G_B$ for 80\% of the 11,243 satellite pixels ($\approx 9,000$) are used for training, while the rest are kept for the test set. Their tuning procedure and the resulting hyper-parameter values of the models are provided in Appendix \ref{app:tune_ELM}. 
-Table \ref{tab:G_train} shows the mean-squared error (MSE) between the targets and predictions for the test set, while Fig.~ \ref{figc:ELM_training} shows the fit of the predictions and the targets ($G_h$ only). Each entry (color) represents one trained monthly ELM-E.
+Separate ELM-E are trained for each month for $G_h$ and $G_B$. % For model training, the $G_h$ and $G_B$ for 80\% of the 11,243 satellite pixels ($\approx 9,000$) are used for training, while the rest are kept for the test set. 
+Their tuning procedure and the resulting hyper-parameter values of the models are provided in Appendix \ref{app:tune_ELM}. 
+Table \ref{tab:G_train} shows the MSE between the targets and predictions for a random 20\% of the satellite coordinates (test set), which are excluded from training.
+% , while Fig.~ \ref{figc:ELM_training} shows the fit of the predictions and the targets ($G_h$ only). 
+Each entry represents one trained monthly ELM-E.
 The model performance is overall better for $G_h$ than for $G_B$, as it is harder to model $G_B$ from the given set of features.
-%
+% 
 To estimate $\rho$ from the satellite-derived daily albedo measurements, we train one ELM-E with similar features as described above, namely x, y, z and month. The model is tuned in a similar fashion as that of $G_h$ and $G_B$ and yields a test MSE of 0.10, which lies in the range of the values obtained for $G_h$.
 
 \begin{figure}[tb]
 \centering
-\begin{subfigure}{.32\textwidth}
+\begin{subfigure}{.4\textwidth}
   \centering
   % include second image
   \includegraphics[width=\linewidth]{Figs/importance_July.pdf}  
 \end{subfigure}
-\begin{subfigure}{.32\textwidth}
+\begin{subfigure}{.4\textwidth}
   \centering
   % include first image
   \includegraphics[width=\linewidth]{Figs/importance_December.pdf}  
 \end{subfigure}
+\caption{Feature importance per hour for $G_h$ for June (a) and December (b) for six terrain features, namely altitude (z), longitude (x), latitude (y), medium-scale curvature (medDoG), small-scale curvature (smallDoG), terrain slope in east-west (big\_EW) and north-south (big\_NS) direction.} %(c) Fit of predictions and targets for $G_h$ per month (test set) and the linear regression curve (black line) fitted on targets and predicted values.}
+\label{fig:ftrs_phys}
+\end{figure}
+
+\begin{comment}
 \begin{subfigure}{.32\textwidth}
   \centering
   % include second image
@@ -255,9 +287,7 @@ To estimate $\rho$ from the satellite-derived daily albedo measurements, we trai
   \caption{}
   \label{figc:ELM_training}
 \end{subfigure}
-\caption{Feature importance per hour for $G_h$ for June (a) and December (b) for six terrain features, namely altitude (z), longitude (x), latitude (y), medium-scale curvature (medDoG), small-scale curvature (smallDoG), terrain slope in east-west (big\_EW) and north-south (big\_NS) direction. (c) Fit of predictions and targets for $G_h$ per month (test set) and the linear regression curve (black line) fitted on targets and predicted values.}
-\label{fig:ftrs_phys}
-\end{figure}
+\end{comment}
 
 \begin{table}[tb]
 \centering
@@ -295,9 +325,9 @@ The panels are installed in both horizontal and vertical alignments, as no align
 \label{fig:panels}
 \end{figure}
 
-The data on roof superstructures is however only available in one of Switzerland's 26 cantons (Geneva). We hence train an ML model to estimate the change in $C_{\mathit{pv}}$ due to the area covered by superstructures, which is applied to the rooftops of the remaining 25 cantons. 
+The data on roof superstructures is however only available in one of Switzerland's 26 cantons (Geneva). We hence train an ML model to estimate the change in $C_{\mathit{pv}}$ due to the area covered by superstructures, which is applied to the rooftops of the remaining 25 cantons.
 %
-In our case, the training of the ML model is performed using the rooftop dataset with superstructure information in the Canton of Geneva (see Section~\ref{data}).
+In our case, the training of the ML model is performed using the rooftop dataset with superstructure information in the Canton of Geneva (see Chapter~\ref{data_geometry}).
 The fraction of their area on which virtual panels are installed provides the target for the ML algorithm ($C_{\mathit{pv}}^T$).
 In addition, we define $C_{\mathit{pv}}^F$ as the fraction of the area on which virtual panels can be installed if no superstructures are removed from the roof polygons. This $C_{\mathit{pv}}^F$ is one feature of the ML model. %
 The full set of the considered features is listed in Table \ref{tab:features}. 
@@ -479,7 +509,7 @@ This is valid as the uncertainty of $G_{h, B, D}$ is dominated by the meteorolog
 By contrast, $G_h$ and $G_B$, as well as $S_{sh}$ and $\mathit{SVF}$, exhibit a mutual correlation, as Table~\ref{tab:covrr} shows. Therefore, their covariances must be considered in the uncertainty propagation. 
 Second, we assume that $G_t$ and $A_{PV}$, and $C_{\mathit{pv}}$ and $C_{sh}$, are independent as their correlation coefficients are negligible (see Table~\ref{tab:covrr}).
 Third, we neglect the uncertainties of $\rho$ and of the temperature data, as these have a low impact on the final results.
-Fourth, we do not account for the uncertainty related to the physical models of $G_{Dt}$, $\eta_{PV}$ and $\mathit{PF}$ (Section~\ref{phys_models}), due to a lack of data on their performance and the expected errors. This limitation will be discussed in Section \ref{limitations_pv}.
+Fourth, we do not account for the uncertainty related to the physical models of $G_{Dt}$, $\eta_{PV}$ and $\mathit{PF}$ (Chapter~\ref{phys_models}), due to a lack of data on their performance and the expected errors. This limitation will be discussed in Section \ref{limitations_pv}.
 
 \begin{table}[tb]
 \centering
@@ -493,6 +523,21 @@ Fourth, we do not account for the uncertainty related to the physical models of 
     $S_{sh}$, $\mathit{SVF}$ $^2$  & 0.36                  \\ 
     $G_t$, $A_{PV}$ $^2$  & 0.04                  \\
     $C_{\mathit{pv}}$, $C_{sh}$    & 0.02                  \\   \hline 
+\end{tabular}
+\end{table}
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\caption{Summary of the uncertainties for each variable in the RPV potential estimation. The dimension (dim) of the uncertainties refers to $R$ as roof surfaces and $t$ as time steps.}
+\label{tab:uncs}
+\begin{tabular} {lcccccccc}
+\hline 
+\textit{Variable}  & $G_{h,B,D}$  & $S_{sh}$  & $\mathit{SVF}$ & $C_{sh}$ & $C_{\mathit{pv}}$ & $G_t$  & $A_{PV}$ & $E_{PV}$                  \\
+\hline 
+Uncertainty    & $\sigma_{Gh,B,D}$    & $\sigma_{\mathit{Ssh}}$     & $\sigma_{\mathit{SVF}}$     & $\sigma_{\mathit{Csh}}$  & $\sigma_{\mathit{Cpv}}$    & $\sigma_{Gt}$   & $\sigma_{A}$     & $\sigma_{PV}$                     \\
+Dim. of $\sigma$ & $R \times t$ & $t$ & $1$   & $R$     & $R$     & $R \times t$ & $R$    & $R \times t$ \\
+\hline 
 \end{tabular}
 \end{table}
 
@@ -525,21 +570,6 @@ The variances of $A_{PV}$ ($\sigma^2_A$) and $E_{PV}$ ($\sigma^2_{PV}$) are deri
 \sigma^2_{PV}  = \eta_{PV}^2 \mathit{PF}^2 (\sigma^2_{A} G_{t}^2 + \sigma^2_{Gt} A_{PV}^2 + \sigma^2_{Gt} \sigma^2_{A}) 
 \end{equation}
 
-\begin{table}[tb]
-\centering
-\footnotesize
-\caption{Summary of the uncertainties for each variable in the RPV potential estimation. The dimension (dim) of the uncertainties refers to $R$ as roof surfaces and $t$ as time steps.}
-\label{tab:uncs}
-\begin{tabular} {lcccccccc}
-\hline 
-\textit{Variable}  & $G_{h,B,D}$  & $S_{sh}$  & $\mathit{SVF}$ & $C_{sh}$ & $C_{\mathit{pv}}$ & $G_t$  & $A_{PV}$ & $E_{PV}$                  \\
-\hline 
-Uncertainty    & $\sigma_{Gh,B,D}$    & $\sigma_{\mathit{Ssh}}$     & $\sigma_{\mathit{SVF}}$     & $\sigma_{\mathit{Csh}}$  & $\sigma_{\mathit{Cpv}}$    & $\sigma_{Gt}$   & $\sigma_{A}$     & $\sigma_{PV}$                     \\
-Dim. of $\sigma$ & $R \times t$ & $t$ & $1$   & $R$     & $R$     & $R \times t$ & $R$    & $R \times t$ \\
-\hline 
-\end{tabular}
-\end{table}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -557,18 +587,12 @@ After defining the model parameters and training the model on the satellite data
 \subsection{Physical potential estimation}
 \label{phys}
 
-The models of Section~\ref{irrad} are used to predict the MMH solar horizontal radiation and the monthly albedo for each pixel of the $200\times200$ m$^2$ output grid in Switzerland. 
-The results, as well as the estimated model and data uncertainties (Section \ref{unc}), are reported in Table~\ref{tab:G_results} as monthly sums, averaged across all pixels. The uncertainty of $\rho$ is not shown as it is neglected in the uncertainty propagation.
-For $G_h$ and $G_B$, the model uncertainty $\sigma_M$ is negligible compared to the data uncertainty $\sigma_D$ due to the large amount of training data.
-The model performs better for the prediction of $G_h$ than $G_B$. This may be explained by the large relative data uncertainty of $G_B$ (up to 32\%), indicating that its hourly variability is higher than that of $G_h$. 
-The results for $\rho$ are close to the standard value of 0.2 in the summer and reach up to 0.5 on average in the winter due to snow coverage at high altitudes in the Swiss alps.
-
 \begin{table}[tb]
 \centering
 \footnotesize
 \caption{Results for the estimation of $G_h$, $G_B$ and $G_D$, showing the monthly predicted values (in kWh/m$^2$) and the model ($\sigma_M$) and data ($\sigma_D$) uncertainties (no distinction for $G_D$), as percentage of the monthly radiation.}
 \label{tab:G_results}
-\resizebox{\textwidth}{!}{%
+% \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccccccccc} % {X[-1,l] X[-1,c] X[-1,c] X[-1,c] X[-1,c] X[-1,c] X[-1,c] X[-1,c] X[-1,c] X[-1,c] X[-1,c] X[-1,c] X[-1,c]}%  
 \hline 
       & \textbf{Jan}  & \textbf{Feb}  & \textbf{Mar}   & \textbf{Apr}   & \textbf{May}   & \textbf{Jun}   & \textbf{Jul}   & \textbf{Aug}   & \textbf{Sep}   & \textbf{Oct}  & \textbf{Nov}  & \textbf{Dec}  \\
@@ -587,10 +611,8 @@ $\sigma_{GD} (\%)$ & 19.0 & 17.0 & 17.3 & 16.1 & 15.8 & 14.6  & 18.3  & 16.7  & 
 $\rho$ & 0.52 & 0.50 & 0.41 & 0.32 & 0.26 & 0.22 & 0.19 & 0.19 & 0.22 & 0.27 & 0.36 & 0.48 \\
 \hline
 \end{tabular}
-}
+% }
 \end{table}
-
-Figure \ref{fig:Gh_GB}a and b show the spatial distribution of $G_h$ and $G_B$ for Switzerland, while Fig. \ref{fig:Gh_GB}c and d show $\sigma_{Gh}$ and $\sigma_{GB}$, which are dominated by the data uncertainty. The highest solar radiation and the largest uncertainty is found at high altitudes in the south of the country where weather extremes are frequent. The majority of buildings are however located at lower altitudes in the Swiss plateau, which spans from the north-west to the north-east of the country. The uncertainty tends to be low here, so the weather patterns are more predictable. In the plateau, also the values for $\rho$ (not shown in Fig.~\ref{fig:Gh_GB}) lie below the averages quoted in Table~\ref{tab:G_results} with a low uncertainty, which shows that $\rho$ mostly impacts the potential at high altitudes.
 
 \begin{figure}[tb]
 \centering
@@ -614,9 +636,17 @@ Figure \ref{fig:Gh_GB}a and b show the spatial distribution of $G_h$ and $G_B$ f
   \includegraphics[width=\linewidth]{Figs/SISDIR_unc_annual.jpg}  
   \subcaption{}
 \end{subfigure}
-\caption{Spatial distribution of annual predicted $G_h$ (a) and $G_B$ (b), as well as the respective total uncertainties $\sigma_{Gh}$ (c) and $\sigma_{GB}$ (d).}
+\caption{Spatial distribution of annual predicted $G_h$ (a) and $G_B$ (b) for Switzerland, and the total uncertainties $\sigma_{Gh}$ (c) and $\sigma_{GB}$ (d).}
 \label{fig:Gh_GB}
 \end{figure}
+
+The models of Section~\ref{irrad} are used to predict the MMH solar horizontal radiation and the monthly albedo for each pixel of the $200\times200$ m$^2$ output grid in Switzerland. 
+The results, as well as the estimated model and data uncertainties (Section \ref{unc}), are reported in Table~\ref{tab:G_results} as monthly sums, averaged across all pixels. The uncertainty of $\rho$ is not shown as it is neglected in the uncertainty propagation.
+For $G_h$ and $G_B$, the model uncertainty $\sigma_M$ is negligible compared to the data uncertainty $\sigma_D$ due to the large amount of training data.
+The model performs better for the prediction of $G_h$ than $G_B$. This may be explained by the large relative data uncertainty of $G_B$ (up to 32\%), indicating that its hourly variability is higher than that of $G_h$. 
+The results for $\rho$ are close to the standard value of 0.2 in the summer and reach up to 0.5 on average in the winter due to snow coverage at high altitudes in the Swiss alps.
+
+Figure \ref{fig:Gh_GB}a and b show the spatial distribution of $G_h$ and $G_B$ for Switzerland, while Fig. \ref{fig:Gh_GB}c and d show $\sigma_{Gh}$ and $\sigma_{GB}$, which are dominated by the data uncertainty. The highest solar radiation and the largest uncertainty is found at high altitudes in the south of the country where weather extremes are frequent. The majority of buildings are however located at lower altitudes in the Swiss plateau, which spans from the north-west to the north-east of the country. The uncertainty tends to be low here, so the weather patterns are more predictable. In the plateau, also the values for $\rho$ (not shown in Fig.~\ref{fig:Gh_GB}) lie below the averages quoted in Table~\ref{tab:G_results} with a low uncertainty, which shows that $\rho$ mostly impacts the potential at high altitudes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -678,7 +708,7 @@ The uncertainty is proportional to the shaded area coefficient and is hence high
 %%%%%%%%%%%%%%% Gt %%%%%%%%%%%%%%%%%%%%%%%
 
 To compute $G_t$ from Eq.~(\ref{eq:irrad}) and its uncertainty $\sigma_{Gt}$ from Eq.~(\ref{eq:irrad_unc}), we combine the tilted radiation $G_{Bt,Dt,Rt}$ (Section \ref{app:irrad}) with the $S_{sh}$ (Section \ref{shade}) and the SVF (Section \ref{svf}).
-
+%
 Figure~\ref{fig:Sh}a shows the bias-corrected unshaded fraction $(1-S_{sh})$ for roofs of different tilts and aspects for four example hours in June. 
 The patterns of $S_{sh}$ follow the trajectory of the sun, with shading on west-facing surfaces in the morning hours and shaded east-facing roofs in the evening.
 Around solar noon (12h-14h), $S_{sh}$ is nearly zero for all roofs. This is expected as strongly shaded areas are already excluded (as part of $C_{sh}$). 
@@ -702,13 +732,13 @@ The average SVF on Swiss roofs is 0.69, with a $\sigma_{\mathit{SVF}}$ of 0.12 d
 \label{fig:Sh}
 \end{figure}
 
-Figure~\ref{fig:Gt} shows the annual tilted irradiation on the building roofs ($G_t$) and its uncertainty ($\sigma_{Gt}$), again grouped by their tilt and aspect angles. The annual $G_t$ (a) is highest for south-facing roofs with a tilt angle of around $40^\circ$. This matches the latitude of Switzerland. As panels on flat roofs are oriented south and tilted at $30^\circ$, they receive near-maximum solar irradiation.
+Figure~\ref{fig:Gt} shows the annual tilted irradiation on the building roofs ($G_t$) and its uncertainty ($\sigma_{Gt}$), again grouped by their tilt and aspect. The annual $G_t$ (a) is highest for south-facing roofs with a tilt angle of around $40^\circ$. This matches the latitude of Switzerland. As panels on flat roofs are oriented south and tilted at $30^\circ$, they receive near-maximum solar irradiation.
 Fig.~\ref{fig:Gt}b shows $\sigma_{Gt}$ as percentage of $G_t$. It is lowest for steep north-facing roofs, which receive low direct radiation and are hence less impacted by $\sigma_{GB}$. 
 The highest relative uncertainty is found on steep roofs in the east and the west. 
-These roofs receive their highest proportion of direct radiation at low sun positions, for which $\sigma_{\mathit{Ssh}}$ is high.
+These roofs receive much direct radiation at low sun positions, for which $\sigma_{\mathit{Ssh}}$ is high.
 %
 Fig.~\ref{fig:Gt}c shows the hourly profiles for surfaces oriented north, east, west and south, averaged across all roofs of similar aspect. In summer, the peak of east-facing roofs in the morning is higher than that of the west-facing roofs in the afternoon. In winter, the opposite is the case. 
-These results suggest that during summer the sky is clearer in the morning, while the weather conditions are generally better in the afternoon in winter. 
+These results suggest that during summer the sky is clearer in the morning, while the weather is generally better in the afternoon in winter. 
 
 \begin{figure}[tb]
 \centering
@@ -774,26 +804,26 @@ In total, the $A_{PV}$ is $267 \pm 71$ km$^2$ and the resulting maximum technica
 %
 The annual $E_{PV}$ per rooftop of one such pixel is shown in Figure~\ref{fig:results}b, which demonstrates that large flat roofs have by far the highest potential to install PV panels.
 %
-Figure~\ref{fig:results}c shows the temporal variation of the PV potential and its total uncertainty, in comparison with the Swiss electricity demand of 2018 \cite{swissgrid_production_2019}. In absolute terms, the uncertainty is highest during the summer months, due to the high variability of the horizontal radiation in these months. The RPV potential exceeds the electricity demand even for the lower boundary of $E_{PV}$ ($E_{PV} - \sigma_{PV}$) from March until September, while a deficit is expected from November to January and during night hours. 
+Figure~\ref{fig:results}c shows the temporal variation of the PV potential and its total uncertainty, in comparison with the Swiss electricity demand of 2018 \cite{swissgrid_production_2019}. In absolute terms, the uncertainty is highest during the summer, due to a high variability of the horizontal radiation. The RPV potential exceeds the electricity demand even for the lower boundary of $E_{PV}$ ($E_{PV} - \sigma_{PV}$) from March until September, while a deficit is expected from November to January and during night hours. 
 
 \begin{figure}[t]
 \centering
 \begin{subfigure}{.63\textwidth}
   \centering
   % include second image
-  \includegraphics[width=0.98\linewidth]{Figs/PV_per_pixel_small.jpg}
+  \includegraphics[width=0.9\linewidth]{Figs/PV_per_pixel_small.jpg}
   \subcaption{}
 \end{subfigure}
 \begin{subfigure}{.34\textwidth}
   \centering
   % include second image
-  \includegraphics[width=0.98\linewidth]{Figs/PV_MWh_roofs.jpg}
+  \includegraphics[width=0.9\linewidth]{Figs/PV_MWh_roofs.jpg}
   \subcaption{}
 \end{subfigure}
 \begin{subfigure}{.95\textwidth}
   \centering
   % include first image
-  \includegraphics[width=\linewidth]{Figs/PV_hourly_w_unc_demand.pdf} 
+  \includegraphics[width=.9\linewidth]{Figs/PV_hourly_w_unc_demand.pdf} 
   \subcaption{}
 \end{subfigure}
 \caption{a) Spatial distribution of annual $E_{PV}$, aggregated to pixels of $500 \times 500$ m$^2$ for visualization purposes, 
@@ -873,7 +903,7 @@ This allows decision-makers to better understand the potential contribution of R
 The application of the methodology to Switzerland provides several practical contributions for an effective integration of RPV in the built environment. 
 Firstly, our results form a dataset of hourly profiles of RPV potential and its uncertainty for 9.6M rooftops in Switzerland, which will be publicly accessible. To the best of our knowledge, it is the first dataset of its type at this spatio-temporal resolution and scale. Our data can be used by the research community to study future energy systems with large shares of RPV, whereby the uncertainty permits the modelling of different scenarios. 
 
-Secondly, the large-scale estimate of $24 \pm 9$ TWh provides a realistic estimate of the maximum technical RPV potential for Switzerland. According to our data, electricity generation from PV may cover over 40\% of Switzerland's annual demand of 57.6TWh in 2018 \cite{swiss_federal_institue_for_energy_schweizerische_2018}. However, our results also show that the potential contribution from RPV is insufficient during winter and night hours, while there may be a large surplus of RPV generation during peak hours in summer (see Fig~\ref{fig:results}b).
+Secondly, the large-scale estimate of $24 \pm 9$ TWh provides a realistic estimate of the technical RPV potential for Switzerland. According to our data, PV generation may cover over 40\% of Switzerland's annual electricity demand of 57.6 TWh in 2018 \cite{swiss_federal_institue_for_energy_schweizerische_2018}. However, our results also show that the potential contribution from RPV is insufficient during winter and night hours, while there may be a surplus of RPV generation during peak hours in summer (see Fig~\ref{fig:results}b). 
 
 Thirdly, the sensitivity analysis performed here identifies the parameters with the highest impact on the estimated RPV potential, as well as the main sources of uncertainty (see Fig.~\ref{fig:sens_vars}). The parameter with the highest impact is the horizontal radiation. Its uncertainty is mainly caused by the high intermittency of the solar resource and can not be significantly reduced, even if higher-quality data was available. 
 The panelled area ratio represents the second largest source of uncertainty. In this case, it is due to inaccuracies in the input data and uncertainty in the modelling approach. These may be reduced by a more precise model, for example using image processing techniques \cite{mainzer_assessment_2017}, or a more detailed building model (i.e. LOD 4) that is available in the entire study region.
@@ -928,8 +958,10 @@ Some assumptions were made that impact these results:
 (iii) The potential uncertainties arising from the physical models of tilted radiation and module efficiency are neglected, as no comprehensive quantification of these has been found in the literature.
 (iv) The PV panel performance parameters as well as the system losses are treated as assumptions rather than random variables, due to the large variety of available technologies and their fast development. 
 (v) PV panels on flat roofs are all placed in a technically optimal fashion (see Section~\ref{flat}). 
-A comparison with other installation practices, such as lower tilt angles or the alternation of east and west-facing rows, is beyond the scope of this work.
-To consider different configurations of PV on flat roofs and the uncertainty in technological developments, a scenario-based approach may be followed (see Section\ref{solar_scenarios}).
+A comparison with other installation practices, such as lower tilt angles or the alternation of east and west-facing rows, will be assessed in Section~\ref{scenario_EW}.
+% To consider different configurations of PV on flat roofs and the uncertainty in technological developments, a scenario-based approach may be followed (see Section \ref{solar_scenarios}).
+
+Finally, the total RPV potential of $24 \pm 9$ TWh depends fundamentally on the hypotheses in the definition of the available area and the suitable rooftops for PV installation. While Section~\ref{solar_comparison} compares existing hypotheses used in the Swiss context, Section~\ref{solar_scenarios} discusses the impact of changes in these hypotheses on the potential estimate presented above.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -944,10 +976,13 @@ Energy system designers can use this work to simulate future electricity network
 The generated dataset may be further used to estimate the PV potential for future scenarios that account for urbanization, climate change and technological advancement of PV.
 This is possible as the existing building stock covers different types of roofs in various urban contexts and climatic conditions, which exist in the Swiss plateau, the Jura mountains and the Alps. 
 A techno-economic potential may be formulated for these scenarios by combining the maximum technical potential with economic factors such as installation and operational cost.
+An example application for the prediction of solar radiation in similar climatic and geographic conditions is provided in Section~\ref{solar_application}.
 
 Finally, a further validation of the estimated RPV potential provides a challenging subject of future work. 
-We validate our results against those of previous work (Section~\ref{comparison}), some of which have been compared to measurement data \cite{buffat_scalable_2018}. While this approach is feasible for validating the tilted radiation, a direct validation of the available area is difficult due to the lack of a "ground truth". A possible method to establish such a ground truth may be the application of image segmentation techniques, for example using Convolutional Neural Networks \cite{castello_deep_2019}, to high-resolution aerial imagery. 
-This would allow for a more accurate detection of obstructing objects on rooftops as well as the recognition of already installed PV panels (see Section\ref{solar_scenarios}).
+We validate our results against those of previous work (Section~\ref{solar_comparison}) and to measurement data for a small roof sample (Section~\ref{scenario_EW}).
+% some of which have been compared to measurement data \cite{buffat_scalable_2018}. 
+While this approach is feasible for validating the tilted radiation, a direct validation of the available area is difficult due to the lack of a "ground truth". A possible method to establish such a ground truth may be the application of image segmentation techniques, for example using Convolutional Neural Networks \cite{castello_deep_2019}, to high-resolution aerial imagery. 
+As shown for a case study in Section \ref{scenario_area}, this allows for a more accurate detection of obstructing objects on rooftops as well as the recognition of already installed PV panels.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -960,7 +995,11 @@ This would allow for a more accurate detection of obstructing objects on rooftop
 Installing photovoltaics (PV) on building rooftops is a promising approach to reduce greenhouse gas emissions, especially in dense urban areas. Understanding the large-scale potential for rooftop PV is important for several reasons, including electricity network design, urban and regional energy planning, as well as incentive policies for PV installations. Several studies in recent years focus on assessing a large-scale technical rooftop PV potential. Early methods relying on “rules of thumb” \cite{iea_potential_2002} have been continuously improved by incorporating environmental and building data as well as using powerful computational engines and advanced analytic methods such as Machine Learning (ML). This progress in data processing, enabled by the availability of larger and more accurate datasets, has led to widely varying results of PV potential studies, even for the same geographic area. This makes the comparison across studies intrinsically challenging. \citet{assouline_estimation_2017} provide an overview of the existing methods to estimate a large-scale technical rooftop PV potential, however this methodological review does not discuss the results obtained by individual studies. Some of these compare their results with those of other studies, but the discrepancies are explained in a qualitative rather than quantitative way \cite{assouline_quantifying_2017,assouline_large-scale_2018}. 
 \end{comment}
 
-In this paper, we propose a framework to compare large-scale rooftop PV assessment studies in a quantitative way. This helps us to understand how different methods impact the potential estimates. We focus our comparison on Switzerland, where six different studies have been carried out at national scale from 2002 to 2019 \cite{iea_potential_2002,assouline_quantifying_2017,assouline_large-scale_2018,klauser_solarpotentialanalyse_2016,buffat_scalable_2018, walch_big_2020}. The results are interpreted with respect to the following aspects: (i) target audience, (ii) spatio-temporal resolution, (iii) datasets, and (iv) methods. We finally provide a perspective on future developments which may further improve the PV potential studies. In Switzerland, the following six studies have been conducted at different scales. 
+In this Section, we propose a framework to compare large-scale rooftop PV assessment studies in a quantitative way. This helps to understand how different methods and hypotheses impact the potential estimates. We focus the comparison on Switzerland, where six have been carried out at national scale from 2002 to 2020 \cite{iea_potential_2002,assouline_quantifying_2017,assouline_large-scale_2018,klauser_solarpotentialanalyse_2016,buffat_scalable_2018, walch_big_2020}
+, including this work:
+% The results are interpreted with respect to the following aspects: (i) target audience, (ii) spatio-temporal resolution, (iii) datasets, and (iv) methods. 
+% We finally provide a perspective on future developments which may further improve the PV potential studies. 
+% The comparison is based on the following studies: 
 
 \begin{enumerate}
 \item The first study (\textit{\textbf{S1}}) was conducted for several European countries including Switzerland by the International Energy Agency (IEA) in 2002 \cite{iea_potential_2002}. The method is based on rules of thumb, established at European scale, and does not reflect the local building stock characteristics within Switzerland. The technical potential is given as a yearly value for the entire country, representing the lowest temporal and spatial resolution among the compared studies. It is aimed at indicating an order of magnitude of the total technical rooftop PV potential at national scale. 
@@ -968,16 +1007,19 @@ In this paper, we propose a framework to compare large-scale rooftop PV assessme
 \item The third study (\textit{\textbf{S3}}) is again conducted by \citet{assouline_large-scale_2018} at $200 \times 200$ m$^2$ spatial resolution. In this study, another ML algorithm, Random Forests (RF), is used in combination with GIS to estimate the potential. The method from S3 is enhanced in S4 using (i) larger and more accurate datasets, (ii) a more efficient  ML algorithm that includes the estimation of model uncertainties, and (iii) a higher spatial resolution of $200 \times 200$ m$^2$. Both studies aim at a large-scale estimation of PV potential on building roofs to inform regional and national decision making.
 \item The fourth study (\textbf{\textit{S4}}) was conducted as a national project, namely Sonnendach.ch, by the Swiss Federal Offices of Energy (SFOE), Topography (Swisstopo), and Meteorology and Climatology (MeteoSwiss) \cite{klauser_solarpotentialanalyse_2016,portmann_sonnendach.ch:_2016}. Monthly solar PV potential is estimated for each rooftop in Switzerland using a GIS-based approach \cite{klauser_solarpotentialanalyse_2016} complemented by rules of thumb \cite{portmann_sonnendach.ch:_2016}. In contrast to the above studies (S1-S3), the primary target group of this study is individual property owners and energy service providers interested in installing PV on specific building roofs. Thus, the primary output of this study is a classification of rooftop suitability for solar PV installation.
 \item The fifth study (\textbf{\textit{S5}}), conducted by \citet{buffat_scalable_2018}, estimates PV potential from solar radiation profiles in half-hour temporal resolution for pixels of $0.5 \times 0.5$ m$^2$. In this study, GIS is used to estimate the solar radiation on tilted surfaces. In addition, the study includes a detailed model of the panel and inverter efficiencies. The results presented in the study aim primarily at a comparison between different PV technologies and are validated against measurement data.
-\item The sixth study (\textbf{\textit{S6}}) is the estimation of solar PV potential presented in Section~\ref{solar_results} and published in \cite{walch_big_2020}. As explained in Section~\ref{solar_method}, Geographic Information Systems and Machine Learning approaches are used to estimate the solar PV potential for each building roof surface at hourly temporal resolution. ML is used to quantify not only the modelling uncertainty for the resulting PV potential estimation, but also the uncertainty in the data. The hourly temporal resolution of the results is very important for the spatio-temporal modelling of future electricity systems.   
+\item The sixth study (\textbf{\textit{S6}}) is the estimation of solar PV potential presented above and published in \cite{walch_big_2020}. As explained in Section~\ref{solar_method}, Geographic Information Systems and Machine Learning approaches are used to estimate the solar PV potential for each building roof surface at hourly temporal resolution.
+ML is used to quantify not only the modelling uncertainty for the resulting PV potential estimation, but also the uncertainty in the data. The hourly temporal resolution of the results is important for the spatio-temporal modelling of future electricity systems.   
+
 \end{enumerate}
 
 \subsection{Methodological comparison}
 
 To compute the technical rooftop PV potential, the hierarchical approach presented in Chapter~\ref{method_solar_hierarchy} is used in all studies, which differentiates between physical potential, geographic potential and technical potential.
 %
-The physical potential is defined as the global horizontal solar radiation ($G_h$), consisting of a direct horizontal ($G_B$) and a diffuse horizontal ($G_B$) component. In S1, a constant $G_h$ of 1,167 kWh/m$^2$ (from Meteonorm) is used for the entire country. In all other studies (S2-S6), the three horizontal radiation components $G_h$, $G_B$ and $G_B$ are obtained from satellite-derived solar radiation data based on the Heliosat algorithm \cite{rigollier_method_2004}. S2 and S3 use the mentioned data for 100 locations, S5 uses a gridded dataset at $3.8 \times 5.6$ km$^2$ spatial resolution (SARAH) and S4 and S6 use satellite data on a $1.6 \times 2.3$ km$^2$ grid provided by MeteoSwiss, which contains improvements for radiation modelling at high altitude \cite{stockli_heliomont_2017}. S4 and S5 directly use the input data as physical potential. S2, S3 and S6 use Machine Learning to derive $G_h$, $G_B$ and $G_B$ on a $200 \times 200$ m$^2$ grid to better represent the local terrain. In S2 and S3, additional measurements of temperature, precipitation, sunshine duration and cloud cover are used to support the estimation, while S6 use exclusively spatial features, namely longitude, latitude and altitude. 
+% The physical potential is defined as the global horizontal solar radiation ($G_h$), consisting of a direct horizontal ($G_B$) and a diffuse horizontal ($G_B$) component. 
+To estimate the physical potential, a constant global horizontal radiation ($G_h$) of 1,167 kWh/m$^2$ (from Meteonorm) is used in S1 for the entire country. In all other studies (S2-S6), the global, direct and diffuse horizontal radiation components ($G_h$, $G_B$,$G_D$) are obtained from satellite-derived solar radiation data based on the Heliosat algorithm \cite{rigollier_method_2004}. S2 and S3 use this data for 100 locations, S5 uses a gridded dataset at $3.8 \times 5.6$ km$^2$ spatial resolution (SARAH) and S4 and S6 use data on a $1.6 \times 2.3$ km$^2$ grid provided by MeteoSwiss, which contains improvements for radiation modelling at high altitude \cite{stockli_heliomont_2017}. S4 and S5 directly use the input data as physical potential. S2, S3 and S6 use Machine Learning to derive $G_h$, $G_B$ and $G_B$ on a $200 \times 200$ m$^2$ grid to better represent the local terrain. In S2 and S3, measurements of temperature, precipitation, sunshine duration and cloud cover are used to support the estimation, while S6 use spatial features (coordinates and altitude) only. 
 
-The geographic potential is driven by two factors: (i) tilted radiation, that is, the solar radiation on a tilted PV panel ($G_t$, in kWh/m$^2$) and (ii) available area for PV panel installation ($A_{PV}$, in m$^2$). $G_t$ and $A_{PV}$ for a rooftop PV potential estimation may be generally defined as:
+The geographic potential is driven by two factors: (i) tilted radiation ($G_t$, in kWh/m$^2$) and (ii) available area for PV panel installation ($A_{PV}$, in m$^2$). For this comparison of large-scale RPV potential estimations, we propose to define $G_t$ and $A_{PV}$ in a general form as:
 
 \begin{equation}
 \label{eq:Gt_compare}
@@ -989,16 +1031,11 @@ The geographic potential is driven by two factors: (i) tilted radiation, that is
     A_{PV} = A_{\mathit{floor}} * C_R \quad \forall A_{PV} > A_{min} 
 \end{equation}
 
-where $G_{Bt}$, $G_{Dt}$ and $G_{Rt}$ are the direct, diffuse and reflected tilted radiation components, $Sh_A$ and $Sh_{Bt}$ are parameters of shading losses, explained below, \textit{SVF} denotes the sky view factor, $A_{\mathit{floor}}$ is the ground floor area, $C_R$ denotes the ratio of available area for PV panel installation over ground floor area and $A_{min}$ describes the minimum roof area considered for PV installation. 
+where $G_{Bt}$, $G_{Dt}$ and $G_{Rt}$ are the tilted radiation components (Section \ref{phys_models}), $Sh_A$ and $Sh_{Bt}$ are parameters of shading losses, explained below, \textit{SVF} denotes the sky view factor, $A_{\mathit{floor}}$ is the ground floor area, $C_R$ denotes the ratio of available area for PV panel installation over ground floor area and $A_{min}$ describes the minimum roof area considered for PV installation. 
 These equations differ slightly from those presented in Section~\ref{solar_method} (Eq.~\ref{eq:irrad} and \ref{eq:area}) in order to be generalisable across all compared studies. 
 Despite following the same physical principles, differences in spatio-temporal resolution and available datasets lead to significantly varying methods for calculating the parameters for geographic potential, as summarized in Table \ref{tab:compare_methods}. It should be noted that probabilistic functions are used in S2 and S3 to compute the geographic potential as detailed roof shapes are unknown. One exception to Eqs.~\ref{eq:Gt_compare} and \ref{eq:APV_compare} is S1, where the geographic potential is computed in a simplified way. In S1, $G_t$ is obtained by multiplying $G_h$ with an average solar yield ($\sim 93.3\%$ for Switzerland, derived from \cite{iea_potential_2002}). $A_{PV}$ is computed by multiplying an estimated floor area (45 m$^2$ per person) with the population size and a constant ratio of “architecturally suitable area / ground floor area”, equal to 0.72. This accounts for construction elements (here $C_R$) as well as shading (here $Sh_A$) \cite{iea_potential_2002}.
 
-In S2-S6, shading effects ($Sh_A$, $Sh_{Bt}$) are computed separately from $C_R$ using GIS and a Digital Surface Model (DSM). All studies use Switzerland’s DSM in $2 \times 2$ m$^2$ resolution (see Chapter~\ref{data_DEM}). S4 and S5 interpolate this DSM to a $0.5 \times 0.5$ m$^2$ resolution. We distinguish between two types of shading, namely (i) the fraction of a roof area in full shade ($Sh_A$), and (ii) the average amount of shading on the remaining roof ($Sh_{Bt}$), reducing the direct tilted radiation. $Sh_A$ is only considered in S2, S3 and S6. S2 and S3 follow a Hillshade (HS) approach which estimates shading by computing relief maps for each pixel of a DSM. $Sh_A$ is obtained from pixels with a HS value of 0, while $Sh_{Bt}$ is obtained by averaging the remaining pixels over a building roof. ML is used by S2 and S3 to estimate shading effects at commune and pixel scale for Switzerland based on data from Geneva Canton. In contrast, S4-S6 use a horizon-based method, where binary maps of sun visibility are computed for each hour and each pixel of a DSM. S5 directly uses these binary maps to compute the per-pixel tilted radiation, so $Sh_{Bt} \in {0, 1}$. S4 and S6 average the results for each roof such that $Sh_{Bt} \in [0, 1]$. $Sh_A$ is computed in S6 as areas with low sunlight exposure, i.e. $\bar{Sh_{Bt}} < 40\%$. SVF, which reduces the diffuse tilted radiation, is accounted for in S2 and S3 through a constant (0.9) and in S4 and S6 by using GIS. $G_{Bt}$, $G_{Dt}$ and $G_{Rt}$ are computed in S2 and S3 from daily solar radiation models \cite{assouline_quantifying_2017, assouline_large-scale_2018}. S4-S6 use hourly models, explained in \cite{perez_modeling_1990}, and apply the anisotropic Perez model for the diffuse component.
-
-The available roof area for PV panel installation is estimated in each study to a different extent. S5 does not compute any $C_R$, while S4 uses roof-specific rules of thumb based on expert knowledge, which are in the range of 0.42-0.8 \cite{portmann_sonnendach.ch:_2016}. S2, S3 and S6 use a combination of GIS and ML to obtain $C_R$. GIS is used in S2 to remove superstructures (SP) from roof polygons and to compute the resulting useful roof area. S3 improves on S2 by virtually installing PV panels (VP) on the building roofs. In both cases, the GIS algorithms are applied to all rooftops in Geneva Canton, where detailed city GML data (LOD 4) is available. ML is then used to estimate $C_R$ in all other communes/pixels based on building characteristics, which are derived from the Swiss building registry (RegBL). In contrast, S6 uses roof data for the entire country to virtually install panels, reducing the uncertainty related to estimating $C_R$ with respect to S2 and S3. ML is applied in S6 to consider superstructures at national scale, by extrapolating the change in $C_R$ when accounting for SP, which is again computed for Geneva Canton where LOD 4 data is available.
-The technical potential is computed as shown in Eq.~\ref{eq:EPV_compare} by multiplying $G_t$, $A_{PV}$, the module efficiency ($\eta$) and a performance factor (\textit{PF}), which accounts for losses of the inverter, soiling, degradation, etc. Most studies approximate $\eta$ and \textit{PF} using constants. S5 and S6 use physical models for module and inverter efficiencies. S5 further compares the results for monocrystalline, poly-crystalline and thin film technologies. From an economic point of view, it is necessary to exclude unsuitable surfaces when estimating the solar rooftop PV potential. In S1, unsuitable surfaces are defined as those with a yield below 80\%, which is approximated to be 55\% of roofs \cite{iea_potential_2002}. S2, S3 and S6 define suitable roofs as those facing southwards, with an aspect angle of $\pm 90^\circ$ (east to west), while S4 and S5 exclude those roofs/pixels with an annual tilted radiation below 1,000 kWh (see Table~\ref{tab:compare_methods} for reference).
-
-\begin{table}[htb]
+\begin{table}[tb]
 \centering
 \footnotesize
 \caption{Comparison of methods for computing the main parameters of rooftop PV potential.}
@@ -1020,12 +1057,19 @@ $\eta$                      & \multirow{2}{*}{10\%} & 17\%                      
 }
 \end{table}
 
+In S2-S6, shading effects ($Sh_A$, $Sh_{Bt}$) are computed separately from $C_R$ using GIS and a DSM. All studies use Switzerland’s DSM in $2 \times 2$ m$^2$ resolution (see Chapter~\ref{data_DEM}). S4 and S5 interpolate this DSM to a $0.5 \times 0.5$ m$^2$ resolution. We distinguish between two types of shading, namely (i) the fraction of a roof area in full shade ($Sh_A$), and (ii) the average amount of shading on the remaining roof ($Sh_{Bt}$), reducing the direct tilted radiation. $Sh_A$ is only considered in S2, S3 and S6. S2 and S3 follow a Hillshade (HS) approach which estimates shading by computing relief maps for each pixel of a DSM. $Sh_A$ is obtained from pixels with a HS value of 0, while $Sh_{Bt}$ is obtained by averaging the remaining pixels over a building roof. ML is used by S2 and S3 to estimate shading effects at commune and pixel scale for Switzerland based on data from Geneva Canton. In contrast, S4-S6 use a horizon-based method (Chapter~\ref{GIS_methods}), where binary maps of sun visibility are computed for each hour and each pixel of a DSM. S5 directly uses these binary maps to compute the per-pixel tilted radiation, so $Sh_{Bt} \in \{0, 1\}$. S4 and S6 average the results for each roof such that $Sh_{Bt} \in [0, 1]$. $Sh_A$ is computed in S6 as areas with low sunlight exposure (see Section~\ref{shade}). SVF, which reduces the diffuse tilted radiation, is accounted for in S2 and S3 through a constant (0.9) and in S4 and S6 by using GIS. $G_{Bt}$, $G_{Dt}$ and $G_{Rt}$ are computed in S2 and S3 from daily solar radiation models \cite{assouline_quantifying_2017, assouline_large-scale_2018}. S4-S6 use hourly models, explained in \cite{perez_modeling_1990}, and apply the anisotropic Perez model for the diffuse component.
+
+The available roof area for PV panel installation is estimated in each study to a different extent. S5 does not compute any $C_R$, while S4 uses roof-specific rules of thumb based on expert knowledge, which are in the range of 0.42-0.8 \cite{portmann_sonnendach.ch:_2016}. S2, S3 and S6 use a combination of GIS and ML to obtain $C_R$. GIS is used in S2 to remove superstructures (SP) from roof polygons and to compute the resulting useful roof area. S3 improves on S2 by virtually installing PV panels (VP) on the building roofs. In both cases, the GIS algorithms are applied to all rooftops in Geneva Canton, where detailed city GML data (LOD 4) is available. ML is then used to estimate $C_R$ in all other communes/pixels based on building characteristics, which are derived from the Swiss building registry (RBD). In contrast, S6 uses roof data for the entire country to virtually install panels, reducing the uncertainty related to estimating $C_R$ with respect to S2 and S3. ML is applied in S6 to consider superstructures at national scale, by extrapolating the change in $C_R$ when accounting for SP (see Section~\ref{panels}).
+% , which is again computed for Geneva Canton where LOD 4 data is available.
+
+The technical potential is computed by multiplying $G_t$, $A_{PV}$, the module efficiency ($\eta$) and a performance factor (\textit{PF}), which accounts for losses of the inverter, soiling, degradation, etc. Most studies approximate $\eta$ and \textit{PF} using constants (see Eq. ~\ref{eq:EPV_compare}). S5 and S6 use physical models for module and inverter efficiencies. S5 further compares the results for monocrystalline, poly-crystalline and thin film technologies. From an economic point of view, it is necessary to exclude unsuitable surfaces when estimating the solar rooftop PV potential. In S1, unsuitable surfaces are defined as those with a yield below 80\%, which is approximated to be 55\% of roofs \cite{iea_potential_2002}. S2, S3 and S6 define suitable roofs as those facing southwards, with an aspect angle of $\pm 90^\circ$ (east to west), while S4 and S5 exclude those roofs/pixels with an annual tilted radiation below 1,000 kWh (see Table~\ref{tab:compare_methods} for reference).
+
 \begin{equation}
 \label{eq:EPV_compare}
     E_{PV} = G_t * A_{PV} * \eta * \mathit{PF} \quad \forall \ \text{\textit{suitable roofs}}
 \end{equation}
 
-Finally, the number of buildings considered in each study and the type of dataset used to describe buildings/roofs is important, as it impacts the total floor area ($A_{\mathit{floor}}$) and hence the order of magnitude of final PV potential. Again, S1 applies a rule of thumb of $A_{\mathit{floor}} = 45$ m$^2$ per capita. S2 uses polygons of building clusters (Vector25) in urban areas only. S3 uses a combination of these building clusters and roof surface polygons with a higher spatial resolution, representing a total of nearly 2 million buildings in Switzerland \cite{assouline_large-scale_2018}. The estimation in S5 is based on individual building footprints for the entire country, mostly from the Swiss cadastral survey. S4 and S6 use a national dataset of 9.6M roof surface polygons, representing 3.7M buildings, which was derived from a national 3D building model (LOD 2) by Swisstopo . It should be noted that the building footprint area in S5 is lower than the total building area declared by the Swiss Federal Statistical Office (2009 estimate) \cite{buffat_scalable_2018}. In contrast, the national roof surface dataset used in S3 (partly), S4 and S6 may overestimate total roof area, as some polygons overlap \cite{swisstopo_swisstlm3d_2018}.
+Finally, the number of buildings considered in each study and the type of dataset used to describe buildings/roofs impacts the total floor area ($A_{\mathit{floor}}$) and hence the order of magnitude of final PV potential. Again, S1 applies a rule of thumb of $A_{\mathit{floor}} = 45$ m$^2$ per capita. S2 uses polygons of building clusters in urban areas only. S3 uses a combination of these building clusters and roof surface polygons with a higher spatial resolution, representing a total of nearly 2 million buildings in Switzerland \cite{assouline_large-scale_2018}. The estimation in S5 is based on individual building footprints for the entire country, mostly from the Swiss cadastral survey. S4 and S6 use a national dataset of 9.6M roof surface polygons, representing 3.7M buildings, which was derived from a national 3D building model (LOD 2) by Swisstopo. The building footprint area in S5 is lower than the total building area declared by the Swiss Federal Statistical Office (2009 estimate) \cite{buffat_scalable_2018}. In contrast, the national roof surface dataset used in S3 (partly), S4 and S6 may overestimate total roof area, as some polygons may overlap \cite{swisstopo_swisstlm3d_2018}.
 
 \subsection{Quantitative comparison}
 
@@ -1064,11 +1108,37 @@ S6             & 581.5$^e$       & 45.9        & \textbf{267} & \textbf{1,186} &
 
 % \subsubsection{Study comparison}
 % Table~\ref{tab:compare_values} shows the quantitative comparison between the different studies. 
-A first noticeable difference between the studies is related to the ratio of available area for PV panel installation over ground floor area. The ratios used in S1 and S4 are comparable, indicating a rule of thumb for current installation practices. S2 and S3, which are based on data-driven methods that extrapolate $C_R$ from Geneva Canton to the rest of the country, estimate higher ratios. In contrast, S6 quote a significantly lower value for $C_R$. As S6 is the only study which uses a GIS algorithm at national scale to obtain $C_R$, it is likely that earlier methods overestimated the ratio of available roof area to ground floor area. However, S3 and S6 also show that the estimation of the available roof area is highly uncertain. “Big data” can bring future improvements to reduce this uncertainty, e.g. through an image-based classification of superstructures. The percentage of suitable roofs, on the other hand, is comparable across studies. In general, we can see that assessing suitability by a minimum radiation threshold of 1000 kWh/m$^2$ leads to approximately 10\% more suitable roof surface area then using south-facing surfaces with a roof aspect below $90^\circ$. 
+A first noticeable difference between the studies is related to the ratio of available area for PV panel installation over ground floor area ($C_R$). The ratios used in S1 and S4 are comparable, indicating a rule of thumb for current installation practices of around $70 - 75$\%. S2 and S3, which are based on data-driven methods that extrapolate $C_R$ from Geneva Canton to the rest of the country, estimate higher ratios. 
+In contrast, this work (S6) quotes a significantly lower value for $C_R$, which is shown to be highly uncertain.
+This may either indicate a rather conservative estimation of the available area for PV by the combined GIS and ML approach used in this work, or suggest that earlier methods may have overestimated the ratio of available roof area to ground floor area across the entire building stock, potentially due to the fact that current recommendations are focused on well-suited roofs for RPV installations. 
+These may not be representative for all roofs in the Swiss building stock, as badly suited rooftop geometries and the presence of roof superstructures may be neglected. 
+, which may not be representative for all roofs in the Swiss building stock. 
+% “Big data” can bring future improvements to the estimation of the available area for PV , e.g. classification of superstructures.
+Further insights into this discussion will be provided through an image-based detection of available roof area presented in Section \ref{scenario_area}.
+% As S6 is the only study which uses a GIS algorithm at national scale to obtain $C_R$, earlier methods may have overestimated the ratio of available roof area to ground floor area. 
+% However, S3 and S6 also show that the estimation of the available roof area is highly uncertain. “Big data” can bring future improvements to reduce this uncertainty, e.g. through an image-based classification of superstructures.
 
-The annual mean tilted radiation ($G_t$) ranges from 662 to 1,243 kWh/m$^2$. The lowest values are found in S2 and S3, which use a conservative Hillshade analysis rather than the more optimistic Horizon method for computing shading. The highest values for $G_t$ are found in S4 to S6, which follow similar approaches for the computation of the shading and tilted radiation components. These studies all use satellite data for the horizontal solar radiation. This is a strong indication that the choice of satellite or station data as source for the solar radiation impacts the PV potential estimate. System efficiency is assumed equally throughout most studies. S1, which was published over a decade ago, assume a lower value of 10\%. S5 quote a value of 10.3\% which is derived from measurements. However, a higher value of 17\% average module efficiency and 80\% performance factor appear realistic when considering the constantly improving performance of PV installations. These values used in S2-S4 are confirmed by the results obtained from the detailed model of module and inverter efficiencies used in S6.
+The annual mean tilted radiation ($G_t$) ranges from 662 to 1,243 kWh/m$^2$. The lowest values are found in S2 and S3, which use a conservative Hillshade analysis rather than the more optimistic horizon method for computing shading. 
+The values found in S4 to S6, which follow similar approaches for the computation of the shading and tilted radiation components, are significantly higher.
+Estimates based on MeteoSwiss data, which is corrected for high altitudes \cite{buffat_scalable_2018}, have the highest $G_t$. As the satellite sources are known to over-estimate solar radiation by 2-3\% \cite{klauser_solarpotentialanalyse_2016}, the upper estimates of $G_t$ should be considered slightly optimistic.
+A validation of $G_t$ against measurement data is provided in \cite{buffat_scalable_2018}, who find a negligible mean error in summer when production is highest, and a small overestimation in winter. 
+These results are confirmed by the comparison to measurement data provided in Section~\ref{scenario_EW}, suggesting that the annual irradiation obtained in this work is close to its real value. 
+% Consequently, while it is likely underestimated in \cite{iea_potential_2002, assouline_quantifying_2017, assouline_large-scale_2018}, possibly due to a different computation of the shading effects.
+% These studies all use satellite data for the horizontal solar radiation. This is a strong indication that the choice of satellite or station data as source for the solar radiation impacts the PV potential estimate.
 
-The final technical PV rooftop potential ranges from the lowest estimate of 15 TWh by S1 up to 53 TWh by S4. The lower values are based on a smaller ground floor area and hence likely underestimate the total available roof area for PV installation. The upper estimates are characterized in particular through a high ratio of available area to ground floor area and high tilted radiation. The former leads to an overestimation of technical PV potential, as superstructures and roof geometry have a significant impact on the total available roof area. The latter is largely based on the meteorological input data. Estimates based on MeteoSwiss data, which is corrected for high altitudes \cite{buffat_scalable_2018}, have the highest $G_t$. As the satellite sources are known to over-estimate solar radiation by 2-3\% \cite{klauser_solarpotentialanalyse_2016}, the upper estimates of $G_t$ should be considered slightly optimistic.
+Across all studies, the percentage of suitable roofs and the system efficiency are similar.
+Assessing suitability by a minimum radiation threshold of 1000 kWh/m$^2$ hereby leads to approximately 10\% more suitable roof surface area then using south-facing surfaces with a roof aspect below $90^\circ$. 
+The system efficiency in S1, published over a decade ago, lies at 10\%. S5 quote a value of 10.3\% which is derived from measurements. However, a higher average module efficiency of 17\% and a PF of 80\% appear realistic when considering the performance improvements of PV systems. These values, used in S2-S4, are confirmed by the results obtained from the model of module and inverter efficiencies described in Section~\ref{phys_models}.
+
+The final technical PV rooftop potential ranges from the lowest estimate of 15 TWh by S1 up to 53 TWh by S4, with our estimate (S6) lying in the mid-range of the existing studies at $24$ TWh. 
+The relatively low $C_R$ obtained in this work is hereby offset by the high $A_\mathit{floor}$ and $G_t$ compared to previous studies.
+% The lower values are based on a smaller ground floor area and hence likely underestimate the total available roof area for PV installation. 
+% The upper estimates are characterized in particular through a high ratio of available area to ground floor area and high tilted radiation. 
+% The former may lead to an overestimation of technical PV potential, as superstructures and roof geometry have a significant impact on the total available roof area. The latter is largely based on the meteorological input data. 
+%
+% Several complementarities exist between this study and previous work, given by the use of similar datasets and methods. This leads to comparable aggregated values and allows for the validation of our results against existing approaches.
+The added value of our work is given firstly by the computation of the results in monthly-mean-hourly resolution, instead of yielding monthly or yearly values as used in \cite{klauser_solarpotentialanalyse_2016, assouline_quantifying_2017, assouline_large-scale_2018}. Secondly, we contribute to the existing work by assessing the available area for PV installation for each roof surface, rather than using communes~\cite{assouline_quantifying_2017} or pixel sizes of $200 \times 200$ m$^2$~\cite{assouline_large-scale_2018}. Thirdly, our study is the only one that quantifies the uncertainty on the final potential estimate. 
+Uncertainties are not specifically addressed in \cite{assouline_quantifying_2017, assouline_large-scale_2018, iea_potential_2002} and qualitatively assessed in \cite{klauser_solarpotentialanalyse_2016, buffat_scalable_2018}.
 
 
 \begin{comment}
@@ -1205,7 +1275,7 @@ A quantitative comparison of the actual and modelled (normalized) PV generation,
 \end{table}
 
 \subsection{Image-based detection of available area}
-
+\label{scenario_area}
 While this assessment can be very precise locally, at larger scale (regional and national) it poses a major challenge. This is mostly due to the lack of a scalable approach for accurately estimating the available area for RPV panel installation. For individual roofs, panels can be custom-fitted based on aerial photographs taking into account all obstructing objects, a practice widely applied for creating offers for RPV installations. Custom-fitting however is not scalable to 9.6 million rooftops in Switzerland. Automatic panel fitting algorithms based on roof shape data have hence been developed to estimate the available area for RPV installations at regional and national scale \cite{assouline_large-scale_2018, walch_big_2020}. While these algorithms are scalable, they depend on the availability and accuracy of the roof shape data. Such data however rarely includes information on rooftop obstructing objects. Using Machine Learning (ML) techniques, the impact of these objects on the available roof area can be extrapolated from areas with detailed roof shape data \cite{assouline_large-scale_2018, walch_big_2020}. While such detailed roof data include superstructures (dormers, chimneys, etc.), other obstructing objects, such as windows, remain unknown. In other studies, the fraction of available roof area for large-scale RPV potential studies is estimated using constant coefficients and expert knowledge \cite{portmann_sonnendach.ch:_2016} or sampling techniques \cite{wiginton_quantifying_2010}. Aerial photographs, which are used for the custom fitting of PV panels, are rarely used in large-scale approaches due to their large volume and processing requirements. The only notable attempt is the work of \citet{mainzer_assessment_2017} where public geographical data are used to extract roof slopes and available areas using edge detection techniques. However, the algorithms employed fail in 27\% of the analyzed buildings, classifying them as flat instead of considering their actual slope. 
 In this paper, we leverage the power of Convolutional Neural Networks (CNNs) for pixel-wise semantic segmentation in combination with high spatial resolution aerial imagery to provide a quantification of the available area for RPV installation. This approach has already shown promising results in detecting existing RPV installations \cite{castello_deep_2019}, having the advantages of being scalable and requiring a relatively small training set of images.   
 
@@ -1278,11 +1348,11 @@ To set this work in context with existing studies on the available area for RPV 
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccccccccc}
 \hline
-\multicolumn{1}{c}{\textbf{}} & \multicolumn{3}{c}{\textbf{All roofs}}        & \multicolumn{3}{c}{\textbf{Large ($> 1000$ m$^2$)}} & \multicolumn{3}{c}{\textbf{Med. ($100-500$ m$^2$)}} & \multicolumn{3}{c}{\textbf{Small ($10 - 100$ m$^2$)}} \\ 
+\multicolumn{1}{c}{\textbf{}} & \multicolumn{3}{c}{\textbf{All roofs}}        & \multicolumn{3}{c}{\textbf{Large ($\mathbf{> 1000}$ m$\mathbf{^2}$)}} & \multicolumn{3}{c}{\textbf{Med. ($\mathbf{100-500}$ m$\mathbf{^2}$)}} & \multicolumn{3}{c}{\textbf{Small ($\mathbf{10 - 100}$ m$\mathbf{^2}$)}} \\ 
                               & \textit{CNN} & \textit{Panels} & \textit{RPV} & \textit{CNN}     & \textit{Panels}     & \textit{RPV}     & \textit{CNN}  & \textit{Panels} & \textit{RPV} & \textit{CNN}  & \textit{Panels}  & \textit{RPV}  \\ \hline
-\textbf{Total area ($\mathbf{10^3}$ m$\mathbf{^2}$)}  & 98.5         & 65.8            & 65.4         & 19.2             & 13.4                & 27.3             & 25.8          & 17.3            & 23.3         & 56.2          & 35.9             & 30.2          \\
+\textbf{Total area ($\mathbf{10^3}$ m$\mathbf{^2}$)}  & 98.5         & 65.8            & 65.4         & 18.1             & 12.9                & 20             & 24.7          & 17.1            & 18.3         & 55.6          & 35.8             & 27          \\
 \textbf{Mean \% of roof}      & 74           & 45.4            & 33.1         & 57.4             & 40                  & 63.5             & 70.9          & 49              & 49.5         & 74.8          & 45.1             & 30.4          \\
-\textbf{Std. \% of roof}      & 19.6         & 22.5            & 17.9         & 19.3             & 17.3                & 7.4              & 19.3          & 19.6            & 14           & 19.5          & 22.9             & 17.6          \\
+\textbf{Std. \% of roof}      & 19.6         & 22.5            & 17.9         & 17.6             & 17.3                & 7.4              & 19.3          & 19.6            & 14           & 19.5          & 22.9             & 16.8          \\
 \textbf{Median \% of roof}    & 79           & 47.7            & 35           & 61               & 39.4                & 66.4             & 76.6          & 52.8            & 51.8         & 80            & 47               & 32.2          \\ \hline
 \end{tabular}
 }
@@ -1305,46 +1375,30 @@ Comparing the absolute available areas for the three estimations (Table \ref{tab
 
 \section{\textit{Application}: Estimating annual solar radiation in new areas}
 \label{solar_application}
-% PAPER CHILE
-Existing studies of PV potential hence require the collection of various input datasets and the implementation of computationally intensive data processing methods to compute each parameter. We propose a model which can accurately predict long-term annual solar irradiation on building roofs from a reduced set of inputs and with a significantly smaller computational effort compared to existing studies. Recent suggested methods such as a simplified skyline-based method \cite{calcabrini_simplified_2019} are insufficient for this task, as separate models needed to be fitted for each pair of roof slope and aspect. Instead, we train a Machine Learning model using data from an existing dataset of rooftop PV potential at national scale in Switzerland, in order to learn the relation between rooftop features, weather data and rooftop irradiation. The use of ML for a large-scale estimation of rooftop PV potential has been tested at the scale of communes \cite{assouline_quantifying_2017} and pixels of $200 \times 200$ m$^2$ resolution \cite{assouline_large-scale_2018}, but it has not yet been applied to the estimation of solar irradiation for individual roof surfaces. 
-ML methods to predict solar irradiation perform a short-term forecasting for single roofs, but do not address a large-scale potential estimation. An overview of these methods is provided by \citet{voyant_machine_2017}. 
 
-In this work, we compare the performance of five different ML models in estimating the annual solar irradiation on building roofs and we quantify the uncertainty for the predicted values. We further use Machine Learning to reduce the number of input features by determining those with the highest importance for the prediction of annual irradiation. Our model is trained and tested on data belonging to two distinct geographic areas in Switzerland. The testing procedure demonstrates that our model predicts tilted irradiation (in kWh/m$^2$) with an accuracy of 92.3\%. The results suggest that the proposed model is suitable to estimate annual solar irradiation on building roofs in regions with similar geographic and meteorological conditions, for example in Germany, France or northern Italy.
-
-\subsection{Methods and data}
+% \subsection{Methods and data}
 \label{chile_method}
 
-To estimate annual solar irradiation on building roofs ($G_t$, in kWh/m$^2$), we account for different types of input features, which represent the main input parameters used in existing studies. These are (i) horizontal irradiation, (ii) roof aspect, (iii) roof tilt, (iv) shading effects from buildings and trees, (v) sky visibility, (vi) horizon maps. We use a feature selection procedure to extract the most relevant features, and compare five Machine Learning methods with respect to their performance in predicting $G_t$. The complete methodology is summarized in \ref{fig:chile_schema}.
+While the previous sections have addressed the large-scale estimation of RPV potential for Switzerland, this section suggests an application of the results presented above to estimate the RPV potential in regions with similar geographic and meteorological conditions as Switzerland.
+More specifically, we propose here a Machine Learning model which can accurately predict long-term annual solar irradiation on building roofs from a reduced set of inputs and with a significantly smaller computational effort compared to the studies assessed in Section~\ref{solar_comparison}. 
+Combined with an estimation of the available area for PV and the system efficiency, the proposed method may hence allow to carry out RPV potential studies at regional scale for example in Germany, France or northern Italy.
+
+% PAPER CHILE
+% Existing studies of PV potential hence require the collection of various input datasets and the implementation of computationally intensive data processing methods to compute each parameter. We propose a model which can accurately predict long-term annual solar irradiation on building roofs from a reduced set of inputs and with a significantly smaller computational effort compared to existing studies. Recent suggested methods such as a simplified skyline-based method \cite{calcabrini_simplified_2019} are insufficient for this task, as separate models needed to be fitted for each pair of roof slope and aspect. Instead, we train a Machine Learning model using data from an existing dataset of rooftop PV potential at national scale in Switzerland, in order to learn the relation between rooftop features, weather data and rooftop irradiation. The use of ML for a large-scale estimation of rooftop PV potential has been tested at the scale of communes \cite{assouline_quantifying_2017} and pixels of $200 \times 200$ m$^2$ resolution \cite{assouline_large-scale_2018}, but it has not yet been applied to the estimation of solar irradiation for individual roof surfaces. 
+% ML methods to predict solar irradiation perform a short-term forecasting for single roofs, but do not address a large-scale potential estimation. An overview of these methods is provided by \citet{voyant_machine_2017}. 
+
+The proposed approach, summarized in Fig. \ref{fig:chile_schema}, consists of (i) the selection of appropriate features for modelling annual solar irradiation amongst a set of 15 available input variables (Section~\ref{chile_ftrSelect}), (ii) the training and  comparison of five different ML models (Section~\ref{chile_ml}), and (iii) its application for the estimation of large-scale solar irradiation patterns (Section~\ref{chile_predict}). The five considered supervised ML models are (i) Linear Regression (LIN), (ii) K-Nearest Neighbors (KNN), (iii) Support Vector Machines (SVM), (iv) Extreme Learning Machine Ensembles (ELM-E), and (v) Random Forests (RF).
+
+To test the performance of the proposed approach, we divide Switzerland into two separate geographic areas, using the Swiss Romandie area for training and the remaining country for testing (see Fig. \ref{fig:chile_case_study}). This boundary is chosen as it represents a cultural and language border which divides all three geographic terrains of Switzerland, namely the Alps, the Plateau (where most buildings are situated) and the Jura mountains. 
+We randomly select 100,000 samples for training and 1,000,000 samples for testing with no noticeable reduction in the model performance. 
+We further select six cities inside the test area, shown in Fig. \ref{fig:chile_case_study}, for which we will predict the aggregated annual PV potential in order to test the performance of the proposed method at city level. The cities are selected to cover different population sizes, geographic areas and altitudes. The details for each city are shown in Table \ref{tab:chile_cities}. 
+
 
 \begin{figure}[tb]
 \centering\includegraphics[width=0.9\linewidth]{Figs/chile_schematic.pdf}
 \caption{Schematic for estimation of annual rooftop solar irradiation ($G_t$). Feature selection is applied to choose the most important features and to reduce the total number of features. Five ML algorithms are tested for the prediction of annual $G_t$ (* see Chapter~\ref{ML_models}). Model and data uncertainties are computed for the ensemble-based algorithms (ELM-E, RF). }
 \label{fig:chile_schema}
 \end{figure}
-
-\subsubsection{Dataset description}
-
-The target variable estimated in this work is the annual rooftop solar irradiation ($G_t$). We use values for $G_t$ from a publicly available dataset of PV potentials for 9.6M rooftops in Switzerland \cite{klauser_solarpotentialanalyse_2016} as labels for training the ML models. The method applied by \citet{klauser_solarpotentialanalyse_2016} to obtain $G_t$ is summarized in \cite{walch_fast_2019-1}. The dataset also contains information on roof slope and roof aspect, which are input features to the ML models. We further include the global and direct horizontal irradiation components (GHI and DNI) in the set of features. They are derived from satellite data provided by the Swiss meteorological office MeteoSwiss \cite{stockli_daily_2013} for the years of 2004-2015, by linearly interpolating the satellite pixels to the coordinates of each roof surface and averaging the results for all years. The diffuse horizontal irradiation is omitted, as it is the difference between GHI and DNI. 
-
-The shading effects from surrounding buildings and trees and the sky visibility, which is quantified as the sky view factor (SVF), are typically derived from the horizon height of a roof, as explained in  Chapter~\ref{GIS_methods}. The horizon height can be interpreted as the minimum sun altitude to illuminate a given point (in degrees), which is typically computed using a Digital Surface Model (DSM).
-The shading effects are then computed for each time step (e.g. hourly) as the portion of roof surface with a horizon height above the current sun altitude, while the SVF is obtained by integrating the horizon height for all azimuth angles. 
-We compute the average horizon height for each roof as described in Appendix \ref{app:shade} based on the DSM of Switzerland (Table~\ref{tab:bld_landscape}). In the feature set, we include the roof shading, obtained by averaging hourly shading effects, the SVF and 9 of the DSM-derived horizons for azimuths of 60$^\circ$-300$^\circ$ in bins of 30$^\circ$. Table \ref{tab:chile_features} summarizes all 15 features considered in the feature selection procedure.
-
-\begin{table}[thb]
-\centering
-\footnotesize
-\caption{All available features for the estimation of rooftop solar irradiation. Italic features may not be readily available or are computationally demanding to compute.}
-\label{tab:chile_features}
-\begin{tabular}{lll}
-\hline
-\textbf{Roof features} & \textbf{Horizontal irradiation}          & \textbf{Shade and skyview}         \\ \hline
-Aspect angle           & Annual global irradiation (GHI)          & \textit{Roof shading}              \\
-Tilt angle             & \textit{Annual direct irradiation (DNI)} & \textit{Skyview factor (SVF)}      \\
-                       &                                          & 9 $\times$ horizon height (30$^\circ$ angle bins) \\ \hline
-\end{tabular}
-\end{table}
-
-The data set is standardized and split into training and test data, covering separate geographic areas of Switzerland (see \ref{fig:chile_case_study}). We use the Swiss Romandie area for training and the remaining country for testing. This boundary is chosen as it represents a cultural and language border which divides all three geographic terrains of Switzerland, namely the Alps, the Plateau (where most buildings are situated) and the Jura mountains. We randomly select 100,000 samples for training and 1,000,000 samples for testing with no noticeable reduction in the model performance. We choose six cities inside the test area, shown in \ref{fig:chile_case_study}, for which we will predict the aggregated annual PV potential in order to test the performance of the proposed method at city level. The cities are selected to cover different population sizes, geographic areas and altitudes. The details for each city are shown in Table \ref{tab:chile_cities}. 
 
 \begin{figure}[tb]
 \centering\includegraphics[width=0.6\linewidth]{images/Figs/train_test_w_cities.png}
@@ -1369,12 +1423,84 @@ Interlaken    & 5,592                & 4.3                 & 1,025              
 \end{tabular}
 \end{table}
 
-\subsubsection{Feature selection}
-\label{chile_ftrSelect}
-The reduction of the number of features to a small set of easily available variables is one of the key aspects of this work. To obtain such a reduced feature set, we use a recursive feature selection technique as described in Chapter~\ref{ML_features}, using the MSE as selection criterion.
-We further aim to obtain a feature set that contains only easily accessible features that can be obtained with a low computational effort. Three out of 15 features, highlighted in Table \ref{tab:chile_features}, are hence excluded before applying the recursive selection. These are (i) the DNI, which is frequently unavailable at measurement stations and not included in some future climate scenarios, (ii) the roof shading and (iii) the SVF, which both require the computation of the horizon height for all azimuth angles, which is the highest computational burden in large-scale PV potential studies. 
+% In this section, we compare the performance of five different ML models in estimating the annual solar irradiation on building roofs ($G_t$, in kWh/m$^2$) and we quantify the uncertainty for the predicted values. We further use ML to reduce the number of input features by determining those with the highest importance for the prediction of annual irradiation. As an example application, our model is trained and tested on data belonging to two distinct geographic areas in Switzerland. 
+% The testing procedure demonstrates that our model predicts tilted irradiation (in kWh/m$^2$) with an accuracy of 92.3\%. The results suggest that the proposed model is suitable to estimate annual solar irradiation on building roofs in regions with similar geographic and meteorological conditions, for example in Germany, France or northern Italy.
+% To estimate annual solar irradiation on building roofs ($G_t$, in kWh/m$^2$), 
 
-\subsubsection{Machine Learning Algorithms}
+% account for different types of input features, which represent the main input parameters used in existing studies. These are (i) horizontal irradiation, (ii) roof aspect, (iii) roof tilt, (iv) shading effects from buildings and trees, (v) sky visibility, (vi) horizon maps. We use a feature selection procedure to extract the most relevant features, and compare five Machine Learning methods with respect to their performance in predicting $G_t$. The complete methodology is summarized in \ref{fig:chile_schema}.
+
+\subsection{Feature selection and importance analysis}
+\label{chile_ftrSelect}
+
+\subsubsection{Dataset description}
+
+The target variable estimated in this section is the annual rooftop solar irradiation ($G_t$, in kWh/m$^2$). We use values for $G_t$ from a publicly available dataset of PV potentials (Sonnendach.ch) \cite{klauser_solarpotentialanalyse_2016} as labels for training the ML models, which are closely correlated to those presented in Section~\ref{solar_results}. The method applied by \citet{klauser_solarpotentialanalyse_2016} to obtain $G_t$ is summarized in \cite{walch_fast_2019}. 
+The full set of input features represent the main variables used to estimate $G_t$, namely
+% account for different types of input features, which represent the main input parameters used in existing studies. These are
+(i) horizontal irradiation, (ii) roof aspect, (iii) roof tilt, (iv) roof shading from buildings and trees, (v) sky visibility, (vi) horizon maps. 
+% The dataset also contains information on roof slope and roof aspect, which are input features to the ML models. We further include the global and direct horizontal irradiation components (GHI and DNI) in the set of features. They are derived from satellite data provided by the Swiss meteorological office MeteoSwiss \cite{stockli_daily_2013} for the years of 2004-2015, by linearly interpolating the satellite pixels to the coordinates of each roof surface and averaging the results for all years. The diffuse horizontal irradiation is omitted, as it is the difference between GHI and DNI.
+
+The horizontal irradiation features are the annual sum of the global and direct radiation (GHI and DNI) estimated in Section~\ref{irrad}. The horizontal irradiation is omitted, as it is the difference between GHI and DNI.
+The roof aspect and tilt are the attributes contained in the rooftop dataset (Chapter~\ref{data_geometry}). 
+The roof shading feature is the average value of the hourly shading, and the sky visibility is represented by the SVF, which are both obtained from Section~\ref{shade}.
+Furthermore, we use average horizon heights for each roof as input features. 
+The maps of horizon heights are intermediate results in the computation of shading effects and the SVF (see Chapter~\ref{GIS_methods}), whose generation is the most computationally intensive part of the RPV potential estimation. Reducing the number of required horizon maps hence significantly reduces the data pre-processing efforts for the proposed method.
+To sufficiently represent the solar trajectory, we select 9 horizon heights for azimuth angles of 60$^\circ$-300$^\circ$ in bins of 30$^\circ$. 
+% For feature selection and ML model training, all features are standardized. - MENTIONED SOMEWHERE IN ML
+% The shading effects from surrounding buildings and trees and the sky visibility, which is quantified as the sky view factor (SVF), are typically derived from the horizon height of a roof, as explained in  Chapter~\ref{GIS_methods}. The horizon height can be interpreted as the minimum sun altitude to illuminate a given point (in degrees), which is typically computed using a Digital Surface Model (DSM).
+% The shading effects are then computed for each time step (e.g. hourly) as the portion of roof surface with a horizon height above the current sun altitude, while the SVF is obtained by integrating the horizon height for all azimuth angles. 
+% We compute the average horizon height for each roof as described in Appendix \ref{app:shade} based on the DSM of Switzerland (Table~\ref{tab:bld_landscape}). In the feature set, we include the roof shading, obtained by averaging hourly shading effects, the SVF and 9 of the DSM-derived horizons for azimuths of 60$^\circ$-300$^\circ$ in bins of 30$^\circ$.
+Table \ref{tab:chile_features} summarizes all 15 input features considered in the feature selection procedure.
+
+\begin{table}[thb]
+\centering
+\footnotesize
+\caption{All available features for the estimation of rooftop solar irradiation. Italic features may not be readily available or are computationally demanding to compute.}
+\label{tab:chile_features}
+\begin{tabular}{lll}
+\hline
+\textbf{Roof features} & \textbf{Horizontal irradiation}          & \textbf{Shade and skyview}         \\ \hline
+Aspect angle           & Annual global irradiation (GHI)          & \textit{Roof shading}              \\
+Tilt angle             & \textit{Annual direct irradiation (DNI)} & \textit{Skyview factor (SVF)}      \\
+                       &                                          & 9 $\times$ horizon height (30$^\circ$ angle bins) \\ \hline
+\end{tabular}
+\end{table}
+
+% The data set is standardized
+%and split into training and test data, covering separate geographic areas of Switzerland (see \ref{fig:chile_case_study}). We use the Swiss Romandie area for training and the remaining country for testing. This boundary is chosen as it represents a cultural and language border which divides all three geographic terrains of Switzerland, namely the Alps, the Plateau (where most buildings are situated) and the Jura mountains. 
+%We choose six cities inside the test area, shown in \ref{fig:chile_case_study}, for which we will predict the aggregated annual PV potential in order to test the performance of the proposed method at city level. The cities are selected to cover different population sizes, geographic areas and altitudes. The details for each city are shown in Table \ref{tab:chile_cities}. 
+
+\subsubsection{Sequential feature selection}
+The reduction of the number of features to a small set of easily available variables is one of the key aspects of this work. To obtain such a reduced feature set, we use a sequential feature selection technique as described in Chapter~\ref{ML_features}, using the MSE as selection criterion.
+We further aim to obtain a feature set that contains only easily accessible features that can be obtained with a low computational effort. Three out of 15 features, highlighted in Table \ref{tab:chile_features}, are hence excluded before applying the sequential selection. These are (i) the DNI, which is frequently unavailable at measurement stations and not included in some future climate scenarios, (ii) the roof shading and (iii) the SVF, which both require the computation of the horizon height for all azimuth angles, which is the highest computational burden in large-scale PV potential studies. 
+
+We hence perform sequential feature selection for a reduced set of 12 features, which excludes the DNI, roof shading and SVF. We use the KNN as assessment model due to its high computational efficiency and low error. Figure~\ref{fig:chile_RFE} shows the results for the selection procedure as the increase in the cross-validation root-mean squared error (RMSE) for the selected features with respect to the RMSE obtained from the complete feature set (listed in Table \ref{tab:chile_features}). The curve falls steeply for a low number of features, where each additional feature brings a large improvement in performance, and flattens out when six or more features are used. We choose a threshold of 5 kWh/m$^2$ as maximum acceptable increase in RMSE, corresponding to approximately 5\% of the modelling RMSE (see Table \ref{tab:chile_results}). This gives a set of six remaining features, and six features are excluded. The removed features are shown in Figure~\ref{fig:chile_RFE} in the order of exclusion, indicating that north-facing horizon heights have the smallest contribution in the modelling, followed by the near-south as well as the east and west horizon heights.
+
+\subsubsection{Feature importance}
+The remaining features are shown in Figure~\ref{fig:chile_FtrImp}, ranked by their importance score. This score is obtained from the built-in feature importance method of the Random Forest algorithm, which quantifies the contribution of each feature to increasing the model performance. The results confirm that all features are relevant to the modelling, with the roof aspect as well as the south-facing horizon height scoring highest, before the roof tilt and GHI. This analysis suggests that three horizon heights, at 120$^\circ$, 180$^\circ$ and 240$^\circ$, are sufficient for a good prediction of annual tilted rooftop irradiation.
+
+\begin{figure}[tb]
+\centering
+\begin{subfigure}{.49\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{images/Figs/ftr_selection_topdown_reduced_run1_w_excluded.png}
+  \subcaption{}
+  \label{fig:chile_RFE}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=\linewidth]{images/Figs/Feature_importance_selFtrs_mean_10k.png}  
+  \subcaption{}
+    \label{fig:chile_FtrImp}
+\end{subfigure}
+\caption{(a) Change in RMSE for sequentially eliminating variables from the feature set, with indication of eliminated features (threshold = 5 kWh/m$^2$); (b) Feature importance score (obtained using RF) for all selected features used in the ML models.}
+\label{fig:chile_ftrs}
+\end{figure}
+
+\subsection{Machine Learning and uncertainty estimation}
+\label{chile_ml}
 
 We compare five of the supervised regression models introduced in Chapter~\ref{ML_models}: (i) Linear Regression (LIN), (ii) K-Nearest Neighbors (KNN), (iii) Support Vector Machines (SVM), (iv) Extreme Learning Machine Ensembles (ELM-E), and (v) Random Forests (RF). In each case, the annual $G_t$ is predicted from the selected features. The architecture of each model is determined through 5-fold cross-validation. Table 3 gives the values of all tuned hyper-parameters. 
 For the ensemble models (RF, ELM-E), we further estimate the model and data uncertainties as described in Chapter~\ref{unc_ML}.
@@ -1394,32 +1520,6 @@ For the ensemble models (RF, ELM-E), we further estimate the model and data unce
 \end{tabular}
 \end{table}
 
-\subsection{Results}
-
-\subsubsection{Feature selection and importance analysis}
-
-As described in \ref{chile_ftrSelect}, we perform recursive feature selection for the reduced set of 12 features, which excludes the DNI, roof shading and SVF. We use the KNN as assessment model due to its high computational efficiency and low error. Figure~\ref{fig:chile_RFE} shows the results for the selection procedure as the increase in the cross-validation root-mean squared error (RMSE) for the selected features with respect to the RMSE obtained from the complete feature set (listed in Table \ref{tab:chile_features}). The curve falls steeply for a low number of features, where each additional feature brings a large improvement in performance, and flattens out when six or more features are used. We choose a threshold of 5 kWh/m$^2$ as maximum acceptable increase in RMSE, corresponding to approximately 5\% of the modelling RMSE (see Table \ref{tab:chile_results}). This gives a set of six remaining features, and six features are excluded. The removed features are shown in Figure~\ref{fig:chile_RFE} in the order of exclusion, indicating that north-facing horizon heights have the smallest contribution in the modelling, followed by the near-south as well as the east and west horizon heights.
-
-\begin{figure}[tb]
-\centering
-\begin{subfigure}{.49\textwidth}
-  \centering
-  % include second image
-  \includegraphics[width=\linewidth]{images/Figs/ftr_selection_topdown_reduced_run1_w_excluded.png}
-  \subcaption{}
-  \label{fig:chile_RFE}
-\end{subfigure}
-\begin{subfigure}{.49\textwidth}
-  \centering
-  % include first image
-  \includegraphics[width=\linewidth]{images/Figs/Feature_importance_selFtrs_mean_10k.png}  
-  \subcaption{}
-    \label{fig:chile_FtrImp}
-\end{subfigure}
-\caption{(a) Change in RMSE for recursively eliminating variables from the feature set, with indication of eliminated features (threshold = 5 kWh/m$^2$); (b) Feature importance score (obtained using RF) for all selected features used in the ML models.}
-\label{fig:chile_ftrs}
-\end{figure}
-
 
 \begin{table}[tb]
 \centering
@@ -1437,10 +1537,6 @@ As described in \ref{chile_ftrSelect}, we perform recursive feature selection fo
 \textbf{Prediction time (s)} & 0.16         & 29.94        & 39.44          & 1178.3       & 33.3        \\ \hline
 \end{tabular}
 \end{table}
-
-The remaining features are shown in Figure~\ref{fig:chile_FtrImp}, ranked by their importance score. This score is obtained from the built-in feature importance method of the Random Forest algorithm, which quantifies the contribution of each feature to increasing the model performance. The results confirm that all features are relevant to the modelling, with the roof aspect as well as the south-facing horizon height scoring highest, before the roof tilt and GHI. This analysis suggests that three horizon heights, at 120$^\circ$, 180$^\circ$ and 240$^\circ$, are sufficient for a good prediction of annual tilted rooftop irradiation.
-
-\subsubsection{Comparison of ML models}
 
 After choosing the final set of features (see Figure~\ref{fig:chile_FtrImp}), we apply each of the five ML models to the test data. The models are previously tuned individually using 5-fold cross-validation, yielding the hyper-parameters shown in \ref{tab:chile_hyperparams}. The test errors and execution times for the algorithms are given in \ref{tab:chile_results}. Four error metrics are shown, namely RMSE, mean absolute error (MAE), mean bias error (MBE) and the $R^2$ coefficient of determination ($R^2$), as well as the training and testing times (using a laptop with 4 cores and 8GB RAM). Linear regression is the fastest method but shows large errors. KNN and ELM-E show a similar performance and execution time, with particularly low training times. SVM has a similar error as KNN and ELM-E, but it is very slow in comparison. This is expected, as the SVM is designed for high-dimensional feature spaces rather than large datasets. 
 
@@ -1465,7 +1561,8 @@ The RF shows the lowest errors with a reasonable execution time. Further tests h
 \caption{(a) Predicted against target irradiation for 1 million roofs in the test area; (b) Prediction (blue), target (green) and uncertainties (bars) for a random sample of the test data.}
 \end{figure}
 
-\subsubsection{Large-scale estimation of rooftop solar irradiation patterns}
+\subsection{Large-scale estimation of rooftop solar irradiation patterns}
+\label{chile_predict}
 
 We use the test results for the RF model to analyze the solar irradiation patterns for roof surfaces in Switzerland with respect to their aspect and tilt angles. Figure~\ref{fig:chile_tiltIrrad} shows the predicted annual $G_t$, with flat roofs in the center. The largest irradiation is found for surfaces with a tilt angle of 30-50$^\circ$, which is expected given Switzerland’s latitude. Steep north-facing roofs have the lowest solar irradiation, of less than 700 kWh/m$^2$ on average. Figure~\ref{fig:chile_unc} shows the relative uncertainty, as percentage of predicted $G_t$. The relative uncertainty is lowest for the roofs with the highest solar irradiation, while it is high for roofs with low $G_t$. This may be due to a low number of steep roofs and strong shading effects on these. We also observe a relatively high uncertainty for (nearly) flat roofs, which may be due to unpredictable shading effects on these roofs, for example caused by objects installed on the surfaces.
 
@@ -1509,9 +1606,6 @@ To assess the performance of the model on the large scale, we compute the PV pot
 \caption{(a) Target and predicted PV potential for six Swiss cities of different sizes (see Table~\ref{tab:chile_cities}); (b) PV potential per inhabitant for each city.}
 \end{figure}
 
-
-\subsection{Discussion}
-
 \subsubsection{Limitations}
 The model proposed here reduces the set of features required for a large-scale estimation of annual solar irradiation to the GHI, the roof aspect, the roof tilt as well as three horizon heights, approximately towards south, east and west. While this largely reduces the computation required for such a study, a DSM and a reliable dataset with roof tilt and aspect angles are still necessary. The latter two are only available for cities with a 3D building model (LOD 2 or higher). If such a dataset is not available, a high-resolution DSM or a roof shape classification as proposed by \cite{mohajeri_city-scale_2018} may be used to derive tilt and aspect angles. As the model is trained in Switzerland, it is only applicable to locations with a similar latitude, as the latitude has a major impact on the peak irradiation and the corresponding tilt angle. To extend the area of applicability, results from a study in another geographic area can be added to the training dataset. Finally, we do not specifically address the available area for the installation of PV panels in this work. Studies show that the available area may be much smaller than the total roof surface \cite{assouline_quantifying_2017}, which reduces the estimated large-scale PV potential.
 
@@ -1552,3 +1646,5 @@ In this work we present a novel method to estimate the available rooftop surface
 
 %SOURCE: Chile paper
 This study provides a Machine Learning algorithm to estimate annual solar irradiation on building rooftops for areas at similar latitudes as Switzerland. The proposed model is trained using data of existing PV potential studies and uses the following six input features: annual GHI, roof tilt, roof aspect and three mean horizon heights for each roof ($120^\circ$, $180^\circ$, $240^\circ$). Comparing five ML algorithms, we found that Random Forests are most suited for this task due to their high accuracy, reasonable execution time and their ensemble structure, which in turn allows for a sound estimation of uncertainties. The obtained results show that the proposed model can effectively learn from existing large-scale datasets of PV potential and accurately estimate annual irradiation for individual rooftops and entire cities. The computational time for estimating solar irradiation at city or even country scale can thereby be reduced from hours to seconds.
+% ADDED: The selected application demonstrates that not only the method, but also the datasets generated as part of this thesis can be useful for studies outside of Switzerland, and aims to encourage the use of already existing RPV potential data in future studies.
+
