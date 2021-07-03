@@ -95,7 +95,7 @@ Other TLM objects used in Chapter \ref{geothermal} are buffered by $1m$ to accou
 %
 It contains information on coordinates (x,y) and altitude (z). In addition, we consider several spatial features derived from the DTM at various spatial scales, including terrain slope and curvature (see Table \ref{tab:DTM_ftrs} for a complete list). These features have been computed by \citet{robert_spatial_2012} for an aggregation level of $250 \times 250$ m$^2$.
 
-\begin{table}[tb]
+\begin{table}[b]
 \centering
 \footnotesize
 \caption{Spatial features of the DTM (x,y,z) and additional features derived from the DTM. All derived features are available for each scale~\cite{robert_spatial_2012}.}
@@ -123,12 +123,12 @@ An analysis of the RBD shows that 9.32\% of buildings in Switzerland have been c
 \label{data_meteo}
 Meteorological data is available from the Swiss Federal Office of Meteorology and Climatology (MeteoSwiss) as gridded data and for a network of measurement stations across the country. 
 Gridded data is preferred over data from measurement stations as it provides a better spatial coverage with an increased spatial resolution and has a very low missing data ratio ($<1\%$). 
-For the potential studies in Part~\ref{potential}, we have used solar radiation and temperature data for Switzerland. We further derive heating and cooling degree days (HDD/CDD), which are used to estimate monthly variations of heating and cooling demands \cite{stadler_contribution_2018}. The meteorological datasets are summarised in Table~\ref{tab:meteo}.
+For the potential studies in Part~\ref{potential}, we use solar radiation and temperature data for Switzerland. We further derive heating and cooling degree days (HDD/CDD), which are used to estimate monthly variations of heating and cooling demands \cite{stadler_contribution_2018}. The meteorological datasets are summarised in Table~\ref{tab:meteo}.
 %\nomenclature[A]{MeteoSwiss}{Swiss Federal Office of Energy}
 \nomenclature[A]{HDD}{Heating Degree Days}
 \nomenclature[A]{CDD}{Cooling Degree Days}
 
-\begin{table}[tb]
+\begin{table}[b]
 \centering
 \footnotesize
 \caption{Overview of meteorolgical datasets and the relevant chapters. }
@@ -140,9 +140,9 @@ For the potential studies in Part~\ref{potential}, we have used solar radiation 
 \multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Solar} \\ \textit{radiation}\end{tabular}} & GHI & $1.25$ deg. min.*   & hourly        & 2004-2015      & MeteoSwiss \cite{stockli_daily_2013}     & \ref{solar}              \\
                                  & DIR & $1.25$ deg. min.*   & hourly        & 2004-2015      & MeteoSwiss  \cite{stockli_daily_2013}    & \ref{solar}              \\
                                  & Albedo              & $1.25$ deg. min.*   & hourly        & 2004-2015      & MeteoSwiss \cite{stockli_daily_2013}     & \ref{solar}              \\ \hline
-\multirow{3}{*}{\textit{Temperature}}     & Max. temp.   & $1 \times 1 km^2$    & daily         & 2004-2015      & MeteoSwiss \cite{meteoswiss_daily_2017}     & \ref{solar}              \\
-                                 & HDD                 & $200 \times 200m^2$  & daily         & averaged      & Eq.~\ref{eq:hdd}     & \ref{geothermal}, \ref{hybrid_chapter} \\
-                                 & CDD                 & $200 \times 200m^2$  & daily         & averaged      & Eq.~\ref{eq:cdd}    & \ref{geothermal}         \\ \hline
+\multirow{3}{*}{\textit{Temperature}}     & Max. temp.   & $1 \times 1$ km$^2$    & daily         & 2004-2015      & MeteoSwiss \cite{meteoswiss_daily_2017}     & \ref{solar}              \\
+                                 & HDD                 & $200 \times 200$ m$^2$  & daily         & averaged      & Eq.~\ref{eq:hdd}     & \ref{geothermal}, \ref{hybrid_chapter} \\
+                                 & CDD                 & $200 \times 200$ m$^2$  & daily         & averaged      & Eq.~\ref{eq:cdd}    & \ref{geothermal}         \\ \hline
 \multicolumn{7}{l}{* Deg. min.: degree minutes on a longitude-latitude grid (1.25 deg. min. $\approx 1.6 \times 2.3$ km$^2$)}   
 \end{tabular}
 \end{table}
@@ -152,7 +152,7 @@ For the potential studies in Part~\ref{potential}, we have used solar radiation 
 \label{data_solarRad}
 
 % SOURCE: PV paper (original draft)
-\textbf{Global and direct horizontal radiatio (GHI/DIR).} To estimate RPV potential for Switzerland, we use satellite data for global horizontal radiation (GHI), also known as surface incoming shortwave radiation, and direct beam radiation (DIR) provided by MeteoSwiss\cite{stockli_daily_2013}. The radiation describes the total solar power at the earth's surface, given in W/m$^2$. The solar energy is referred to as irradiation, given in Wh/m$^2$. The data are available as hourly values for the period from 2004-2015 on a longitude-latitude grid of 1.25 degree minutes, equivalent to approximately $1.6 \times 2.3$ km$^2$ (see Fig.~\ref{figa:GHI_patterns}).  
+\textbf{Global and direct horizontal radiatio (GHI/DIR).} To estimate RPV potential, we use satellite data for global horizontal radiation (GHI), also known as surface incoming shortwave radiation, and direct beam radiation (DIR) provided by MeteoSwiss\cite{stockli_daily_2013}. The radiation describes the  solar power at the earth's surface, given in W/m$^2$. The solar energy is called irradiation, given in Wh/m$^2$. The data are hourly values for the period from 2004-2015 on a longitude-latitude grid of 1.25 degree minutes, equivalent to around $1.6 \times 2.3$ km$^2$ (see Fig.~\ref{figa:GHI_patterns}).  
 \nomenclature[A]{GHI}{Global horizontal radiation}
 \nomenclature[A]{DIR}{Direct beam radiation}
 
@@ -221,7 +221,7 @@ At national scale, this information is complemented by national data regarding p
 % Furthermore, information on restrictions for geothermal installations can be obtained from cantonal geothermal cadastres and national information regarding protected areas and groundwater vulnerability. 
 An overview of the datasets described below is provided in Table~\ref{tab:geoData}.
 
-\begin{table}[tb]
+\begin{table}[b]
 \centering
 \footnotesize
 \caption{Overview of subsurface datasets. CH denotes availablility in the entire Switzerland, VD is the Canton of Vaud and GE is the Canton of Geneva.}

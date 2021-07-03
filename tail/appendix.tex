@@ -150,6 +150,26 @@ Random Forests are used for two separate models, to estimate $C_{\mathit{pv}}$ (
 The RF has three main hyper-parameters which can be tuned: the number of trees in the ensemble ($n$), the minimum number of samples in each leaf node ($l$), and the number of features ($m$) which are randomly considered for splitting at each node. $m$ determines the level of randomization within each decision tree, $l$ impacts the level of smoothing of the predictions, while $n$ improves the robustness of the model, and is primarily limited by computational time \cite{breiman_random_2001}.
 The selected hyper-parameters for both models are  $l = 3$, $m = 5$ and $n = 1000$. It should be noted that the RF is much less prone to small deviations in the model hyper-parameters than the ELM-E.
 
+\subsection*{ML models for solar irradiation prediction}
+\label{app:tune_irrad}
+
+In addition to the above applications, we compare five ML models with respect to their performance in predicting annual solar irradiation (Chapter~\ref{solar_application}). Similar to the above, the architecture of each model is determined through 5-fold cross-validation. Table \ref{tab:chile_hyperparams} gives the values of all tuned hyper-parameters. For a description of the model hyper-parameters, please refer to Chapter~\ref{ML_models}.
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\caption{Hyperparameters for each Machine Learning algorithm after tuning using 5-fold cross-validation.}
+\label{tab:chile_hyperparams}
+\begin{tabular}{ccccc}
+\hline
+\textbf{LIN}       & \textbf{KNN}      & \textbf{ELM-E}     & \textbf{SVM}     & \textbf{RF}         \\\hline
+\multirow{3}{*}{-} & $k = 17$   & $m_{ELM} = 45$ & $C = 5 $  & $m_{ftrs} = 3$  \\
+                   & \multirow{2}{*}{} & $n_{est} = 25$ &  $\gamma = 200$ & $m_{leaf} = 3$  \\
+                   &                   &                    & $\varepsilon = 0.1$ & $n_{est} = 500$\\
+\hline
+\end{tabular}
+\end{table}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Geospatial algorithms}
@@ -216,6 +236,10 @@ The computation of these maps is the most computationally expensive step in the 
 
 The sky view factor is computed from similar horizon maps as described above for 32 equally spaced azimuth bins and a horizon distance of 100 m, using the \textit{skyview} add-on for GRASS GIS~\cite{zaksek_sky-view_2011}. The computation is performed in parallel over 64 sub-regions.
 
+\subsection{Post-processing of pixel-wise available area detection}
+\label{app:CNN_postprocess}
+
+The post-processing of the pixel-wise image segmentation results (Section~\ref{scenario_area}) is performed through a series of geospatial processing steps: First, the detected pixels are intersected with the roof shapes (see Section~\ref{data_geometry}). The shapes are buffered by 3 m to account for the frequent misalignments between the roof shapes and the images. Second, the pixels within roofs/buildings are clustered to groups of at least 3 m$^2$ of surface to eliminate further scattered pixels. Third, the clusters are aggregated per roof, converted from pixels to polygons (shapes) and projected onto the roof by dividing their area by the cosine of the roof tilt.
 
 
 \section{Configuration of solar panels on flat roofs}

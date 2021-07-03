@@ -92,7 +92,8 @@ As redundancy between features may lead to misleading importance scores, this me
 \label{RF}
 
 \subsubsection{Regression}
-\begin{table}[tb]
+
+\begin{table}[b]
 \footnotesize
 \centering
 \caption{Error metrics in regression problems for a data set of $n$ samples, where $y_i$ is the target, $\hat{y}_i$ is the predicted value for sample $i$, $\bar{y}$ is the mean of $y_i$ and $\epsilon$ is a small positive number to avoid undefined MAPEs.} %  ($\bar{y}=\frac{1}{n} \sum_{i=0}^{n-1} y_{i}$)
@@ -113,12 +114,12 @@ As redundancy between features may lead to misleading importance scores, this me
 % }
 \end{table}
 
-As mentioned above, regression algorithms are used to predict continuous variables, for example solar radiation or shallow geothermal heat. 
+Regression algorithms are used to predict continuous variables, such as solar radiation or shallow geothermal heat. 
 During model training, the (internal) parameters of the regression algorithms are optimized such as to minimise the error between the continous targets and the predictions of the model.
 This error (also referred to as the loss function) is typically defined as the mean squared error (MSE), i.e. the mean of the squared difference between the predictions and the "true" targets.
 %
 For model tuning and performance evaluations, further error metrics are widely used (see Table~\ref{tab:error_metrics}).
-These include (i) the R$^2$-coefficient of determination, indicating the goodness of fit between the predictions and the targets, (ii) the root-mean-squared error (RMSE), which has the same unit as the target, (iii) the mean average error (MAE), (iv) the mean average percentage error (MAPE), (v) the mean bias error (MBE), and (vi) the mean squared logarithmic error (logMSE), which is particularly useful for targets with an exponential growth \cite{pedregosa_scikit-learn:_2011}.
+These include (i) the R$^2$-coefficient of determination, indicating the goodness of fit between predictions and targets, (ii) the root-mean-squared error (RMSE), which has the same unit as the target, (iii) the mean average error (MAE), (iv) the mean average percentage error (MAPE), (v) the mean bias error (MBE), and (vi) the mean squared logarithmic error (logMSE), which is useful for targets with an exponential growth \cite{pedregosa_scikit-learn:_2011}.
 
 
 \subsubsection{Classification}

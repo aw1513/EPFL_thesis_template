@@ -38,7 +38,8 @@ We hereby do not claim to provide a complete review of existing modelling approa
 
 \subsection{Hierarchial approach for PV potential estimation}
 \label{method_solar_hierarchy}
-\begin{figure}[tb]
+
+\begin{figure}[b]
 	\centering
 	\includegraphics[width=\linewidth]{images/Figs/hierarchy.png}  
 	\caption{Hierarchical approach for estimating rooftop PV potential. Source: \citet{assouline_estimation_2017}}
@@ -77,10 +78,10 @@ As these are included across the literature in the form of different factors, pa
 
 The available area for installing PV or STC ($A_{PV}$) is potentially the factor that varies most between different studies of RPV potential, as it is strongly dependent on the scale of the study and on the available rooftop data. 
 Rooftop available area is either quantified as constant factors (e.g. \cite{iea_potential_2002,wegertseder_combining_2016,portmann_sonnendach.ch:_2016}) or derived from building data (\cite{ramirez_camargo_spatio-temporal_2015,assouline_quantifying_2017,hong_development_2017}) and aerial imagery \cite{mainzer_assessment_2017} using geospatial techniques or image processing. 
-As the required geospatial input data may not be available across entire study areas and the computational time for these methods may be prohibitively high, sampling techniques \cite{izquierdo_method_2008}, the use of building prototypes \cite{wegertseder_combining_2016} and extrapolation techniques using ML \cite{assouline_quantifying_2017,assouline_large-scale_2018} based on geospatial methods are frequently used in large-scale studies. 
-A review of statistical and geospatial techniques for quantifying the available roof area is provided in Section~\ref{GIS_methods}, while constant factors used in the literature are compared in \cite{assouline_estimation_2017,wiginton_quantifying_2010,singh_estimation_2015}.
+As the required geospatial input data may not be available across entire study areas and the computational time for these methods may be prohibitively high, sampling techniques \cite{izquierdo_method_2008}, the use of building prototypes \cite{wegertseder_combining_2016} and extrapolation using ML \cite{assouline_quantifying_2017,assouline_large-scale_2018} based on geospatial methods are mostly used in large-scale studies. 
+A review of statistical and geospatial techniques for quantifying the available roof area is provided in Section~\ref{GIS_methods}, while constant factors are compared in \cite{assouline_estimation_2017,wiginton_quantifying_2010,singh_estimation_2015}.
 
-\textbf{Technical potential.} The conversion of global radiation to PV potentials is driven by three factors: the efficiency of the PV panel ($\eta_{PV}$), the inverter efficiency ($\eta_\mathit{inv}$) and other losses ($\eta_\mathit{losses}$), which are multiplied with the tilted radiation ($G_t$) and the available area for PV installation ($A_{PV}$):
+\textbf{Technical potential.} The conversion of solar radiation to PV electricity ($P_{PV}$) is driven by three factors: the efficiency of the PV panel ($\eta_{PV}$), the inverter efficiency ($\eta_\mathit{inv}$) and other losses ($\eta_\mathit{losses}$), which are multiplied with the tilted radiation ($G_t$) and the available roof area ($A_{PV}$):
 
 \begin{equation}
     P_{PV} = G_t \times A_{PV} \times \eta_{PV} \times \eta_\mathit{inv} \times \eta_\mathit{losses}
@@ -139,7 +140,7 @@ In particular, empirical models are used in the literature (i) to quantify the p
 \subsubsection{Plane-of-array radiation}
 \label{app:irrad}
 
-\begin{figure}[bt]
+\begin{figure}[b]
 \centering
 \begin{subfigure}[t]{.43\textwidth}
   \centering
@@ -281,7 +282,7 @@ Alternative approaches, including constant-value methods and extrapolation techn
 
 \subsubsection{Shading effects and sky view factor}
 
-\begin{figure}[tb!]
+\begin{figure}[b]
 	\centering
 	\begin{subfigure}[t]{.49\textwidth}
 		\centering
@@ -431,7 +432,7 @@ When boreholes are spaced too close to each other, thermal plumes may overlap, w
 Thermal interference between boreholes is assessed in the literature based on an analytical model, developed by \citet{eskilson_thermal_1987}, which simulates the thermodynamic behaviour of BHEs based on the thermal ground properties as well as the sizing, geometry and material of the BHEs.
 %  (e.g. \cite{miglani_methodology_2018,rivera_increased_2017,bayer_strategic_2014})
 %
-To formulate a technical potential for closed-loop GSHPs, related studies (e.g. \cite{miglani_methodology_2018,rivera_increased_2017,schiel_gis-based_2016,viesi_gis-supported_2018,casasso_g.pot:_2016,perego_techno-economic_2019}) combine the this analytical model with norms for the current BHE design practice, using primarily the geothermal norms of the Association of German Engineers (VDI) \cite{vdi_vdi_2019} and the Swiss Society of Engineers and Architects (SIA) \cite{sia_sondes_2010}.
+To obtain a technical potential for closed-loop GSHPs, related studies (e.g. \cite{miglani_methodology_2018,rivera_increased_2017,schiel_gis-based_2016,viesi_gis-supported_2018,casasso_g.pot:_2016,perego_techno-economic_2019}) combine the this analytical model with norms for BHE design practice, using primarily the geothermal norms of the Association of German Engineers (VDI) \cite{vdi_vdi_2019} and the Swiss Society of Engineers and Architects (SIA) \cite{sia_sondes_2010}.
 The parameters required for the analytical model and their values given by the SIA norm (relevant for Switzerland) will be introduced in Section~\ref{geo_params}.
 
 Both the VDI and SIA norms require the BHEs to be designed and operated such that the mean temperature of the borehole fluid ($T_{mf}$) never drops below its freezing temperature ($T_\mathit{mf,min}=-1.5$ °C \cite{sia_sondes_2010}), such that \cite{sia_sondes_2010,vdi_vdi_2019}:
@@ -445,14 +446,22 @@ The variables in Eq.~\ref{eq:Q_field_method} ($q_\mathit{max}$, $t_{op}$, $H$, $
 %
 The relationship between these variables and the $T_{mf}$ is expressed by the borehole \textit{temperature profile}, which describes the temperature changes inside and around a BHE.
 A general model of this temperature profile, proposed by \citet{claesson_conductive_1988}, is introduced in Section~\ref{model_intro}, while Section~\ref{geo_models} details the analytical formulas used to estimate the thermodynamic processes in the ground.
+\\
 
 While heat extraction is the dominant mode of operation of GSHPs in Europe \cite{lund_direct_2020}, GSHPs can also be used for heat injection, for example for space cooling applications \cite{kavanaugh_geothermal_2014}, whereby the same physical principles (Sections ~\ref{model_intro} and \ref{geo_models}) apply.
-As heat injection is not addressed in the SIA or VDI norms, studies addressing the potential of GSHPs for heat injection use the standards of the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) \cite{kavanaugh_geothermal_2014} for borehole sizing \cite{aditya_environmental_2020,miglani_methodology_2018,michopoulos_potential_2011} . For cooling-dominated systems, the temperature requirement from Eq.~\ref{eq:T_mf_min} is inverted, limiting the maximum fluid temperature $T_\mathit{mf,max}$:
+As heat injection is not addressed in the SIA or VDI norms, studies on the potential of GSHPs for heat injection use the standards of the American Society of Heating, Refrigerating and Air-Conditioning Engineers (ASHRAE) \cite{kavanaugh_geothermal_2014} for borehole sizing \cite{aditya_environmental_2020,miglani_methodology_2018,michopoulos_potential_2011} . For cooling-dominated systems, the temperature requirement from Eq.~\ref{eq:T_mf_min} is inverted, limiting the maximum fluid temperature $T_\mathit{mf,max}$:
 
 \begin{equation}
 \label{eq:T_mf_max}
 T_{mf} \leq T_\mathit{mf,max}
 \end{equation}
+
+\begin{figure}[bt]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/Figs/GSHP.png}
+    \caption{Working principle of a GSHP in heating cycle. Cold air is moved from the house to the heat pump, where it is heated from the compressed heat extracted from the ground. The ground loop liquid is cooled and transported back to the ground, where it is again heated \cite{gns_science_nz_geothermal_2016}.}
+    \label{fig:HP}
+\end{figure}
 
 In addition to the BHEs, a GSHP system contains a heat pump (HP), which is used to transfer the heat extracted from the ground to the building heating or cooling systems (see Fig. \ref{fig:HP}).
 %, as these typically require different temperatures than those provided by the BHE. 
@@ -469,13 +478,6 @@ Q_\mathit{cool}=Q_\mathit{inj}\ \frac{COP_\mathit{cool}}{\left(COP_\mathit{cool}
 \end{equation}
 
 where $Q_\mathit{extr}$ and $Q_\mathit{inj}$ are the extracted and injected heat from/to the BHEs and $COP_\mathit{heat}$/$COP_\mathit{cool}$ are the COPs for heating and cooling, respectively. In neighbourhood or regional-scale studies of technical GSHP potential, constant values are often used for the COP \cite{miglani_methodology_2018,schiel_gis-based_2016,perego_techno-economic_2019}, while studies at building scale typically model the COP as a function of temperature \cite{fraga_heat_2018,liu_feasibility_2017,stene_residential_2005}.
-
-\begin{figure}[bt]
-    \centering
-    \includegraphics[width=0.7\linewidth]{images/Figs/GSHP.png}
-    \caption{Working principle of a GSHP in heating cycle. Cold air is moved from the house to the heat pump, where it is heated from the compressed heat extracted from the ground. The ground loop liquid is cooled and transported back to the ground, where it is again heated \cite{gns_science_nz_geothermal_2016}}.
-    \label{fig:HP}
-\end{figure}
 
 \subsection{Parameters}
 \label{geo_params}
@@ -517,8 +519,7 @@ $\dot{q}_{g}$               & mW/m$^2$      & Geothermal heat flow           & $
     \alpha = \frac{\lambda}{\rho C}
 \end{equation}
 
-In the literature, the values for $\rho C$ and $\lambda$ are either derived from measurement data and interpolated using geostatistical kriging \cite{tian_improved_2020,munoz_estimating_2015} or Machine Learning~\cite{assouline_machine_2019}, obtained from 3D underground models \cite{garcia-gil_gis-supported_2015,groupe_de_travail_pgg_evaluation_2011-1} or, most frequently, mapped from tabulated values in the literature based on the present rock types~\cite{perego_techno-economic_2019,galgaro_empirical_2015,casasso_g.pot:_2016,gemelli_gis-based_2011}. An overview of typical thermal conductivity and heat capacity values for rock types found in Switzerland are provided in the SIA norm \cite{sia_sondes_2010} and by \cite{pahud_geothermal_2002}.
-\\
+In the literature, the values for $\rho C$ and $\lambda$ are either derived from measurements and interpolated using kriging \cite{tian_improved_2020,munoz_estimating_2015} or Machine Learning~\cite{assouline_machine_2019}, obtained from 3D underground models \cite{garcia-gil_gis-supported_2015,groupe_de_travail_pgg_evaluation_2011-1} or, most frequently, mapped from tabulated values based on the present rock types~\cite{perego_techno-economic_2019,galgaro_empirical_2015,casasso_g.pot:_2016,gemelli_gis-based_2011}. An overview of typical thermal conductivity and heat capacity values for rock types found in Switzerland are provided in the SIA norm \cite{sia_sondes_2010} and by \cite{pahud_geothermal_2002}.
 
 If hydro-geological data is available, the thermal conductivity can be adjusted to account for conductive heat transfer due to groundwater movement \cite{viesi_gis-supported_2018,assouline_machine_2019}, using the ground saturation level and the darcy velocity as input \cite{viesi_gis-supported_2018}. 
 Advective heat transfer is neglected in the model proposed by \citet{eskilson_thermal_1987}.
@@ -535,7 +536,7 @@ Another important physical parameter is the \textit{undisturbed ground temperatu
 \begin{figure}
     \centering
     \includegraphics[width=0.6\linewidth]{Figs/ground_temperature.png}
-    \caption[Example for the variation in ground temperature for two measurements of ground temperature in Zürich.]{Example for the variation in ground temperature for two measurements of ground temperature in Zürich, showing the influence of altitude (black line) and additional surface heating through the presence of forests (red line). Source: \citet{huber_bodentemperaturen_2014}.}
+    \caption[Example for the variation in ground temperature ($T_g$) for two measurements of $T_g$ in Zürich.]{Example for the variation in ground temperature ($T_g$) for two measurements of $T_g$ in Zürich, showing the influence of altitude (black line) and surface heating through the presence of forests (red line) \cite{huber_bodentemperaturen_2014}.}
     \label{fig:T_ground}
 \end{figure}
 
@@ -544,12 +545,13 @@ The $T_0$ can be either interpolated based on measurements of the near-surface g
 While not being directly used in the analytical model of GSHPs, the (undisturbed) \textit{geothermal heat flow} $\dot{q}_{g}$ plays an important role in the quantification of geothermal resources, as it characterises the natural heat flow in the ground. It is given by \cite{huber_bodentemperaturen_2014}:
 
 \begin{equation}
+\label{eq:heat_flux}
     \dot{q}_{g} = \lambda * \frac{\Delta T}{\Delta z}
 \end{equation}
 
-The geothermal heat flow is approximately constant across the outer crust of the earth, but may vary in mountain terrain \citep{huber_bodentemperaturen_2014}. The relationship may further be used to compute $\lambda$ or $ \frac{\Delta T}{\Delta z}$ if other data is unavailable.
+The geothermal heat flow is nearly constant in the outer crust of the earth, but may vary in mountain terrain \citep{huber_bodentemperaturen_2014}. Eq.~\ref{eq:heat_flux} may be used to compute $\lambda$ or $ \frac{\Delta T}{\Delta z}$ if other data is unavailable.
 
-\begin{figure}[b]
+\begin{figure}[tb]
     \centering
     \includegraphics[width=0.6\linewidth]{Figs/BHE_tech.png}
     \caption[Cross-section of a duplex BHE layout.]{Cross-section of a duplex BHE layout \citep{pahud_geothermal_2002}.}
@@ -561,28 +563,11 @@ For $T_\mathit{mf,max}$, no unique value exists across the literature. Instead, 
 % \cite{spitler_vertical_2016}.
 Quantifying the temperature drop inside the borehole further requires knowledge of the borehole radius ($r_b$) as well as the effective thermal resistance of the borehole ($R_b^*$). A typical layout of a duplex system, the most common form of BHE installations (\cite{sia_sondes_2010}), is shown in Fig.~\ref{fig:BHE_cross-sec}. The thermal resistance is determined by the materials and the geometry of the BHE, which are analysed in detail in \citep{huber_erdwarmesonden_2005}. Table~\ref{tab:tech_design_params} summarises the range of parameters found in the literature and the SIA norm values (if applicable).
 
-\textbf{Design parameters}. Two groups of design parameters are relevant to study the multi-fold effects between the geometry of a BHE field and the temperature in the ground, which is typically assessed after a planning horizon $t_\mathit{dim}$. 
-The first group of parameters are related to the borehole geometry. These include the borehole depth ($H$), the horizontal distance between BHEs ($B$) and the distance between the top part of the BHE (where heat is extracted) and the ground surface ($D$). 
-
-A second group of design parameters is related to the heat extraction from the borehole. It includes the heat extraction power ($Q_{HP}$), the maximum heat extraction rate ($q_\mathit{max}$), the operating time ($t_{op}$) and the duration of maximum operation ($t_{peak}$). The heat extraction power is related to the power rating of the heat pump (HP), whose typical values are shown in Table~\ref{tab:tech_design_params}. 
-% In a large-scale study, however, $Q_{HP}$ is not a technical parameter, as the number of heat pumps in the system is undefined. 
-The heat extraction rate is computed from $Q_{HP}$ and $H$ as given in Table~\ref{tab:tech_design_params}. Nominal curves for $q_\mathit{max}$ as a function of $\lambda$ and $\rho C$, referred to as nominal heat extraction rate $q_{nom}$, are provided in \cite{sia_sondes_2010}. These curves can be approximated as (cf. \cite{sia_sondes_2010}):
-
-\begin{equation}
-\label{eq:q_nom}
-    q_{nom} \approx \frac{T_g - T_\mathit{mf, min}}{11.5} \ \left( 10.6 \lambda + 11.2 + 2 \left( \frac{\lambda}{\alpha} - 2 \right) \right)
-\end{equation}
-
-% If these are used, $Q_{HP}$ needs to be computed by rearranging the equation for $q_\mathit{max}$. 
-The operating time indicates the number of hours in which the heat pump is operating (with power $Q_{HP}$). The norm values, used throughout this work, depend on altitude and location \cite{sia_sondes_2010}.
-%. It changes with altitude and location, and the nominal values are shown in Fig.~\ref{fig:t_q_norm}b. 
-The duration of the peak extraction pulse ($t_\mathit{peak}$) measures the maximum time of non-stop operation of the HP, which impacts the maximum temperature drop in the BHE and is usually taken as 1, 5 or 10 days \cite{pahud_geothermal_2002}.
-
-\begin{table}[t]
+\begin{table}[tb]
 \footnotesize
 \caption{Technical and design parameters. Norm values are given in \citep{sia_sondes_2010}, while other parameters are obatined from related studies \citep{pahud_geothermal_2002, wagner_erdwarmesonden._2019, claesson_conductive_1988}.}
 \centering
-\resizebox{\textwidth}{!}{%
+% \resizebox{\textwidth}{!}{%
 \begin{tabular}{lllll}
 \hline
 \textbf{Symbol} & \textbf{Unit} & \textbf{Description}                   & \textbf{Formula}                                        & \textbf{Norm value / range (CH)} \\ \hline
@@ -601,9 +586,26 @@ $t_{peak}$      & h           & Duration of maximum extraction pulse   &        
 $t_\mathit{dim}$       & years           & Planning horizon for dimensioning the BHE   &                                                         & $50$                    \\ 
 \hline
 \end{tabular}
-}
+% }
 \label{tab:tech_design_params}
 \end{table}
+
+\textbf{Design parameters}. Two groups of design parameters are relevant to quantify the effects of the geometry of a BHE field on the temperature in the ground, which are typically assessed after a planning horizon $t_\mathit{dim}$. 
+The first parameter group describes the borehole geometry. This includes the borehole depth ($H$), the horizontal distance between BHEs ($B$) and the distance between the top part of the BHE (where heat is extracted) and the surface ($D$). 
+
+A second group of design parameters is related to the heat extraction from the borehole. It includes the heat extraction power ($Q_{HP}$), the maximum heat extraction rate ($q_\mathit{max}$), the operating time ($t_{op}$) and the duration of maximum operation ($t_{peak}$). The heat extraction power is related to the power rating of the heat pump (HP), whose typical values are shown in Table~\ref{tab:tech_design_params}. 
+% In a large-scale study, however, $Q_{HP}$ is not a technical parameter, as the number of heat pumps in the system is undefined. 
+The heat extraction rate is computed from $Q_{HP}$ and $H$ as given in Table~\ref{tab:tech_design_params}. Nominal curves for $q_\mathit{max}$ as a function of $\lambda$ and $\rho C$, referred to as nominal heat extraction rate $q_{nom}$, are provided in \cite{sia_sondes_2010}. These curves can be approximated as (cf. \cite{sia_sondes_2010}):
+
+\begin{equation}
+\label{eq:q_nom}
+    q_{nom} \approx \frac{T_g - T_\mathit{mf, min}}{11.5} \ \left( 10.6 \lambda + 11.2 + 2 \left( \frac{\lambda}{\alpha} - 2 \right) \right)
+\end{equation}
+
+% If these are used, $Q_{HP}$ needs to be computed by rearranging the equation for $q_\mathit{max}$. 
+The operating time indicates the number of hours in which the heat pump is operating (with power $Q_{HP}$). The norm values, used throughout this work, depend on altitude and location \cite{sia_sondes_2010}.
+%. It changes with altitude and location, and the nominal values are shown in Fig.~\ref{fig:t_q_norm}b. 
+The duration of the peak extraction pulse ($t_\mathit{peak}$) measures the maximum time of non-stop operation of the HP, which impacts the maximum temperature drop in the BHE and is usually taken as 1, 5 or 10 days \cite{pahud_geothermal_2002}.
 
 \subsection{Temperature profile of a BHE installation}
 \label{model_intro}

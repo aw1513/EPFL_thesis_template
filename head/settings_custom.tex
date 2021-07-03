@@ -58,3 +58,12 @@
     format=plain,   % but allowed in subfigure to save space
     labelfont=normalfont,        % the label, e.g. figure 12, is bold
 }
+
+% FORMAT FIGURE PLACEMENT (https://tex.stackexchange.com/questions/39017/how-to-influence-the-position-of-float-environments-like-figure-and-table-in-lat)
+\setcounter{topnumber}{1}
+\setcounter{bottomnumber}{1}
+\setcounter{totalnumber}{3}
+
+% \renewcommand{\topfraction}{0.7}	% max fraction of floats at top
+\renewcommand{\bottomfraction}{0.7}	% max fraction of floats at bottom
+\renewcommand{\textfraction}{0.1}	% max fraction of floats at top
