@@ -207,7 +207,7 @@ Dimension & $P \times t$ & $R \times t$ & $R \times t$ & $R$   & $R$     & $R$  
 Unit     & W/m$^2$    & W/m$^2$  & -                          & -                  & -                    & -                     & -                             
 \\
 Method      & ML & PM & GIS & GIS & GIS+ML & GIS+ML & PM \\
-Section      & \ref{irrad}  & \ref{app:irrad}     & \ref{shade}       & \ref{svf} & \ref{shade} & \ref{panels} & \ref{app:efficiency} 
+Thesis section      & \ref{irrad}  & \ref{app:irrad}     & \ref{shade}       & \ref{svf} & \ref{shade} & \ref{panels} & \ref{app:efficiency} 
 \\  
 \hline 
 \end{tabular}
@@ -786,12 +786,14 @@ These results suggest that during summer the sky is clearer in the morning, whil
   % include first image
   \includegraphics[width=\linewidth]{Figs/PV_per_roof_area_tilt_norm.jpg} 
   \subcaption{}
+  \label{figa:pv_roof}
 \end{subfigure}
 \begin{subfigure}{.48\textwidth}
   \centering
   % include second image
   \includegraphics[width=\linewidth]{Figs/PV_slope_azimuth_suitable_norm.jpg}
   \subcaption{}
+  \label{figb:pv_roof}
 \end{subfigure}
 \caption{Annual technical RPV potential for all roof surfaces ($E_{PV}$, in kWh/m$^2$), a) grouped by roof tilt and area, b) grouped by roof tilt and aspect.}
 \label{fig:pv_roof}
@@ -836,7 +838,7 @@ c) monthly-mean-hourly profiles of $E_{PV}$, summed for all suitable roofs, the 
 \end{figure}
 
 Applying these criteria to all 9.6 million roof surfaces in Switzerland, 2.7 million roofs on 2.3 million buildings remain suitable to install PV panels. 
-In total, the $A_{PV}$ is $267 \pm 71$ km$^2$ and the resulting maximum technical PV potential is $24 \pm 9$ TWh. Figure~\ref{fig:results}a shows the spatial distribution of the annual $E_{PV}$ aggregated to pixels of $500 \times 500$ m$^2$ for visualisation purposes. The potential is centered in the Swiss plateau, where most densely populated cities are located.
+In total, the $A_{PV}$ is $267 \pm 71$ km$^2$ and the resulting maximum technical PV potential is $25 \pm 9$ TWh. Figure~\ref{fig:results}a shows the spatial distribution of the annual $E_{PV}$ aggregated to pixels of $500 \times 500$ m$^2$ for visualisation purposes. The potential is centered in the Swiss plateau, where most densely populated cities are located.
 %
 The annual $E_{PV}$ per rooftop of one such pixel is shown in Figure~\ref{fig:results}b, which demonstrates that large flat roofs have by far the highest potential to install PV panels.
 %
@@ -1037,7 +1039,7 @@ Across all studies, the percentage of suitable roofs and the system efficiency a
 Assessing suitability by a minimum radiation threshold of 1000 kWh/m$^2$ hereby leads to approximately 10\% more suitable roof surface area then using south-facing surfaces with a roof aspect below $90^\circ$. 
 The system efficiency in S1, published over a decade ago, lies at 10\%. S5 quote a value of 10.3\% which is derived from measurements. However, a higher average module efficiency of 17\% and a PF of 80\% appear realistic when considering the performance improvements of PV systems. These values, used in S2-S4, are confirmed by the results obtained from the model of module and inverter efficiencies described in Section~\ref{phys_models}.
 
-The final technical PV rooftop potential ranges from the lowest estimate of 15 TWh by S1 up to 53 TWh by S4, with our estimate (S6) lying in the mid-range of the existing studies at $24$ TWh. 
+The final technical PV rooftop potential ranges from the lowest estimate of 15 TWh by S1 up to 53 TWh by S4, with our estimate (S6) lying in the mid-range of the existing studies at $25$ TWh. 
 The relatively low $C_R$ obtained in this work is hereby offset by the high $A_\mathit{floor}$ and $G_t$ compared to previous studies.
 % The lower values are based on a smaller ground floor area and hence likely underestimate the total available roof area for PV installation. 
 % The upper estimates are characterized in particular through a high ratio of available area to ground floor area and high tilted radiation. 
@@ -1069,13 +1071,13 @@ For the validation, two configurations of PV panels on flat roofs are considered
 
 In contrast to the solar radiation, no "ground truth" exists for the available roof area ($A_{PV}$), as PV systems may not be installed using the maximum available area.
 While a ground truth can be manually established from satellite images, this approach is not scalable.
-We thus propose an image segmentation method based on convolutional neural networks (CNNs) to automate the detection of available roof area from satellite images, which is used to validate the estimated $A_{PV}$ for a sample of $\sim 2400$ roof surfaces in the Canton of Geneva (Section~\ref{scenario_area}).
+We thus propose an image segmentation method based on convolutional neural networks (CNNs) to automate the detection of available roof area from satellite images. This CNN approach is used to validate the estimated $A_{PV}$ for a sample of $\sim 2400$ roofs in the Canton of Geneva (Section~\ref{scenario_area}).
 
 % As the above comparison has shown, this estimate of RPV potential depends on the applied methods and underlying hypotheses. In particular, the arrangement of PV panels on flat roofs and the definition of suitable roofs for PV installation may impact the magnitude of the estimated RPV potential. Furthermore, some of the variables, notably the available area for PV panel installation ($A_{PV}$), are estimated with uncertainties of around 25\% (see Fig.~\ref{figa:sens_vars}). 
 
 % In this section, we explore two expansions of the method presented in Section~\ref{solar_method} challenging these hypotheses and uncertainties. 
 % These are the arrangement of PV panels on flat roofs as alternating east-west-facing rows, with a validation against measurement data (Section~\ref{scenario_EW}), and the use of image segmentation for estimating $A_{PV}$, assessed for a case study in western Switzerland (Section~\ref{scenario_area}). 
-% These expansions yield further scenarios of RPV potential, which will be compared to the first estimate of $24 \pm 9$ TWh in Section~\ref{scenario_compare}.
+% These expansions yield further scenarios of RPV potential, which will be compared to the first estimate of $25 \pm 9$ TWh in Section~\ref{scenario_compare}.
 
 % PAPER CISBAT 2021
 \begin{comment}
@@ -1561,16 +1563,22 @@ The motivation behind this work is to facilitate the study of rooftop PV potenti
 
 \subsection{Methodological contribution}
 
-Our methodology presents an end-to-end approach to estimate RPV potential at monthly-mean-hourly temporal resolution for individual roof surfaces. It uses large building and environmental datasets and may be transferred to any region or country where such data is or will become available. 
+Our methodology (Section~\ref{solar_method}) presents an end-to-end approach to estimate RPV potential at monthly-mean-hourly temporal resolution for individual roof surfaces. It uses large building and environmental datasets and may be transferred to any region or country where such data is or will become available. 
 The proposed method adapts best existing practices for a data-driven estimation of each parameter that impacts RPV potential. This includes
 (i) the spatio-temporal variation of the horizontal solar radiation,
 (ii) the effects of surrounding trees and buildings on roof shading and the sky view factor,
 (iii) the impact of roof geometry and superstructures on the available area for installing PV panels, and
 (iv) the temperature-dependence of the PV module efficiency.
 As a result, the potential computed here is more accurate and provides a higher spatio-temporal resolution than previous works.
+Furthermore, the proposed method may be easily adapted to different underlying hypotheses, for example to estimate real hourly RPV generation for specific years or to model a different arrangement of PV panels on flat roofs (see Section~\ref{scenario_EW}).
 
-The strength of our method lies in the combination of physical models with GIS and ML. The former two provide a detailed representation of the physical processes underlying the RPV assessment. The use of ML, applied previously only in \cite{assouline_quantifying_2017, assouline_large-scale_2018}, allows to include additional knowledge extracted from data with only partial spatial or temporal coverage, and hence improves the accuracy of the results. 
-The ML approach also outlines a method to use sparsely available datasets for a PV assessment in other regions.
+The strength of our method lies in the combination of physical models with GIS and ML. The former two provide a detailed representation of the physical processes underlying the RPV assessment. The use of ML, applied previously only in \cite{assouline_quantifying_2017, assouline_large-scale_2018}, allows to include additional knowledge extracted from data with only partial spatial or temporal coverage. This approach is transferable to RPV assessments in other regions with sparsely available datasets.
+% and hence improves the accuracy of the results. 
+We also show that available roof areas for RPV installation can be accurately detected from aerial imagery using an image-based ML approach, namely Convolutional Neural Networks (CNN).
+% Using aerial imagery as input data, we further demonstrate that convolutional neural networks (CNNs)
+% SENTENCE: OTHER USES OF ML WITHIN THIS WORK
+
+% The ML approach also outlines a method to use sparsely available datasets for a PV assessment in other regions.
 
 Furthermore, we propose a structured method to estimate and propagate uncertainty in large-scale PV potential studies. Using the ML and GIS methods, we are able to quantify uncertainties related to the data sources and individual processing steps. These values are then combined using statistical tools to estimate the total uncertainty.
 This allows decision-makers to better understand the potential contribution of RPV to future energy systems. 
@@ -1580,24 +1588,149 @@ This allows decision-makers to better understand the potential contribution of R
 \subsection{Practical contribution}
 
 The application of the methodology to Switzerland provides several practical contributions for an effective integration of RPV in the built environment. 
-Firstly, our results form a dataset of hourly profiles of RPV potential and its uncertainty for 9.6M rooftops in Switzerland, which will be publicly accessible. To the best of our knowledge, it is the first dataset of its type at this spatio-temporal resolution and scale. Our data can be used by the research community to study future energy systems with large shares of RPV, whereby the uncertainty permits the modelling of different scenarios. 
-
-Secondly, the large-scale estimate of $24 \pm 9$ TWh provides a realistic estimate of the technical RPV potential for Switzerland. According to our data, PV generation may cover over 40\% of Switzerland's annual electricity demand of 57.6 TWh in 2018 \cite{swiss_federal_institue_for_energy_schweizerische_2018}. However, our results also show that the potential contribution from RPV is insufficient during winter and night hours, while there may be a surplus of RPV generation during peak hours in summer (see Fig~\ref{fig:results}b). 
-
-Thirdly, the sensitivity analysis performed here identifies the parameters with the highest impact on the estimated RPV potential, as well as the main sources of uncertainty (see Fig.~\ref{fig:sens_vars}). The parameter with the highest impact is the horizontal radiation. Its uncertainty is mainly caused by the high intermittency of the solar resource and can not be significantly reduced, even if higher-quality data was available. 
-The panelled area ratio represents the second largest source of uncertainty. In this case, it is due to inaccuracies in the input data and uncertainty in the modelling approach. These may be reduced by a more precise model, for example using image processing techniques \cite{mainzer_assessment_2017}, or a more detailed building model (i.e. LOD 4) that is available in the entire study region.
-
-
-\subsection{Scenario comparison}
-\label{scenario_compare}
+First, our results form a dataset of hourly profiles of RPV potential and its uncertainty for 9.6M rooftops in Switzerland, which are publicly accessible\footnote{\url{http://doi.org/10.5281/zenodo.3609833}}. 
+To the best of our knowledge, it is the first dataset of its type at this spatio-temporal resolution and scale. 
+Our data can be used by the research community to study future energy systems with large shares of RPV in Switzerland, whereby the uncertainty permits the modelling of different RPV scenarios. 
+The application presented in Section~\ref{solar_application} further shows an example of how this data may be used for RPV studies outside of Switzerland or for future scenarios of urbanisation.
 
 \begin{figure}[tb]
 \centering
 \includegraphics[width=\linewidth]{images/Figs/Cumulative_PV_potential.pdf}
-\caption{Cumulative PV potential.}
+\caption{Cumulative PV potential for the Swiss building stock, sorted by the PV potential per building.}
 \label{fig:PV_cumulative}
 \end{figure}
 
+Second, the large-scale estimate of $25 \pm 9$ TWh provides a realistic estimate of the national technical RPV potential for Switzerland. 
+According to our data, PV generation may cover over 40\% of Switzerland's annual electricity demand of 57.6 TWh in 2018 \cite{swiss_federal_institue_for_energy_schweizerische_2018}. 
+However, our results also show that the potential contribution from RPV is insufficient during winter and night hours, while there may be a surplus of RPV generation during peak hours in summer (see Fig~\ref{fig:results}b). 
+A further analysis of this RPV potential by installation size (Figure~\ref{fig:PV_cumulative}) shows that the exploitation of the best 11\% of buildings is sufficient to realise 50\% of the maximum potential (12.5 TWh), while 75\% of the potential may be realised by installing PV on the best third of buildings. 
+These findings make a strong case for the prioritisation of large (mostly industrial) roofs in national RPV integration strategies.
+
+Third, the analysis of the intermediate and final results at national scale shows how the final RPV potential estimate of 25 TWh is impacted by each of the data processing steps. In particular, the available area is of high interest in this analysis, as methods to estimate it vary widely across the literature (see Chapter~\ref{method_solar_hierarchy}).
+As shown in Figure~\ref{fig:PV_sankey}, the virtual panel fitting algorithm ("Buffer + panel fitting") reduces the available area by 40\%, while the impact of superstructures and mostly shaded areas only result in a further reduction of 24\% and 9\% of the (remaining) area, respectively. 
+This shows that roof geometry and the hypotheses for the virtual panel fitting algorithm, such as the panel placement on flat roofs, influence the RPV potential estimate significantly.
+Using the diagram in Fig.~\ref{fig:PV_sankey}, estimations of the national RPV potential under different hypotheses may be obtained by adjusting the quoted percentages.
+% Unsuitable roofs, defined as those facing north (roof aspect > 90° from south) or having an available area below 8 m$^2$ reduce the available area by another 44\%. A more optimistic definition of suitable roofs may hence lead to a higher national RPV potential estimate (see following Section)
+
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{images/Figs/solar_sankey_V2.pdf}
+\caption{Sankey diagram of the RPV potential estimation, separating between the tilted radiation (top left) and available area (bottom left), which are then multiplied to obtain the electricity generation (right). The percentages in brackets denote the percentage reduction with respect to the remaining quantity (radiation, area, electricity).}
+\label{fig:PV_sankey}
+\end{figure}
+
+
+Fourth, the sensitivity analysis performed here identifies the parameters with the highest impact on the estimated RPV potential, as well as the main sources of uncertainty (see Fig.~\ref{fig:sens_vars}). The parameter with the highest impact is the horizontal radiation. Its uncertainty is mainly caused by the high intermittency of the solar resource and can not be significantly reduced, even if higher-quality data was available. 
+The panelled area ratio represents the second largest source of uncertainty. In this case, it is due to inaccuracies in the input data and uncertainty in the modelling approach. 
+The \textit{CNN}-based approach for detecting available areas (Section~\ref{scenario_area}) presents a method to reduce this uncertainty by using aerial images as input data instead of more general roof characteristics such as roof slope, roof area or surrounding building density.
+
+% These may be reduced by a more precise model, for example using image processing techniques \cite{mainzer_assessment_2017}, or a more detailed building model (i.e. LOD 4) that is available in the entire study region.
+
+\subsection{Scenario comparison}
+\label{scenario_compare}
+
+As discussed above, the national RPV potential of $25 \pm 9$ TWh depends fundamentally on the hypotheses in the definition of the available area and the suitable rooftops for PV installation. 
+While the hypotheses used in Section~\ref{solar_method} are based on best practices in the scientific literature, current installation practices and methodological advances may yield different results. 
+This section compares different scenarios of roof utilisation and roof suitability (see Chapter~\ref{GIS_methods} for a definition) with respect to the resulting national RPV potential. 
+In the context of the Swiss targets to achieve 34 TWh of PV electricity generation by 2050 \cite{bfe_energieperspektiven_2020}, we hereby consider only scenarios leading to a more optimistic potential estimate.
+
+Three main scenarios for roof utilisation are considered here. 
+The \textit{baseline} scenario follows the method from Section~\ref{solar_method}, assuming that PV panels are virtually installed on all building roofs with a buffer of 40 cm to the roof edge, and with panels on flat roofs (0° tilt) being installed as separated south-facing shed rows at 30° tilt.
+The \textit{EW (flat)} scenario equals the \textit{baseline} except for flat roofs, for which panels are virtually installed in adjacent alternating east- and west-facing rows at 15° tilt, whereby all roofs with tilt angles below 10° are considered as flat (see Section~\ref{scenario_EW}).
+The \textit{BIPV} scenario simulates building-integrated PV, by assuming that the entire unshaded and unobstructed roof area may be used for electricity generation. This is unarguably a very optimistic scenario given the current state and cost of BIPV technology, however in the future it may become an interesting option for rooftops with high visibility. To implement the \textit{BIPV} scenario, we adjust the potential estimate for the intermediate result of the panel fitting algorithm ($C_{pv}^F$ in Section~\ref{panels}).
+
+For each of the tree main scenarios, we further include a \textit{CNN} estimate, which is adjusted for the results of the CNN-based validation of the available area for small ($10 - 100$ m$^2$), medium ($100 - 500$ m$^2$) and large ($> 500$ m$^2$) roofs (Section~\ref{scenario_area}).
+The validation results suggest that the RPV method (Section~\ref{solar_method}) tends to underestimate the available area on small roofs by 15\% of the total roof area on average, while it overestimates the available area on large roofs by 23.5\% of the roof area. 
+To obtain the \textit{CNN} estimates, we use the ratios between the mean percentage of available roof areas for the different roof sizes shown in Table~\ref{tab:CNN_compare} and extrapolate these to all roofs in Switzerland.
+As the sample used for the validation in  Section~\ref{scenario_area} is rather small and not shown to be representative of the Swiss building stock, these results are preliminary.
+
+For the roof suitability, we also consider three scenarios. The first one assumes that all south-facing roofs (< 90° from south) and all flat roofs (see above) are suitable for PV installation - this is the roof suitability used in Section~\ref{solar_results}. As roofs of tilt angles up to 20° still have a high technical potential (see Fig.~\ref{figb:pv_roof}), the second suitability scenario assumes that in addition to all south-facing roofs, all roofs with tilt angles until 20° are suitable. 
+This scenario further corresponds to some of the existing installations reported in Table~\ref{tab:valid_roofs}.
+The third scenario assumes that all roofs are exploited, which is a rather optimistic assumption.
+A summary of all scenarios is provided in Table~\ref{tab:solar_scenarios}.
+
+% While Section~\ref{solar_comparison} compares existing hypotheses used in the Swiss context, Section~\ref{solar_scenarios} discusses the impact of changes in these hypotheses on the potential estimate presented above.
+% As the \textit{CNN} results (italic values) are extrapolated from a case study that may not be representative of the entire Swiss building stock, these results are preliminary.
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\caption{Overview of scenarios for roof utilisation and roof suitability.}
+\label{tab:solar_scenarios}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lll}
+\hline
+\textbf{Type} & \textbf{Scenario} & \textbf{Description} \\ \hline
+\multirow{8}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Roof} \\ \textit{utilization}\end{tabular}} & Baseline & Roof utilisation as obtained from the big data mining method (see Section  \ref{solar_method}) \\ \cline{2-3} 
+ & EW (flat) & \begin{tabular}[c]{@{}l@{}}As above, but assuming   alternating east and west-facing adjacent panel rows at 15° tilt\\ on flat   roofs (\textless 10° tilt angle) following Section \ref{scenario_EW}\end{tabular} \\ \cline{2-3} 
+ & BIPV & \begin{tabular}[c]{@{}l@{}}Simulating building-integrated   PV (BIPV) panels, assuming all unshaded and \\ unobstructed area is used for   BIPV (i.e. assuming no virtual panel fitting)\end{tabular} \\ \cline{2-3} 
+ & \textit{CNN} & \begin{tabular}[c]{@{}l@{}}For each utilisation scenario,   the available area is adjusted for the outcomes of the CNN-\\ based validation   for small, medium and large roofs (Section \ref{scenario_area}). As the CNN results are \\ based on   a small case study only, they are preliminary and may not be representative.\end{tabular} \\ \hline
+\multirow{4}{*}{\begin{tabular}[c]{@{}l@{}}\textit{Roof}\\ \textit{suitability}\end{tabular}} & \begin{tabular}[c]{@{}l@{}}South-facing, \\ flat\end{tabular} & \begin{tabular}[c]{@{}l@{}}Roofs with aspect angles \textless   90° from south and flat roofs (0° tilt for baseline, \textless 10° tilt \\ for EW and   BIPV)\end{tabular} \\ \cline{2-3} 
+ & \begin{tabular}[c]{@{}l@{}}South-facing,  \\ \textless 20° tilt\end{tabular} & Roofs with aspect angles \textless   90° from south and roofs with tilt angles \textless 20° \\ \cline{2-3} 
+ & All roofs & All rooftops with available area \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{images/Figs/scenarios.pdf}
+\caption{National RPV potential under different scenarios of roof utilisation (bars) and roof suitability (colors), compared to the goal of the Swiss Energy Perspective 2050+ \cite{bfe_energieperspektiven_2020} (dashed line).
+Preliminary results from the extrapolation of the CNN-based available area are shown as semi-transparent bars.}
+\label{fig:PV_scenarios}
+\end{figure}
+
+\begin{comment}
+\begin{table}[tb]
+\centering
+\footnotesize
+\caption{National RPV potential under different scenarios for roof suitability (rows) and roof utilisation (columns). Preliminary results from the \textit{CNN}-based extrapolation of the available area are shown as italic values.}
+\label{tab:scenario_compare}
+\begin{tabular}{lcccccccc}
+\hline
+ & \textbf{Baseline} & \textbf{Baseline - \textit{CNN}} &  & \textbf{EW (flat)} & \textbf{EW (flat) - \textit{CNN}} &  & \textbf{BIPV} & \textbf{BIPV - \textit{CNN}} \\
+\textbf{Roof suitability} & TWh & TWh &  & TWh & TWh &  & TWh & TWh \\ \hline
+South-facing, flat & 24.6 & \textit{29.0} &  & 31.1 & \textit{34.9} &  & 48.5 & \textit{53.4} \\
+South-facing, \textless 20° tilt & 31.1 & \textit{35.4} &  & 34.6 & \textit{39.0} &  & 53.3 & \textit{59.7} \\
+All roofs & 38.3 & \textit{44.2} &  & 41.7 & \textit{47.7} &  & 64.0 & \textit{73.6} \\ \hline
+\end{tabular}
+\end{table}
+\end{comment}
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\caption{Comparison of scenarios for roof utilisation (columns) and roof suitability (rows), including the percentage of roof utilisation, percentage of roof suitability, total PV area (= total roof area (644 km$^2$) * roof utilisation * roof suitability) and resulting PV potential.
+Preliminary results from the \textit{CNN}-based extrapolation of the available area are shown as italic values.}
+\label{tab:scenario_compare}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccccccccccccc}
+\hline
+\textit{} & \multicolumn{3}{c}{\textbf{Roof utilisation ( \%)}} & \textbf{} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{\textbf{Roof suitability (\%)}} & \textbf{} & \textbf{} & \multicolumn{3}{c}{\textbf{PV area (km$^\mathbf{2}$)}} & \textbf{} & \textbf{} & \multicolumn{3}{c}{\textbf{PV potential (TWh)}} \\ \cline{2-4} \cline{7-9} \cline{12-14} \cline{17-19} 
+\textbf{Scenario} & S, flat & S, \textless 20° & all &  &  & S, flat & S, \textless 20° & all &  &  & S, flat & S, \textless 20° & all &  &  & S, flat & S, \textless 20° & all \\ \hline
+Baseline & 43.6 & 46.4 & 45.6 &  &  & 53.6 & 64.7 & 88.1 &  &  & 151 & 194 & 259 &  &  & 25.4 & 31.1 & 38.3 \\
+Baseline - \textit{CNN} & \textit{48.5} & \textit{51.5} & \textit{51.4} &  &  & \textit{55.3} & \textit{66.8} & \textit{91.1} & \textit{} & \textit{} & \textit{173} & \textit{222} & \textit{302} &  &  & \textit{29.0} & \textit{35.4} & \textit{44.2} \\
+EW (flat) & 53.3 & 53.9 & 51.1 &  &  & 58.7 & 65.9 & 89.3 &  &  & 202 & 229 & 294 &  &  & 31.1 & 34.6 & 41.7 \\
+EW (flat) - \textit{CNN} & \textit{58.1} & \textit{59.0} & \textit{57.0} &  &  & \textit{60.3} & \textit{67.7} & \textit{92.0} & \textit{} & \textit{} & \textit{226} & \textit{258} & \textit{338} &  &  & \textit{34.9} & \textit{39.0} & \textit{47.7} \\
+BIPV & 71.2 & 71.9 & 68.9 &  &  & 62.3 & 69.9 & 95.1 &  &  & 286 & 324 & 422 &  &  & 48.5 & 53.3 & 64.0 \\
+BIPV - \textit{CNN} & \textit{87.0} & \textit{88.5} & \textit{85.9} &  &  & \textit{61.7} & \textit{69.3} & \textit{94.4} & \textit{} & \textit{} & \textit{346} & \textit{395} & \textit{523} &  &  & \textit{53.4} & \textit{59.7} & \textit{73.6} \\ \hline
+\end{tabular}%
+}
+
+\end{table}
+
+
+The comparison of the magnitude of the Swiss national RPV potential for these scenarios, shown in Fig~\ref{fig:PV_scenarios}, yields several insights.
+First, considering all roofs with tilt angles below 20° as suitable increases the total PV potential by around 6 TWh (\textit{baseline}). This increase is smaller ($\sim 3.5$ TWh) for the  \textit{EW (flat)} scenario, as all roofs with < 10° tilt are considered flat in \textit{EW (flat)}.
+Second, doubling the PV area on fully flat roofs (as done in \textit{EW (flat)}) adds another 3.5 TWh to the total PV potential. This increase of more than 10\% shows the importance of exploiting flat roofs. 
+Third, the \textit{CNN} scenarios show that the larger available area on small roofs obtained from the CNN validation exceeds the reduction in available area on large roofs, leading to an increase in PV potential of $4-4.5$ TWh (\textit{preliminary}). 
+Fourth, the \textit{BIPV} scenario increases the national PV potential by another 50\% compared to \textit{EW (flat)}, highlighting the need for technological advances to achieve RPV potentials beyond 40 TWh.
+
+Based on the above insights, the goal of the Swiss Energy Perspectives of 34 TWh by 2050 (dashed line in Fig.~\ref{fig:PV_scenarios}) seems achievable if nearly all south-facing roofs and those with tilt angles $<$ 20° ($\sim 65\%$ of the roof surface) are covered with standard PV panels. As Table~\ref{tab:scenario_compare} shows, this assumes that $50 - 55\%$ of the roof surface on suitable roofs is utilised (i.e. covered with PV). This estimated roof utilisation is lower than current installation practices, which are considered to cover around 70\% of the roof surface on average \cite{portmann_sonnendach.ch:_2016}.
+Table~\ref{tab:scenario_compare}  further suggests that the realisation of 34 TWh of rooftop PV would require around 220 km$^2$ of PV area, which amounts to 34\% of the entire roof area.
+The required area and roof utilisation is dependent on the PV system efficiency, so technological advances leading to increased efficiencies may reduce the space requirements to achieve the goals of the Swiss Energy Perspectives.
 
 \begin{comment}
 % MOVED TO SEPARATE SUB-SECTION
@@ -1641,62 +1774,85 @@ Uncertainties are not specifically addressed in \cite{assouline_quantifying_2017
 \subsection{Limitations}
 \label{limitations_pv}
 As all large-scale potential studies, our study relies on various data sources and a combination of statistical and empirical modelling steps. In this work, emphasis has been placed on systematically identifying and combining uncertainties in order to obtain a global uncertainty estimate for the technical RPV potential. 
-Furthermore, a sensitivity analysis has been conducted to assess the impact of the uncertainty of individual steps on the final potential. 
+Furthermore, a sensitivity analysis has been conducted to assess the impact of the uncertainty of each step on the PV potential and a scenario analysis has been performed to quantify the impact of changes in the underlying hypotheses.
 
 Some assumptions were made that impact these results:
 (i) The input data is assumed to be coherent and without error. In reality, some features may be missing or incorrectly represented, and discrepancies between the datasets may arise from  different data collection dates and methods of creation.
 (ii) The systematic error introduced by using a fixed number of azimuth angles for computing the shading effects (38 bins) and the SVF (32 bins) is neglected. This error is expected to be negligible as the number of bins used here is relatively high.
 (iii) The potential uncertainties arising from the physical models of tilted radiation and module efficiency are neglected, as no comprehensive quantification of these has been found in the literature.
 (iv) The PV panel performance parameters as well as the system losses are treated as assumptions rather than random variables, due to the large variety of available technologies and their fast development. 
-(v) PV panels on flat roofs are all placed in a technically optimal fashion (see Section~\ref{flat}). 
-A comparison with other installation practices, such as lower tilt angles or the alternation of east and west-facing rows, will be assessed in Section~\ref{scenario_EW}.
-% To consider different configurations of PV on flat roofs and the uncertainty in technological developments, a scenario-based approach may be followed (see Section \ref{solar_scenarios}).
-
-Finally, the total RPV potential of $24 \pm 9$ TWh depends fundamentally on the hypotheses in the definition of the available area and the suitable rooftops for PV installation. While Section~\ref{solar_comparison} compares existing hypotheses used in the Swiss context, Section~\ref{solar_scenarios} discusses the impact of changes in these hypotheses on the potential estimate presented above.
+(v) PV panels on flat roofs are placed either in a technically optimal fashion (see Section~\ref{flat}) or corresponding to one wide-spread installation practice (see Section~\ref{scenario_EW}).
+% A comparison with other installation practices, such as lower tilt angles or the alternation of east and west-facing rows, will be assessed in Section~\ref{scenario_EW}.
+By extending the scenario-based comparison from Section~\ref{solar_scenarios}, other configurations of PV on rooftops and scenarios of future techological developments may be evaluated.
+% The scenario-based comparison from Section~\ref{solar_scenarios} may be further extended to account for other configurations of PV on rooftops and to evaluate scenarios for future technological developments.
+% Other configurations of PV on rooftops and the uncertainty in technological developments, a scenario-based approach may be followed (see Section \ref{solar_scenarios}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Application and further work}
 \label{application_pv}
 % REFER TO FURTHER WORK DONE IN THE NEXT SUB-SECTION
-A monthly-mean-hourly technical RPV potential for Switzerland is useful for applications including policy making, urban planning and the design of future energy systems. 
-Policy makers may use our results, aggregated at regional or national scale, in order to formulate effective policies to integrate RPV into the built environment. 
-Urban planners may assess the potential self-consumption and the electricity demand which could be covered by installing PV on existing roofs. They may further estimate the expected PV yield for new roofs of a given area, tilt and orientation from our results. 
+An hourly technical RPV potential for Switzerland is useful for applications including policy making, urban planning and the design of future energy systems. 
+Policy makers may use our results, aggregated at regional or national scale, in order to  formulate effective policies to integrate RPV into the built environment. 
+Urban planners may assess the potential self-consumption and the electricity demand which could be covered by installing PV on existing roofs. They may further estimate the expected PV yield for new roofs of a given area, tilt and orientation from our results.
 Energy system designers can use this work to simulate future electricity networks at local scale, which allows to assess the potential mismatch between supply and demand and the resulting storage needs. 
 
-The generated dataset may be further used to estimate the PV potential for future scenarios that account for urbanization, climate change and technological advancement of PV.
+The generated dataset may be further used to estimate the PV potential for future scenarios that account for urbanization, climate change and technological advancement of PV, by expanding for example on the application shown in Section~\ref{solar_application}.
 This is possible as the existing building stock covers different types of roofs in various urban contexts and climatic conditions, which exist in the Swiss plateau, the Jura mountains and the Alps. 
 A techno-economic potential may be formulated for these scenarios by combining the maximum technical potential with economic factors such as installation and operational cost.
-An example application for the prediction of solar radiation in similar climatic and geographic conditions is provided in Section~\ref{solar_application}.
+% An example application for the prediction of solar radiation in similar climatic and geographic conditions is provided in Section~\ref{solar_application}.
 
-Finally, a further validation of the estimated RPV potential provides a challenging subject of future work. 
-We validate our results against those of previous work (Section~\ref{solar_comparison}) and to measurement data for a small roof sample (Section~\ref{scenario_EW}).
+Further work may also address methodological developments, such as the expansion of the CNN-based detection of available roof area (Section~\ref{scenario_area}) to national scale or the expansion of the current methodology to account for solar thermal generation.  
+Finally, the big data mining approach could be adapted to model PV on building facades or as free-standing PV parks.
+The former is a challenging subject of work due to large unknowns with respect to the available area and computational challenges in the quantification of shading effects. The latter may be achieved by applying knowledge on the regulatory frameworks and land use within the country.
+% Finally, a further validation of the estimated RPV potential provides a challenging subject of future work. 
+% We validate our results against those of previous work (Section~\ref{solar_comparison}) and to measurement data for a small roof sample (Section~\ref{scenario_EW}).
 % some of which have been compared to measurement data \cite{buffat_scalable_2018}. 
-While this approach is feasible for validating the tilted radiation, a direct validation of the available area is difficult due to the lack of a "ground truth". A possible method to establish such a ground truth may be the application of image segmentation techniques, for example using Convolutional Neural Networks \cite{castello_deep_2019}, to high-resolution aerial imagery. 
-As shown for a case study in Section \ref{scenario_area}, this allows for a more accurate detection of obstructing objects on rooftops as well as the recognition of already installed PV panels.
+% While this approach is feasible for validating the tilted radiation, a direct validation of the available area is difficult due to the lack of a "ground truth". A possible method to establish such a ground truth may be the application of image segmentation techniques, for example using Convolutional Neural Networks \cite{castello_deep_2019}, to high-resolution aerial imagery. 
+% As shown for a case study in Section \ref{scenario_area}, this allows for a more accurate detection of obstructing objects on rooftops as well as the recognition of already installed PV panels.
 
 \section{Summary}
 \label{solar_conclusion}
 
 % Source: PV potential
-In this Chapter, we present a big data mining approach to estimate the PV potential on building roofs at monthly-mean-hourly temporal resolution and propose a quantification the uncertainty on the estimated potential. 
+In this chapter, we present a big data mining approach (Section~\ref{solar_method}) to estimate the PV potential on building roofs at hourly temporal resolution and propose a quantification the uncertainty on the estimated potential. 
 The developed Machine Learning methodology uses high-resolution building and environmental data to extract information from data which is only available in parts of the study area.
 %
 The Machine Learning algorithms are further used to quantify the uncertainties related to the estimated parameters. These are combined with uncertainties arising from other modelling steps and propagated to obtain an uncertainty on the technical PV potential estimate. 
+The proposed % PV assessment method using data mining and uncertainty propagation 
+method is transferable to any region or country with sufficient high-quality data.
 
-The national-scale application of our method results in a total rooftop PV potential for Switzerland of $24\pm9$ TWh, which could meet more than 40\% of the country's electricity demand in 2018. 
-This potential is in the mid-range of other large-scale estimates for Switzerland.
-The added value of our approach lies in the higher spatio-temporal resolution of the resulting datasets compared to existing studies, as well as in the uncertainty estimate for each spatio-temporal instance.
-This highlights areas and time spans with potentially large inaccuracies. 
-Our results may be used to quantify the potential mismatch between PV production and supply, which is relevant for the design of future energy efficient districts and for the formulation of regional and national incentive policies for the diffusion of rooftop PV.
+The national-scale application of our method (Section~\ref{solar_results}) yields a dataset of hourly RPV potential for the entire Swiss building stock, which is publicly available.
+The total rooftop PV potential for Switzerland is estimated at $25\pm9$ TWh, which could meet more than 40\% of the country's electricity demand in 2018. 
+Half of this potential may be realised by exploiting the 11\% of buildings with the highest potential, whereas 75\% of the potential (18 TWh) may be realised from the best one third of buildings. 
 
-The work presented in this study provides an important contribution for the decarbonisation efforts in Switzerland, as it enables the large-scale modelling of future electricity grids with high shares of rooftop PV using hourly data for individual buildings. The proposed PV assessment method using data mining and uncertainty propagation is transferable to any region or country with sufficient high-quality data, where it can contribute to the transition towards low carbon energy systems.
-
-% SOURCE: CISBAT comparison
-Throughout the past two decades, six studies have estimated the technical rooftop solar PV potential in Switzerland. During this time, the methodologies have changed significantly, moving from simple rules of thumb to data-driven approaches that process very large datasets. Different datasets and methods lead to widely varying potential estimations, ranging from 15TWh to 53TWh. A quantitative comparison showed that in particular the estimation of available roof area for PV panel installation, the source of the solar radiation data as well as the method to compute shading effects on rooftops has a large impact on the results. The analysis also showed that methods based on Machine Learning have achieved good results with using only a small amount of data, indicating that ML is an effective tool to handle missing data and to estimate uncertainty. Uncertainties can be systematically reduced by using powerful processing methods, as larger and more accurate data become available. This is particularly important for a reliable extraction of the available roof area for PV installation, which is currently the most uncertain aspect of the rooftop PV potential estimation. A promising approach is the use of Machine Learning to extract these areas from high-resolution satellite images, for example using deep learning. 
+A comparison to five previous studies of RPV potential for Switzerland (Section~\ref{solar_comparison}) shows that this potential is in the mid-range of other large-scale estimates for Switzerland.
+A comparatively high tilted radiation is hereby offset by a rather low estimate of the available area for PV installation.
+The added value of our approach lies in the higher spatio-temporal resolution of the resulting dataset compared to existing studies, and in the uncertainty estimate for each spatio-temporal instance.
+This highlights areas and time spans with potential inaccuracies. 
 
 % SOURCE: CISBAT validation
-A comparison to measured data of 16 roofs shows that the PV area is identified accurately in most cases, while the real production is overestimated, with higher errors in winter than in summer. The modelled annual PV yield lies 16\% above the measured data, assuming a triangular PV placement at 15$^\circ$ tilt on flat roofs. The errors are to be treated with caution as the sample size is relatively small and there are several unknowns.
+A validation against measured data of 15 RPV installations (Section~\ref{solar_scenarios}) shows that the real production, normalized per PV area, is overestimated by 11\% on average, with higher errors in winter than in summer, assuming a triangular PV placement at 15$^\circ$ tilt on flat roofs.
+The errors are to be treated with caution as the sample size is relatively small and there are several unknowns.
+We further compare the estimated available area for PV panel installation to an image-based detection of available area for a case study of $\sim 2,400$ rooftops in the Canton of Geneva. 
+The results suggest that the mean fraction of available area on large roofs seems to be over-estimated by the big data mining method, while the potential of small surfaces is under-estimated. 
+To improve the estimation of the available area, the proposed image-based detection algorithm may be improved and extended to national scale. 
+
+We further propose an application of the RPV potential dataset to estimate solar irradiation on building rooftops for areas at similar latitudes as Switzerland using a Machine Learning model (Section~\ref{solar_application}).
+We show that the proposed model can effectively learn from existing large-scale datasets of PV potential and accurately estimate annual irradiation for individual rooftops and entire cities. The computational time for estimating solar irradiation can thereby be reduced from hours to seconds.
+The selected application demonstrates that not only the method, but also the datasets generated as part of this thesis can be useful for studies outside of Switzerland, and aims to encourage the use of existing RPV potential data in future studies.
+
+In addition to the methodological and practical contributions summarized above, we compare different scenarios of RPV potential by changing some underlying hypotheses on the roof utilisation and roof suitability for PV panel installation (Section~\ref{discussion_pv}).
+The scenario analysis shows that achieving the target of the Swiss Energy Perspective of 35 TWh by 2050 requires the installation of RPV on around 220 km$^2$.
+This objective may be feasible if nearly all south-facing roofs and those with a tilt angle < 20° are exploited, covering $50 - 55$\% of the suitable roof area on average.
+%
+% The work presented in this chapter may be used to quantify the potential mismatch between PV production and supply, which is relevant for the design of future energy efficient districts and for the formulation of regional and national incentive policies for the diffusion of rooftop PV.
+The work presented in this chapter provides an important contribution for the decarbonisation efforts in Switzerland, as it enables the large-scale modelling of future electricity grids with high shares of rooftop PV using hourly data for individual buildings. 
+% , where it can contribute to the transition towards low carbon energy systems.
+
+\begin{comment}
+% SOURCE: CISBAT comparison
+Throughout the past two decades, six studies have estimated the technical rooftop solar PV potential in Switzerland. During this time, the methodologies have changed significantly, moving from simple rules of thumb to data-driven approaches that process very large datasets. Different datasets and methods lead to widely varying potential estimations, ranging from 15TWh to 53TWh. A quantitative comparison showed that in particular the estimation of available roof area for PV panel installation, the source of the solar radiation data as well as the method to compute shading effects on rooftops has a large impact on the results. The analysis also showed that methods based on Machine Learning have achieved good results with using only a small amount of data, indicating that ML is an effective tool to handle missing data and to estimate uncertainty. Uncertainties can be systematically reduced by using powerful processing methods, as larger and more accurate data become available. This is particularly important for a reliable extraction of the available roof area for PV installation, which is currently the most uncertain aspect of the rooftop PV potential estimation. A promising approach is the use of Machine Learning to extract these areas from high-resolution satellite images, for example using deep learning. 
 
 % SOURCE: CNN paper
 In this work we present a novel method to estimate the available rooftop surfaces for solar panel installation by combining state-of-the-art ML and computer vision techniques together with high-resolution aerial images. The application of the method to the case study areas in Geneva demonstrates that an image segmentation approach can reliably detect and exclude several types of roof superstructures. Assuming this CNN-based model yields realistic results, as it is based on aerial images, we compare it with an existing approach for large-scale estimate applied to the same group of buildings. The results suggest that the median fraction of available area on large roofs seems to be over-estimated by the large-scale approach, while the potential of small surfaces is under-estimated. To further enhance the discriminative power of the CNN-based model, a fourth channel (infrared) may be added to the images to include information on the emissivity of roofs materials. Furthermore, higher-resolution aerial images from more recent campaigns may allow to include more recent buildings. These ameliorations would make possible the extension of the CNN-based model for the quantification of rooftop areas at the national scale. Such an estimate may provide valuable insights for the ongoing public discussion on the realizable solar potential across Switzerland, as the output of the model would be available for individual roofs and could be integrated in existing databases and visualization tools.
@@ -1704,4 +1860,5 @@ In this work we present a novel method to estimate the available rooftop surface
 %SOURCE: Chile paper
 This study provides a Machine Learning algorithm to estimate annual solar irradiation on building rooftops for areas at similar latitudes as Switzerland. The proposed model is trained using data of existing PV potential studies and uses the following six input features: annual GHI, roof tilt, roof aspect and three mean horizon heights for each roof ($120^\circ$, $180^\circ$, $240^\circ$). Comparing five ML algorithms, we found that Random Forests are most suited for this task due to their high accuracy, reasonable execution time and their ensemble structure, which in turn allows for a sound estimation of uncertainties. The obtained results show that the proposed model can effectively learn from existing large-scale datasets of PV potential and accurately estimate annual irradiation for individual rooftops and entire cities. The computational time for estimating solar irradiation at city or even country scale can thereby be reduced from hours to seconds.
 % ADDED: The selected application demonstrates that not only the method, but also the datasets generated as part of this thesis can be useful for studies outside of Switzerland, and aims to encourage the use of already existing RPV potential data in future studies.
+\end{comment}
 

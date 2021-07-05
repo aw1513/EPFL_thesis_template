@@ -48,7 +48,7 @@ Rapid improvements in the quantity and quality of data collected at national and
 % Currently, there is no methodology that estimates the large-scale RPV potential at a high spatio-temporal resolution and also addresses the systematic propagation of uncertainties arising from the modelling process.
 % This paper contributes to fill this gap by adapting state of the art methods for the assessment of RPV potential in order to quantify and combine different sources of uncertainty. 
 % We further use Machine Learning to incorporate information that is only available in parts of the study region of Switzerland.
-Motivated by the need for cross-sectoral RE policies, the push for RE incentives as part of  Covid-19-related recovery strategies and the opportunities presented through an increasing amount of energy-related data, this thesis aims to estimate a \textit{hybrid renewable energy potential} (HyREP) for the built environment at national scale. 
+Motivated by the need for cross-sectoral RE policies, the push for RE incentives and the opportunities presented through an increasing amount of energy-related data, this thesis aims to estimate a \textit{hybrid renewable energy potential} (HyREP) for the built environment at national scale, with application to Switzerland. 
 \nomenclature[A]{HyREP}{Hybrid Renewable Energy Potential}
 The HyREP describes the spatial and temporal patterns of several renewable energy resources for electricity \textit{and} heat generation, which may be combined with other (non)-renewable energy sources to assess potential complementarities between energy sources and their potential for satisfying the energy demand of cities. 
 
@@ -112,17 +112,30 @@ Geothermal energy is equally abundant as solar energy, as it accesses heat from 
 \label{fig:shallow_gshp} 
 \end{figure}
 
+\begin{comment}
 \subsection{Spatio-temporal estimation of renewable energy potentials}
 
 %% SOURCE: Research plan
 For the computation of large-scale solar energy potentials, related studies widely apply a hierarchical approach [3], [4], [7], [13], illustrated in Figure 2. The first step is the calculation of a physical or theoretical potential, which represents the amount of energy that natural resources in the region of interest can provide (per unit area). In the second step, the geographic or urban potential is calculated, which accounts for the impact of the built environment on the natural resources. It measures the amount of energy that can be collected by the panels or collectors. The third step gives the technical potential and accounts for losses during conversion of the natural resources to domestic heat and electricity. It gives the maximum feasible amount of energy that can be harvested using a given technology. After obtaining the maximum feasible energy output, one may consider additional environmental, economic or social considerations to refine the estimated size of the system. A fourth step may thus be an economic potential focused on sizing the systems under given constraints. Economic considerations such as technology cost are not taken into account in the reviewed large-scale studies. Instead, they have been assessed in separate studies, in smaller-scale case studies as well as in hybrid potential assessments. An analysis of market potential is beyond the scope of this work. 
  
 % Figure 2: Hierarchical approach for estimating rooftop PV and solar thermal potentials. [14]
+\end{comment}
 
 \subsection{Definition of hybrid renewable energy potential}
 
 \section{Research aims and objectives}
 \label{intro_goals}
+%% RESEARCH QUESTIONS BRAINSTORIMING
+
+% 3 questions:
+% part 1; tech. potential for solar, with 2 sub-questions (pot, uncertainty)
+% part 2: tech. potential for geothermal, different methodological focus
+% part 3: hybrid
+% --> Table (key research question, with section numbers)
+
+% OR: 2 research questions for potential (addressed for solar and geothermal)
+% + 1 research question for hybrid (how datasets can be used for hybrid studeis)
+
 % SOURCE: Research plan
 The main driver behind this study is the question whether it is possible to cover urban energy demand in Switzerland using a combination of renewable energies, and which level of energy autonomy could be reached in the built environment from this hybrid renewable energy potential. Special interest lies hereby on the spatial and temporal variability of the supply in order to match the seasonal and intra-day variations of the energy demand. With the focus on two types of resources, solar and geothermal energy, the following research questions arise:
 
