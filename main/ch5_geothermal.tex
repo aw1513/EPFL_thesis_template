@@ -48,7 +48,7 @@ The impact of borehole spacing on the performance of GSHPs has been studied conc
 The performance drop as a result of closely spaced BHEs has been simulated so as to optimise the arrangement of BHEs in a single field \cite{bayer_strategic_2014} and to compute the maximum acceptable power in the proximity of existing installations \cite{attard_novel_2020}. 
 To the best of our knowledge, these concepts are yet to be applied to study areas beyond neighbourhood scale.
 
-\section{Technical potential of shallow ground-source heat pumps: Case study}
+\section{Methodology}
 
 % SOURCE: Geothermal paper
 % Paragraph 3: My contributions
@@ -307,7 +307,7 @@ The optimisation problem may hence be formulated as:
 
 \end{landscape}
 
-\subsection{Case study}
+\section{Case study}
 \label{case_study}
 
 To demonstrate the performance of the proposed method at regional scale, we apply it to the cantons of Vaud and Geneva in Switzerland. 
@@ -608,6 +608,201 @@ b) Sensitivity of the technical potential $Q_{pot}$ to changes in the required h
 \label{fig:sensitivity}
 \end{figure}
 
+
+\section{Potential for heating and cooling with ground regeneration}
+
+\section{Machine Learning for estimation of technical geothermal potential}
+\label{geo_ML}
+
+% The extraction of shallow geothermal energy using ground-source heat pumps (GSHPs) of depths up to 400 m is growing worldwide. Switzerland is the country with the world’s highest density of shallow geothermal installations, most of which are GSHPs with vertical borehole heat exchangers (BHEs) \cite{link_statistik_2019}. A dense installation of BHEs may, however, lead to an excessive long-term cooling of the subsurface due to thermal interactions between boreholes. Thus, thermal interaction must be considered when quantifying the technical potential of BHEs, that is, the long-term maximum energy which can be extracted annually using GSHPs \cite{bayer_geothermal_2019}. 
+While analytical methods exist to quantify this potential, they are computationally intensive and require the availability of high-resolution data of the thermal properties of the shallow ground. These limitations may hinder the use of analytical models to quantify the technical potential of shallow GSHPs at national scale. By contrast, Machine Learning (ML) can handle missing data in analytical models and, once trained, is computationally highly efficient \cite{assouline_machine_2019-1}.  % CHECK DAN REFERENCES
+
+Here we use ML in combination with geospatial tools for data pre-processing to estimate the technical potential of BHEs. 
+More specifically, we optimise the set of features and the ML design to (i) use available data from the entire Switzerland and (ii) estimate the technical GSHP potential with high accuracy. 
+For this, we first design the input dataset for the ML model, using the results of the regional-scale analytical modelling from see Section~\ref{results} as input (Section~\ref{geo_ML_data}).
+Second, we analyse the feature set and compute the importance of all features in the dataset for predicting the technical potential (Section~\ref{geo_ML_ftrs}). 
+Third, we train four ML algorithms (K-Nearest Neighbours, Support Vector Machine, Random Forest, Artificial Neural Network) on different feature sets (Section~\ref{geo_ML_model}) and assess their performance for estimating the technical geothermal potential (\ref{geo_ML_results}).
+
+\subsection{Design of input dataset}
+\label{geo_ML_data}
+
+The dataset used to estimate the technical potential of GSHP consists of several groups of input data (features) and outputs (targets), as shown in Table \ref{tab:geo_ML_data}. To design a well-performing ML model which can be applied anywhere in Switzerland and does not require computationally intensive geo-spatial processing steps, each of the feature groups is pre-processed separately. The borehole arrangements (the number of boreholes $N_{BHE}$ and depth $H$) are sampled with replacement from the results for the Cantons of Vaud and Geneva (Section \ref{results}). These two Cantons contain a large variety of borehole field geometries and cover urban as well as rural areas, so that the data is considered sufficiently representative for Switzerland. As a virtual installation of BHEs, described in Section~\ref{methods}, may not be feasible at country scale, the ML features consist only of the available areas for GSHP systems (borehole fields), which can be efficiently computed using geospatial tools. These include the area of a field itself ($A_{field}$) and the area surrounding a field within 10 ($S_{10}$), 25 ($S_{25}$) or 50 m ($S_{50}$), as shown in Figure \ref{fig:surr_fields}. Surrounding areas are taken into account as the presence of nearby boreholes may significantly impact the performance of a GSHP system, especially in small fields.
+
+The geological properties, which include the thermal conductivity $\lambda$ (at depths of 50, 100, 150, and 200 m) and thermal diffusivity $\alpha$ of the ground material, should reflect the thermal characteristics found across Switzerland. 
+Using the values tabulated in the Swiss geothermal norm SIA 384/6 \cite{sia_sondes_2010}, we randomly sampled values for $\lambda$ in the range of $1 - 5.3$ W/mK. 
+To obtain realistic variations of $\lambda$ with BHE depth, we set the mean $\lambda$ to the sampled values and keep the variation in $\lambda$ of the original borehole fields. 
+As the sensitivity of $\alpha$ in the modelling is small, we leave the values for $\alpha$ unchanged. 
+The features determined by the meteorological conditions, namely surface temperature $T_0$, operating time $t_{op}$ and maximum seasonal load $w_{HDD}$ of GSHP systems, are all related to altitude. 
+To obtain realistic combinations of these, we hence randomly sample a set of locations across Switzerland and use the $T_0$, $t_{op}$ and $w_{HDD}$ attributed to each location. 
+Here we consider only altitudes below 2000 m, as few buildings in Switzerland are located above 2000 m.
+
+The different pre-processed datasets are combined to create a synthetic dataset of 100,000 GSHP systems, to which we apply the analytical model from Section~\ref{methods}. The model simulates the large-scale heat extraction from shallow GSHPs of up to 200 m depth, accounting for potential thermal interaction between neighbouring boreholes. The heat extraction is simulated across a range of possible borehole arrangements, from which an optimized arrangement is derived such as to maximize the heat extraction while sustaining a minimum feasible operating power. In this section, we estimate all variables describing the optimized GSHP systems, namely the annual heat extraction ($Q_{pot}$), the heat extraction rate ($q_{max}$) and the borehole arrangement ($N_{BHE}$, $H$).
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\caption{Overview of input features (groups 1-3) and targets used to model GSHP performance. }
+\label{tab:geo_ML_data}
+\begin{tabular}{lllll}
+\hline
+\textbf{Data group} & \textbf{ID} & \textbf{Description} & \textbf{Range/Values} & \textbf{Source} \\ \hline
+\multirow{2}{*}{\textit{\begin{tabular}[c]{@{}l@{}}Borehole\\ arrangements\end{tabular}}} & $A_{field}$ & Available area of building parcel & Fields in VD/GE & Section \ref{results} \\
+ & $S_{10,25,50}$ & Surrounding avail. area in 10, 25, 50 m & Fields in VD/GE & Section \ref{results} \\ \hline
+\multirow{2}{*}{\textit{\begin{tabular}[c]{@{}l@{}}Geological\\ properties\end{tabular}}} & $\lambda_{50-200}$ & Th.   conductivity, at depths $50-200$ m & 1   – 5.3 W/mK & SIA   \cite{sia_sondes_2010} \\
+ & $\alpha$ & Thermal   diffusivity (average) & $0.6-1.4$ $\mu$m$^2$/s & Section \ref{results} \\ \hline
+\multirow{3}{*}{\textit{\begin{tabular}[c]{@{}l@{}}Meteorological\\ conditions\end{tabular}}} & $T_0 $ & Surface temperature, 1m below ground & $7.5-11$ °C & Assouline   et al. \cite{assouline_machine_2019-1} \\
+ & $t_{op}$ & Nominal operating time for heating & $1800-2800$ h & SIA \cite{sia_sondes_2010} \\
+ & $w_{HDD}$ & Maximum   heating load (see Eq.~\ref{eq:w_HDD}) & 0.11   – 0.22 & Derived from \cite{meteoswiss_daily_2017} \\ \hline
+\multirow{4}{*}{\textit{Targets}} & $Q_{pot}$ & Energy   potential (kWh/a) & ML   output &  \\
+ & $q_{max}$ & Heat extraction rate (W/m) & ML output &  \\
+ & $N_{BHE}$ & Number of installed boreholes & ML output &  \\
+ & $H$ & Borehole   depth (m) & \multicolumn{2}{l}{Computed as $H=\frac{Q_{pot}}{q_{max}\ t_{op}\ N_{BHE}}$ (Eq.~\ref{eq:Q_field})} \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[tb]
+\centering\includegraphics[width=0.4\linewidth]{images/Figs/surr_buff_example.pdf}
+\caption{Computation of available area for BHE installations (fields) and surrounding areas for each field within 10, 25 and 50 m distance from the installation}
+\label{fig:surr_fields}
+\end{figure}
+
+\subsection{Feature analysis and transformation}
+\label{geo_ML_ftrs}
+
+Feature analysis is performed to understand correlations between the input features and the target. Strong correlations between features, such as those between the $\lambda_{50-200}$, between the features related to meteorological conditions and between those related to the borehole arrangement, may negatively affect the performance of some ML algorithms. We thus apply principal component analysis (PCA) to obtain a feature set of independent components, without losing significant variance in the features. As Figure \ref{fig:geo_ML_PCA} shows, the first three PCA components alone account for 77\% of the variance within the feature set, while the last 4 components account for less than 1\% of variance. From the PCA we hence derive four feature sets for the ML model design, using the first 3 (PCA\_3), 5 (PCA\_5), 7 (PCA\_7) and all PCA (PCA) components, explaining 77\%, 93\%, 97\% and 100\% of variance, respectively.
+
+We further assess the importance of the features towards the target prediction by means of sequential backward feature selection (SBS, see Chapter~\ref{ML_features}). 
+This method trains an ML model (k-nearest neighbour, KNN), first with all features, and then sequentially eliminates the feature which contributes least to the model’s performance, measured using the coefficient of determination, R$^2$. 
+Figure \ref{fig:geo_ML_RFE} shows the R$^2$ score and mean absolute percentage error (MAPE) for the SBS, indicating also the feature eliminated at each iteration (starting from the right). The KNN algorithm is used in this analysis due to its speed and robust performance. The figure shows that the R$^2$ is high with > 4 features and reaches its maximum for 7 features, where also the MAPE is nearly minimal. We hence create three more feature sets for model testing, using the first 4 (FTR\_4), 7 (FTR\_7) and all features (FTR). We further standardize the features and log-transform $A_{field}$ and $S_{10,25,50}$, as these features span a logarithmic range.
+
+\begin{figure}[b]
+\centering
+\begin{subfigure}{.49\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=\linewidth]{images/Figs/PCA_variance.pdf}
+  \subcaption{}
+  \label{fig:geo_ML_PCA}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=\linewidth]{images/Figs/RFE.pdf}  
+  \subcaption{}
+  \label{fig:geo_ML_RFE}
+\end{subfigure}
+\caption{Feature importance measures. (a) Explained total variance by the PCA components, and (b) R$^2$ score and MAPE obtained from recursive feature elimination using KNN, showing the number of considered features and the eliminated feature at each iteration on the x-axis.}
+\label{fig:geo_ML_ftrs}
+\end{figure}
+
+\subsection{Machine Learning framework}
+\label{geo_ML_model}
+
+\begin{figure}[tb]
+\centering\includegraphics[width=\linewidth]{images/Figs/ML_PV.pdf}
+\caption{Conceptual design of the Machine Learning framework.}
+\label{fig:geo_ML_framework}
+\end{figure}
+
+We apply a two-step approach for the design of the ML framework, as shown in Figure 3. First, we classify the samples into suitable and unsuitable fields for BHE installations. Second, we estimate the potential of the suitable fields ($Q_{pot}$, $q_{max}$, $N_{BHE}$) using an ML regression model. These targets have been obtained from the analytical model (Section \ref{geo_ML_data}). From the targets, we compute $H$ using the formula in Table \ref{tab:geo_ML_data}. This two-step approach allows to train the regression model only in the range of the optimized target values, which increases the performance and physical consistency of the results. 
+
+For the classification and the regression models, we consider four ML algorithms, namely k-nearest neighbours (KNN), Random Forests (RF), single-layer artificial neural networks (ANN) and Support Vector Machines (SVM), which are described in Chapter~\ref{ML_models}. 
+To tune the algorithms, we use 5-fold cross-validation (CV) based on randomized search. 
+For this, random hyper-parameters are selected from a set of distributions, CV is performed for each combination of hyper-parameters and the highest-scoring model is retained. 
+We use 60,000 data samples and 200 CV iterations, which results in excessive CV times for the ANN and SVM. 
+We thus use a reduced dataset (see Table \ref{tab:geo_ML_CV}) for these models, which may cause a small reduction in performance, particularly if smaller samples are used.
+
+As we use a multivariate regression approach, we further consider two ways of constructing the regressors. First, we train one regressor to predict all outputs at once (MO), which is possible for any algorithm supporting native multivariate regression (all except SVM). Second, we train separate models for each target (MM), which can lead to the violation of physics constraints among the targets but may perform better if the importance of features varies significantly between targets. Table \ref{tab:geo_ML_CV} shows a comparison of the CV scores for all considered combinations of features and models. The best performance (highlighted cell) is obtained for using a Random Forest (RF), with separate models fitted for each target (MM) and trained on the entire feature set (FTR). The comparison is provided for the regression model only, as this is the most important stage in the modelling of GSHP performance. 
+
+For the classification, the same model (RF, FTR) was selected and tuned. As the classes in this classification task are unbalanced (there are many more suitable fields than unsuitable ones), we use the average f1-score as performance evaluation metric (see Chapter~\ref{ML_models}).
+
+\begin{table}[tb]
+\footnotesize
+\centering
+\caption{Cross-validation scores (R$^2$) for all ML models and feature sets (see Section \ref{geo_ML_ftrs} and \ref{geo_ML_model}). The highlighted field shows the best model (multi-model Random Forest, trained using all features).}
+\label{tab:geo_ML_CV}
+% \resizebox{\textwidth}{!}{%
+\begin{tabular}{llclcllclcllclcllc}
+\hline
+ &  & \multicolumn{3}{c}{\textbf{KNN}} &  &  & \multicolumn{3}{c}{\textbf{RF}} &  &  & \multicolumn{3}{c}{\textbf{ANN}} &  &  & \textbf{SVM} \\
+\textbf{Feature set} &  & \textbf{MO} &  & \textbf{MM} &  &  & \textbf{MO} &  & \textbf{MM} &  &  & \textbf{MO} &  & \textbf{MM} &  &  & \textbf{MM} \\ \hline
+\textit{PCA\_3} &  & 0.42 &  & 0.42 &  &  & 0.44 &  & 0.44 &  &  & 0.40 $^a$ &  & 0.42 $^a$ &  &  & 0.32 $^a$ \\
+\textit{PCA\_5} &  & 0.78 &  & 0.78 &  &  & 0.77 &  & 0.79 &  &  & 0.72 $^a$ &  & 0.79 $^a$ &  &  & 0.61 $^a$ \\
+\textit{PCA\_7} &  & 0.75 &  & 0.75 &  &  & 0.76 &  & 0.8 &  &  & 0.72 $^a$ &  & 0.65 $^b$ &  &  & 0.54 $^a$ \\
+\textit{PCA} &  & 0.73 &  & 0.73 &  &  & 0.77 &  & 0.82 &  &  & 0.78 $^a$ &  & 0.67 $^b$ &  &  & 0.47 $^b$ \\
+\textit{FTR\_4} &  & 0.77 &  & 0.77 &  &  & 0.81 &  & 0.84 &  &  & 0.73 $^a$ &  & 0.81 $^a$ &  &  & 0.49 $^a$ \\
+\textit{FTR\_7} &  & 0.79 &  & 0.79 &  &  & 0.83 &  & 0.87 &  &  & 0.78 $^a$ &  & 0.86 $^a$ &  &  & 0.53 $^b$ \\
+\textit{FTR} &  & 0.74 &  & 0.74 &  &  & 0.81 & \multicolumn{3}{c}{\cellcolor[HTML]{D9D9D9}0.87} &  & 0.73 $^a$ &  & 0.68 $^b$ &  &  & 0.48 $^b$ \\ \hline
+\multicolumn{18}{l}{\textit{$^a$ Reduced CV iterations (20); $^b$ Reduced sample size (5,000)}}
+\end{tabular}%
+% }
+\end{table}
+
+\subsection{Prediction of technical geothermal potential}
+\label{geo_ML_results}
+The results below report the performance of the best model, as outlined in Section \ref{geo_ML_model}, for a test set of 20,000 borehole fields, which were excluded from the cross-validation procedure.
+
+\subsubsection{Classification model}
+The classification model achieves an overall accuracy of 97\% in predicting the suitability of fields for BHE installation. Furthermore, the results in Table \ref{tab:geo_ML_class} show that the performance is better for the Suitable class than the Unsuitable class, which is expected given the imbalance between the classes. The comparison of precision against recall shows that out of those samples predicted as unsuitable, only 27\% are truly suitable, while nearly half of the truly unsuitable fields are predicted as suitable. As these misclassifications occur only for small fields ($1-2$ BHE), the impact of these misclassifications on the annual total geothermal potential is negligible, increasing the potential estimate by 0.3\%.
+
+\begin{table}[tb]
+\centering
+\footnotesize
+\caption{Confusion matrix of the classification results, as well as precision, recall and f1-scores. The last row shows the average across both classes and the overall accuracy.}
+\label{tab:geo_ML_class}
+\begin{tabular}{llccccc}
+\hline
+\multicolumn{2}{l}{\textbf{Predicted   class:}} & \textit{Unsuitable} & \textit{Suitable} & \textbf{Precision} & \textbf{Recall} & \textbf{f1-score} \\ \hline
+\multirow{2}{*}{\textbf{True   class}} & \textit{Unsuitable} & 481 & 455 & 73\% & 51\% & 0.69 \\
+ & \textit{Suitable} & 177 & 18887 & 98\% & 99\% & 0.98 \\
+\multicolumn{2}{l}{\textbf{Average (macro)}} & \multicolumn{2}{c}{\textit{Overall accuracy: 97\%}} & 85\% & 75\% & 0.79 \\ \hline
+\end{tabular}%
+\end{table}
+
+\subsubsection{Regression model}
+The performance of the regression model varies between the different target variables, showing the highest R$^2$-score for $Q_{pot}$, followed by $q_{max}$ and $N_{BHE}$ (see Table \ref{tab:geo_ML_regr}). We further compare the RMSE, MAE, MAPE and the logMSE (see Chapter~\ref{ML_models}). The MAE of $Q_{pot}$ of 11,466 kWh/a corresponds to the mean annual production of a single BHE, which is in line with the MAE of $N_{BHE}$ of 1.5 boreholes. The MAPE is much lower (7\%) for $q_{max}$ than for the other two targets ($30-35$\%), mainly due to deviations for small residential fields, as shown in Figure \ref{fig:geo_ML_regr}. While Figure \ref{fig:geo_ML_regr} shows no systematic bias in the prediction, a small overestimation of $Q_{pot}$ is observed for the smallest GSHP systems. This implies that the results should be interpreted carefully for small borehole fields. At the large scale, the results however show a very high consistency between targets and predictions, with only 0.1\% of deviation for the annual sums of $Q_{pot}$. 
+
+In addition to the three variables analysed previously, we compute $H$, the borehole depth, as the fourth variable representing the borehole arrangement. The computed $H$ is consequently no longer in the discrete set used in the simulation ($50-200$ m), but instead is a continuous variable. Results show that 92.7\% of $H$ are in the simulated range of $50-200$ m, suggesting a good physical consistency between the estimated target variables.
+
+\begin{table}[tb]
+\footnotesize
+\centering
+\caption{Performance comparison of the best model (Random Forest, all features) on the test set for each variable and several error scores (R$^2$, RMSE, MAE, MAPE, logMSE).}
+\label{tab:geo_ML_regr}
+\begin{tabular}{lccccc}
+\hline
+\textbf{Target   variable} & \textbf{R2} & \textbf{RMSE} & \textbf{MAE} & \textbf{MAPE} & \textbf{logMSE} \\ \hline
+$Q_{pot}$ {[}kWh/a{]} & 0.95 & 47454 & 11466 & 0.31 & 0.13 \\
+$N_{BHE}$ {[}-{]} & 0.82 & 9.05 & 1.52 & 0.35 & 0.08 \\
+$q_{max}$ {[}W/m{]} & 0.86 & 3.02 & 2.37 & 0.07 & 0.01 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{images/Figs/scatterplot_best_prediction.pdf}
+\begin{subfigure}{.33\textwidth}
+  \subcaption{}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \subcaption{}
+\end{subfigure}
+\begin{subfigure}{.32\textwidth}
+  \subcaption{}
+\end{subfigure}
+\caption{Scatterplot of predictions against targets for all target variables, namely (a) energy potential $Q_{pot}$ (logarithmic scale), (b) number of boreholes $N_{BHE}$ (log. scale) and (c) heat extraction rate $q_{max}$.}
+\label{fig:geo_ML_regr}
+\end{figure}
+
+\subsubsection{Computational efficiency}
+For estimating the GSHP potential in only 30s after a training time of 20 min (single core), the two-stage ML model clearly outperforms the analytical approach, which requires 
+$\sim$ 11 hours for processing 20,000 BHE fields. The computational time of the ML approach is thus dominated by common pre-processing steps (50 min for 20,000 samples), resulting in an overall speed-up by a factor of 10.
+
+\section{Expansion to national scale [\textit{IN PROGRESS}]}
+
+\subsection{Estimation of thermal ground properties}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -700,4 +895,6 @@ This work can contribute to the development of decarbonisation strategies for th
 
 % \section{Machine Learning for extrapolation to national scale}
 
-\section{Potential for heating and cooling with ground regeneration}
+% SOURCE: CISBAT PAPER
+This study presents a Machine Learning method to estimate the technical potential of GSHP systems, their heat extraction rate, and the number of boreholes across a wide range of borehole field geometries, meteorological conditions, and geological properties. Several feature sets and Machine Learning models are compared, suggesting a Random Forest trained separately for each target variable on all available features as the best model, which reduces the computational time by a factor of 10. The results show a high R$^2$ coefficient of determination for all targets, with mean absolute percentage errors of 7% for the heat extraction rate and of 30-35% for the technical potential and number of boreholes, implying that the results must be carefully interpreted at the scale of single GSHP systems. 
+As the deviation of the total estimated technical potential from the analytically modelled value is negligible, the proposed ML model appears well-suited for estimating the technical potential of shallow GSHPs at the national scale for Switzerland. To expand this to the national scale, a further validation of the results against real-world examples will be necessary. Further work should also address the physical consistency of the results by simulating the temperature change in the ground for the obtained solutions. Also, the estimation of uncertainties will aid the interpretability of the results. While the uncertainty related to input data must be assessed, the RF allows for the estimation of model uncertainties as standard deviations [7] or quantiles [4].
